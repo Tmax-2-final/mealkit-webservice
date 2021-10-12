@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 import FooterLogo from '../elements/ui/FooterLogo';
 import FooterMenu from '../elements/ui/FooterMenu';
-import FooterMenuData from '../../db/footermenu.json';
 
 export default function Footer(){
 
-    const [newFooterMenu, setNewFooterMenu] = useState(FooterMenuData);
+    const [newFooterMenu, setNewFooterMenu] = useState([]);
     
     return (
         <footer>
@@ -14,7 +13,7 @@ export default function Footer(){
                     <div className="container">
                         <div className="row">
                             <FooterLogo />
-                            <FooterMenu 
+                            {/* <FooterMenu 
                                 footerMenuList = {newFooterMenu['ABOUT US']}
                                 footerMenuTitle = "ABOUT US"
                             />
@@ -25,7 +24,7 @@ export default function Footer(){
                             <FooterMenu 
                                 footerMenuList = {newFooterMenu['USEFUL LINKS']}
                                 footerMenuTitle = "USEFUL LINKS"
-                            />
+                            /> */}
 
                             <div className="col-12 col-md-3">
                                 <p className="menuTitle">SUBSCRIBE</p>

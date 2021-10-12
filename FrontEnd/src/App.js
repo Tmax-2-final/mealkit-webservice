@@ -8,7 +8,6 @@ import ProductDetail from './components/pages/ProductDetail/ProductDetail';
 import ProductList from './components/pages/productlist/ProductList';
 import Features from './components/pages/Features/Features';
 import MyAccount from './components/pages/myaccount/MyAccount';
-import ReduxSample from './components/pages/reduxsample/ReduxSample';
 import "./assets/css/mystyle.css";
 import "./assets/css/style.css";
 import "./assets/css/animate.css";
@@ -18,7 +17,6 @@ import "./assets/icons8/css/line-awesome.min.css";
 import './assets/css/pagination.css'
 import ToTop from "./utilities/ToTop";
 import { Provider } from 'react-redux';
-import store from './redux/store';
 import Login from './components/pages/user/Login';
 import Register from './components/pages/user/Register';
 import MyPage from './components/pages/user/MyPage';
@@ -32,7 +30,6 @@ import AdminOrder from './components/pages/admin/AdminOrder';
 import AdminCatalog from './components/pages/admin/AdminCatalog';
 import CatalogRegister from "./components/pages/productlist/CatalogRegister";
 import CatalogRegisterSub from "./components/pages/productlist/CatalogRegisterSub";
-import TestOne from "./components/pages/productlist/Test";
 
 
 function App() {
@@ -66,10 +63,6 @@ function App() {
           <Route exact path="/admin/catalogs" component={AdminCatalog}></Route>
           <Route exact path="/admin/catalogs/:productId"><CatalogRegisterSub /></Route>
           <Route exact path="/admin/catalog-register"><CatalogRegister /></Route>
-          <Route exact path="/test"><TestOne /></Route>
-          <Provider store={store}>
-            <Route exact path="/reduxsample"><ReduxSample /></Route>
-          </Provider>
         </Switch>
       </ToTop>
     </BrowserRouter>
