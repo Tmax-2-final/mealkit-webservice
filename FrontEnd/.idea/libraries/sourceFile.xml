@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="sourceFile">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/sourceFile/bootstrap-pack.zip!/" />
+      <root url="jar://$PROJECT_DIR$/sourceFile/react-admin-tem01.zip!/" />
+      <root url="jar://$PROJECT_DIR$/sourceFile/personal-site-bs4-05.zip!/" />
+      <root url="jar://$PROJECT_DIR$/sourceFile/react-admin-tem02.zip!/" />
+      <root url="jar://$PROJECT_DIR$/sourceFile/personal-site-bs4-04.zip!/" />
+      <root url="jar://$PROJECT_DIR$/sourceFile/personal-site-bs4-02.zip!/" />
+      <root url="jar://$PROJECT_DIR$/sourceFile/personal-site-bs4-01.zip!/" />
+      <root url="jar://$PROJECT_DIR$/sourceFile/personal-site-bs4-03.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

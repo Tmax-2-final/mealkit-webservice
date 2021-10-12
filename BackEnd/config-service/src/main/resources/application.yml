@@ -1,0 +1,26 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-service
+  # api , config server 통신
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/namgonkim/msa-ecommerce-config-tmax
+#          username: zxcv9455@naver.com
+#          password: []
+
+#          uri: file:///Users/namgonkim/Documents/Work/git-local-repo
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, busrefresh, refresh, metrics

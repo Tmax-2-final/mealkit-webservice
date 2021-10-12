@@ -1,0 +1,159 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    font-size: 12px;
+}
+
+section {
+    margin: 120px 0;
+}
+/* Carousel base class */
+.carousel {
+    margin-bottom: 4rem;
+  }
+  /* Since positioning the image, we need to help out the caption */
+  .carousel-caption {
+    bottom: 3rem;
+    z-index: 10;
+  }
+  
+  /* Declare heights because of positioning of img element */
+  .carousel-item {
+    height: 32rem;
+  }
+  .carousel-item > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    height: 32rem;
+  }
+
+  /* Section id bland */
+
+  #bland .blandImg {
+      margin-top: -5px;
+      font-size:3rem;
+      color:coral;
+  }
+
+  #bland .blandTitle {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 0px;
+  }
+  
+
+  /* Section id deal */
+
+  #deal .title h3{
+      font-size: 2rem;
+      color:coral;
+      text-align: center;
+  }
+
+  #deal ul li {
+      padding-right: 40px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      text-align: center;
+  }
+
+  #deal ul li:last-child {
+      padding-right: 0px;
+  }
+
+  #deal .productImg {
+      width: 100%;
+      height: 350px;
+      background-color: gray;
+  }
+
+  #deal .productTitle {
+      margin-top:20px;
+      text-align: center;
+      font-size: 1.0rem;
+  }
+  #deal .productScore {
+      margin-top: -10px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color:darkgoldenrod;
+  }
+
+  #deal .productPrice {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+  }
+
+  #deal .productPrice span {
+      padding-left: 20px;
+      color: gray;
+      text-decoration: line-through;
+  }
+
+  /* Section id blog */
+  #blog .title h3{
+    font-size: 2rem;
+    color:coral;
+    text-align: center;
+}
+
+#blog .blogImg {
+    width: 100%;
+    height: 300px;
+    background-color: gray;
+}
+
+#blog .blogTxt {
+    width: 90%;
+    margin: 5%;
+    background-color: white;
+    /*border: thin solid gray;*/
+    position: relative;
+    top: -80px;
+}
+
+#blog .blogTitle {
+    padding-top:20px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color:darkgoldenrod;
+}
+
+#blog .blogAuth {
+    text-align: center;
+    font-style: italic;
+    font-size: 1.0rem;
+    color: gray;
+}
+
+footer .footer{
+    background-color: gray;
+    height: 400px;
+    padding: 100px 0;
+    color: white;
+}
+
+footer .footerLogo {
+    font-size: 2.0rem;
+    font-weight: bolder;
+    line-height: 0.8;
+}
+
+footer .footerLogo span {
+    font-size: 3.0rem;
+}
+
+footer ul {
+    list-style: none;
+    text-decoration: none;
+    padding:0px;
+}
+
+footer ul li a:link {
+    color:#c5c5c5;
+}

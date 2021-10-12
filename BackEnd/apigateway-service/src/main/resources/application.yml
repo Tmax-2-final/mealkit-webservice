@@ -1,0 +1,107 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: apigateway-service
+  # api , config server 통신
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    gateway:
+      routes:
+        # user service - swagger
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/v2/api-docs
+            - Path=/user-service/swagger-resources
+            - Path=/user-service/swagger-resources/**
+            - Path=/user-service/configuration/ui
+            - Path=/user-service/configuration/security
+            - Path=/user-service/swagger-ui.html
+            - Path=/user-service/webjars/**
+            # -- Swagger UI v3 (OpenAPI)
+            - Path=/user-service/v3/api-docs/**
+            - Path=/user-service/swagger-ui/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        # user service actuator
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        # user-login service
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/login
+            - Method=POST
+          filters:
+            # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        # user-회원가입 service
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users
+            - Method=POST
+          filters:
+            # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        # user-비밀번호 찾기 /find/pw
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/find/pw
+            - Method=PUT
+          filters:
+            # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        # user service
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+        # catalog service
+        - id: catalog-service
+          uri: lb://CATALOG-SERVICE
+          predicates:
+            - Path=/catalog-service/**
+          filters:
+            # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
+            - RewritePath=/catalog-service/(?<segment>.*), /$\{segment}
+
+        # order service
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order-service/**
+          filters:
+            # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
+            - RewritePath=/order-service/(?<segment>.*), /$\{segment}
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, refresh, health, beans, httptrace, busrefresh
