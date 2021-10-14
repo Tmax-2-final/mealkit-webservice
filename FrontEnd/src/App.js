@@ -30,6 +30,7 @@ import AdminOrder from './components/pages/admin/AdminOrder';
 import AdminCatalog from './components/pages/admin/AdminCatalog';
 import CatalogRegister from "./components/pages/productlist/CatalogRegister";
 import CatalogRegisterSub from "./components/pages/productlist/CatalogRegisterSub";
+import Preference from "./components/pages/user/Preference";
 
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
           <Route exact path="/myaccount"><MyAccount /></Route>
           <Route exact path="/login"><Login /></Route>
           <Route exact path="/register"><Register /></Route>
+          <Route exact path="/preference"><Preference /></Route>
           <Route exact path="/find/pw"><FindPw/></Route>
           <Route exact path="/mypage"><MyPage /></Route>
           <Route exact path="/mypage/myInfo"><MyInfoEdit /></Route>
