@@ -43,45 +43,57 @@ export default function SideMenu() {
                 
                 <button styles="background:white;"><i type="button" className="las la-search" /></button>
             </form> */}
-            <div className="header-right-wrap">
-                <div className="same-style header-compare">
-                    <Link to="/cart"><i className="las la-shopping-bag"></i></Link>
+
+                <div className=" main-menu  ">
+                    <nav>
+                        <Link to="/cart">구독하기</Link>
+                    </nav>
+                    <nav>
+                        <Link to="/cart">회원가입</Link>
+                    </nav>
+                        <ul>
+                            <Link to="/cart">로그인</Link>
+                        </ul>
+                        <ul>
+                            <Link to="/cart">고객센터</Link>
+                        </ul>
+
+
                 </div>
 
-                <div className="dropdown">
-                <div className="same-style header-compare">
-                    <a href="/register"><i className="las la-user"></i></a>
-                    <ul className="sub">
-                        {
-                            !isLogin ? 
-                                (
-                                    <>
-                                    <li><Link to="/login">login</Link></li>
-                                    <li><Link to="/register">register</Link></li>
-                                    </>
-                                )
-                                    :
-                                (
-                                    <>
-                                    <li><Link onClick={onClickHandler}>logout</Link></li>
-                                    {
-                                        isRole === "ROLE_ADMIN" ?
-                                            <li><Link to="/admin/users">admin</Link></li>
-                                            :
-                                            <li><Link to="/mypage">mypage</Link></li>
-                                    }
-                                    </>
-                                )
-                        }
-                        
-                    </ul>
-                </div>
-                </div>
+                {/*<div className="dropdown">*/}
+                {/*<div className="same-style header-compare">*/}
+                {/*    <a href="/register">회원가입</i></a>*/}
+                {/*    <ul className="sub">*/}
+                {/*        {*/}
+                {/*            !isLogin ? */}
+                {/*                (*/}
+                {/*                    <>*/}
+                {/*                    <li><Link to="/login">login</Link></li>*/}
+                {/*                    <li><Link to="/register">register</Link></li>*/}
+                {/*                    </>*/}
+                {/*                )*/}
+                {/*                    :*/}
+                {/*                (*/}
+                {/*                    <>*/}
+                {/*                    <li><Link onClick={onClickHandler}>logout</Link></li>*/}
+                {/*                    {*/}
+                {/*                        isRole === "ROLE_ADMIN" ?*/}
+                {/*                            <li><Link to="/admin/users">admin</Link></li>*/}
+                {/*                            :*/}
+                {/*                            <li><Link to="/mypage">mypage</Link></li>*/}
+                {/*                    }*/}
+                {/*                    </>*/}
+                {/*                )*/}
+                {/*        }*/}
+                {/*        */}
+                {/*    </ul>*/}
+                {/*</div>*/}
+                {/*</div>*/}
                 <div className="same-style mobile-off-canvas d-block d-lg-none">
                     <button className="mobile-aside-button"><i className="las la-bars"></i></button>
                 </div>
             </div>
-            
-        </div>
+
     );
 }

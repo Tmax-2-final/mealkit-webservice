@@ -5,28 +5,20 @@ import com.example.catalogservice.jpa.CatalogEntity;
 import com.example.catalogservice.jpa.ChildrenEntity;
 import com.example.catalogservice.jpa.MenuEntity;
 import com.example.catalogservice.service.CatalogService;
-import com.example.catalogservice.utility.Utility;
 import com.example.catalogservice.vo.RequestCatalog;
 import com.example.catalogservice.vo.ResponseCatalog;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 
 @RestController
