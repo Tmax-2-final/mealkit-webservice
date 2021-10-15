@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c8addc70-71b4-4001-ae4b-36261f5935b6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Algorithms2/src/greedy1015/Main01.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Algorithms2/src/greedy1015/Main02.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Algorithms2/src/greedy1015/Main03.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/controller/CatalogController.java" beforeDir="false" afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/controller/CatalogController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catalog-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/catalog-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/components/elements/ui/SideMenu.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/components/elements/ui/SideMenu.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +48,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../FrontEnd" />
+    <property name="last_opened_file_path" value="$USER_HOME$/IdeaProjects/Algorithm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -145,7 +143,7 @@
       <workItem from="1634025794761" duration="25000" />
       <workItem from="1634174595196" duration="5608000" />
       <workItem from="1634185759573" duration="2124000" />
-      <workItem from="1634194285318" duration="2012000" />
+      <workItem from="1634194285318" duration="2622000" />
     </task>
     <servers />
   </component>
