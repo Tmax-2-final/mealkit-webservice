@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme/build'
 import App from './App'
-import AdminUser from './views/admin/AdminUser.js'
+import AdminUser from './views/user/AdminUser.js'
 
 it('mounts App without crashing', () => {
   const wrapper = shallow(<App />)

@@ -2,8 +2,8 @@ import React from 'react'
 // import AdminUser from './views/admin/AdminUser'
 
 
-
-const AdminUser = React.lazy(() => import('./views/admin/AdminUser'))
+const UserDetail = React.lazy(() => import('./views/user/UserDetail'))
+const AdminUser = React.lazy(() => import('./views/user/AdminUser'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -54,7 +54,9 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
+  { path: '/userdetail', name: '회원 상세', component: UserDetail },
   { path: '/adminuser', name: '회원 관리', component: AdminUser },
+  
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },
   { path: '/theme/typography', name: 'Typography', component: Typography },

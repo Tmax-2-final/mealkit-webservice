@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UserTable = () => {    
+const UserDetailTable = () => {
     return (
         <div className="cart-main-area pt-20 pb-30">
             <div className="container">
@@ -14,10 +14,7 @@ const UserTable = () => {
                                         <th>사용자명</th>
                                         <th>사용자 이메일</th>
                                         <th>사용자 연락처</th>
-                                        <th>구독 멤버십</th>
-                                        <th>생성 날짜</th>
-                                        <th>수정 날짜</th>
-                                        <th>삭제</th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -58,4 +55,4 @@ const UserTable = () => {
     );
 }
 
-export default UserTable
+export default UserDetailTable
