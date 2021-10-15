@@ -15,8 +15,8 @@ import "./assets/css/bootstrap.css";
 import "./assets/css/googlefont.css";
 import "./assets/icons8/css/line-awesome.min.css";
 import './assets/css/pagination.css'
+import './assets/css/routers.css'
 import ToTop from "./utilities/ToTop";
-import { Provider } from 'react-redux';
 import Login from './components/pages/user/Login';
 import Register from './components/pages/user/Register';
 import MyPage from './components/pages/user/MyPage';
@@ -30,6 +30,8 @@ import AdminOrder from './components/pages/admin/AdminOrder';
 import AdminCatalog from './components/pages/admin/AdminCatalog';
 import CatalogRegister from "./components/pages/productlist/CatalogRegister";
 import CatalogRegisterSub from "./components/pages/productlist/CatalogRegisterSub";
+import Routers from './utilities/Routers';
+
 
 
 function App() {
@@ -64,6 +66,7 @@ function App() {
           <Route exact path="/admin/catalogs/:productId"><CatalogRegisterSub /></Route>
           <Route exact path="/admin/catalog-register"><CatalogRegister /></Route>
         </Switch>
+        <Routers/>
       </ToTop>
     </BrowserRouter>
   );
