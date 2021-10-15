@@ -19,4 +19,10 @@ module.exports = function (app) {
             changeOrigin: true,
         })
     );
+    app.use(
+        createProxyMiddleware('/alert-service', {
+            target: 'http://localhost:8000',
+            changeOrigin: true,
+        })
+    );
 }

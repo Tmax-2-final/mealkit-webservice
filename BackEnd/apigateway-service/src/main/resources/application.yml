@@ -5,11 +5,11 @@ spring:
   application:
     name: apigateway-service
   # api , config server 통신
-  rabbitmq:
-    host: 127.0.0.1
-    port: 5672
-    username: guest
-    password: guest
+#  rabbitmq:
+#    host: 127.0.0.1
+#    port: 5672
+#    username: guest
+#    password: guest
   cloud:
     gateway:
       routes:
@@ -93,6 +93,15 @@ spring:
           filters:
             # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
             - RewritePath=/order-service/(?<segment>.*), /$\{segment}
+
+        # alert service
+        - id: alert-service
+          uri: lb://ALERT-SERVICE
+          predicates:
+            - Path=/alert-service/**
+          filters:
+            # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
+            - RewritePath=/alert-service/(?<segment>.*), /$\{segment}
 
 eureka:
   client:
