@@ -56,7 +56,10 @@ const UserTable = () => {
                 <br />
                 <br />
                 <br />
-                <h3><strong>테스트 고객</strong></h3>
+                
+                {/* 고객 상세 정보  */}
+
+                <h3><strong>신혜원 님</strong></h3>
                 <br /><br/>
                 <div className="row">
                     <div className="col-lg-12 col-md-12">
@@ -67,9 +70,9 @@ const UserTable = () => {
                                         <th><br/>고객 상세 정보<br/><br/></th>
                                         <th></th>
                                         <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th>            <div className="button-box">
+                                        
+                                        
+                                        <th >            <div className="button-box">
                                                                 <div className="row justify-content-between">
                                                                     <div className="col-4">
                                                                         <button type="submit" >
@@ -80,32 +83,50 @@ const UserTable = () => {
                                                             </div></th>
                                     </tr>
                                     <tr>
-                                        <th>아이디</th>
-                                        <td align='center'> hyewon </td>
+                                        <th style={{ borderBottom: "hidden" }}><br/>아이디</th>
+                                        <td align='left' style={{ borderBottom: "hidden" }}><br/> hyewon </td>
+                                        <th style={{ borderBottom: "hidden" }}></th>
+                                        <th style={{ borderBottom: "hidden" }}></th>
+                                        
                                     </tr>
                                     <tr>
-                                        <th >이메일</th>
-                                        <td align='center'> hyewon@test.com </td>
+                                        <th style={{ borderBottom: "hidden" }}>이메일</th>
+                                        <td align='left' style={{ borderBottom: "hidden" }}> hyewon@test.com </td>
+                                        <th style={{ borderBottom: "hidden" }}></th>
+                                        <th style={{ borderBottom: "hidden" }}></th>
+                                        
                                     </tr>
                                     <tr>
-                                        <th>생년월일</th>
-                                        <td align='center'> 94.11.23 </td>
+                                        <th style={{ borderBottom: "hidden" }}>생년월일</th>
+                                        <td align='left' style={{ borderBottom: "hidden" }}> 94.11.23 </td>
+                                        <th style={{ borderBottom: "hidden" }}></th>
+                                        <th style={{ borderBottom: "hidden" }}></th>
+                                        
                                     </tr>
                                     <tr>
-                                        <th>연락처</th>
-                                        <td align='center'> 010-0000-0000 </td>
+                                        <th style={{ borderBottom: "hidden" }}>연락처</th>
+                                        <td align='left' style={{ borderBottom: "hidden" }}> 010-0000-0000 </td>
+                                        <th style={{ borderBottom: "hidden" }}></th>
+                                        <th style={{ borderBottom: "hidden" }}></th>
+                                        
                                     </tr>
                                     <tr>
-                                        <th>주소</th>
-                                        <td align='center'>경기도 성남시 분당구 황새울로258번길 29 티맥스소프트</td>
+                                        <th style={{ borderBottom: "hidden" }}>주소</th>
+                                        <td align='left' style={{ borderBottom: "hidden" }}>경기도 성남시 분당구 황새울로258번길 29 티맥스소프트</td>
+                                        <th style={{ borderBottom: "hidden" }}></th>
+                                        <th style={{ borderBottom: "hidden" }}></th>
+                                        
                                     </tr>
                                     <tr>
-                                        <th>상세 주소</th>
-                                        <td align='center'>1층 ~ 2층</td>
+                                        <th style={{ borderBottom: "hidden" }}>상세 주소</th>
+                                        <td align='left' style={{ borderBottom: "hidden" }}>1층 ~ 2층</td>
+                                        <th style={{ borderBottom: "hidden" }}></th>
+                                        <th style={{ borderBottom: "hidden" }}></th>
+                                        
                                     </tr>
                                     <tr>
-                                        <th>가입일</th>
-                                        <td align='center'>21.10.15</td>
+                                        <th>가입일<br/><br/></th>
+                                        <td align='left'>21.10.15<br/><br/></td>
                                     </tr>
                                     
                                 </thead>
