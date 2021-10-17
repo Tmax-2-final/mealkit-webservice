@@ -21,6 +21,7 @@ import Login from './components/pages/user/Login';
 import Register from './components/pages/user/Register';
 import MyPage from './components/pages/user/MyPage';
 import MyInfoEdit from './components/pages/user/MyInfoEdit';
+import MyReview from './components/pages/review/MyReview';
 import MyOrder from './components/pages/user/MyOrder';
 import FindPw from './components/pages/user/FindPw';
 import Payment from './components/pages/payment/Payment';
@@ -32,6 +33,7 @@ import CatalogRegister from "./components/pages/productlist/CatalogRegister";
 import CatalogRegisterSub from "./components/pages/productlist/CatalogRegisterSub";
 import Routers from './utilities/Routers';
 import Preference from "./components/pages/user/Preference";
+import ShippingTable from './components/pages/shipping/ShippingTable';
 
 
 function App() {
@@ -57,8 +59,10 @@ function App() {
           <Route exact path="/preference"><Preference /></Route>
           <Route exact path="/find/pw"><FindPw/></Route>
           <Route exact path="/mypage"><MyPage /></Route>
+          <Route exact path="/mypage/review"><MyReview /></Route>
           <Route exact path="/mypage/myInfo"><MyInfoEdit /></Route>
           <Route exact path="/mypage/myOrder"><MyOrder /></Route>
+          <Route exact path="/mypage/shipping"><ShippingTable /></Route>
           <Route exact path="/payment" component={Payment}></Route>
           <Route exact path="/paymentcomplete" component={PaymetComplete}></Route>
           <Route exact path="/admin/users"><AdminUser /></Route>

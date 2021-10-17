@@ -186,7 +186,7 @@ const _nav = [
   {
     component: CNavItem,
     name: '배송관리',
-    to: '/charts',
+    to: '/adminshipping',
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
   // {

@@ -1,7 +1,49 @@
-import React from 'react';
+
+import React, { Fragment, useEffect, useState } from 'react';
 
 const UserTable = () => {    
+    const [startDate, setStartDate] = useState(new Date("2021/01/01"));
+    const [endDate, setEndDate] = useState(new Date());
+
+
+    const [userDatas, setUserDatas] = useState([]);
+    const [search, setSearch] = useState("");
+    
+
+    const searchChange = (e) => {
+        e.preventDefault();
+        setSearch(e.target.value);
+    }
+
+    const searchHandler = (e) => {
+        e.preventDefault();
+        let body = {
+            startDate: startDate,
+            endDate: endDate,
+            searchData: search
+        }
+
+        console.log(body);
+
+        // axios.post(`/user-service/users/date`, body, {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // })
+        //     .then((res) => {
+        //         console.log(res);
+        //         alert('검색을 시작합니다');
+        //         setUserDatas(res.data);
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //         alert('오류가 발생했습니다');
+        //     })
+
+    }
+
     return (
+        
         <div className="cart-main-area pt-20 pb-30">
             <div className="container">
                 {/* <h3 className="cart-page-title">회원 목록</h3> */}

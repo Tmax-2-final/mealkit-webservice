@@ -81,13 +81,23 @@ const Sidebar = () => {
                         <div className="sidebar-blog-content">
 
                             <h4>
-                                <Link onClick={deleteHandler}>
-                                    회원 탈퇴
+                                <Link to={process.env.PUBLIC_URL + "/mypage/shipping"}>
+                                    배송지 관리
                                 </Link>
                             </h4>
                         </div>
                     </div>
+                    <div className="single-sidebar-blog">
+                        <div className="sidebar-blog-content">
 
+                            <h4>
+                                <Link to={process.env.PUBLIC_URL + "/mypage/myInfo"}>
+                                    상품 후기
+                                </Link>
+                            </h4>
+                        </div>
+                    </div>
+                
 
                 </div>
             </div>
