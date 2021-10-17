@@ -6,6 +6,7 @@ import Compare from './components/pages/compare/Compare';
 import Wishlist from './components/pages/wishlist/Wishlist';
 import ProductDetail from './components/pages/ProductDetail/ProductDetail';
 import ProductList from './components/pages/productlist/ProductList';
+import PackageList from './components/pages/productlist/PackageList';
 import Features from './components/pages/Features/Features';
 import MyAccount from './components/pages/myaccount/MyAccount';
 import "./assets/css/mystyle.css";
@@ -51,6 +52,7 @@ function App() {
           <Route exact path="/productlist/:selCategoryName" component={ProductList}></Route>
           <Redirect exact from="/productlist/:selCategoryName/reload" to="/productlist/:selCategoryName" />
           <Route exact path="/productlist"><ProductList /></Route>
+          <Route exact path="/packagelist"><PackageList /></Route>
           <Route exact path="/myaccount"><MyAccount /></Route>
           <Route exact path="/login"><Login /></Route>
           <Route exact path="/register"><Register /></Route>

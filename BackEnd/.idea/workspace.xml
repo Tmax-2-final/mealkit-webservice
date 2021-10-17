@@ -5,10 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c8addc70-71b4-4001-ae4b-36261f5935b6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Algorithms2/src/greedy1015/Main01.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Algorithms2/src/greedy1015/Main02.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Algorithms2/src/greedy1015/Main03.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/jpa/PackageEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/jpa/PackageRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FrontEnd/src/components/elements/widgets/productlist/SidePackage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FrontEnd/src/components/pages/productlist/PackageList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/controller/CatalogController.java" beforeDir="false" afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/controller/CatalogController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/service/CatalogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/service/CatalogService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/service/CatalogServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/service/CatalogServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/components/elements/ui/SideMenu.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/components/elements/ui/SideMenu.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +54,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/IdeaProjects/Algorithm" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Frontend-admin" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -56,6 +62,11 @@
   </component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.example.catalogservice.jpa" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="configurationTypes">
@@ -143,12 +154,24 @@
       <workItem from="1634025794761" duration="25000" />
       <workItem from="1634174595196" duration="5608000" />
       <workItem from="1634185759573" duration="2124000" />
-      <workItem from="1634194285318" duration="2622000" />
+      <workItem from="1634194285318" duration="3273000" />
+      <workItem from="1634275171878" duration="4995000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

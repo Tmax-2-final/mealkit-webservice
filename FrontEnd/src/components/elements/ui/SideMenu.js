@@ -44,29 +44,23 @@ export default function SideMenu() {
                 <button styles="background:white;"><i type="button" className="las la-search" /></button>
             </form> */}
 
-                <div className=" main-menu  ">
+                <div className=" main-menu  " style={{paddingLeft:"15px"}}>
                     <nav>
-                        <Link to="/cart">구독하기</Link>
-                    </nav>
-                    <nav>
-                        <Link to="/cart">회원가입</Link>
-                    </nav>
                         <ul>
-                            <Link to="/cart">로그인</Link>
+                            <Link style={{paddingLeft:"15px"}} to="/cart">구독하기</Link>
+                            <Link style={{paddingLeft:"15px"}} to="/cart">회원가입</Link>
+                            <Link style={{paddingLeft:"15px"}} to="/cart">로그인</Link>
+                            <Link style={{paddingLeft:"15px"}} to="/cart">고객센터</Link>
                         </ul>
-                        <ul>
-                            <Link to="/cart">고객센터</Link>
-                        </ul>
-
-
+                    </nav>
                 </div>
 
                 {/*<div className="dropdown">*/}
                 {/*<div className="same-style header-compare">*/}
-                {/*    <a href="/register">회원가입</i></a>*/}
+                {/*    <a href="/register"><i>회원가입</i></a>*/}
                 {/*    <ul className="sub">*/}
                 {/*        {*/}
-                {/*            !isLogin ? */}
+                {/*            !isLogin ?*/}
                 {/*                (*/}
                 {/*                    <>*/}
                 {/*                    <li><Link to="/login">login</Link></li>*/}
@@ -86,7 +80,7 @@ export default function SideMenu() {
                 {/*                    </>*/}
                 {/*                )*/}
                 {/*        }*/}
-                {/*        */}
+
                 {/*    </ul>*/}
                 {/*</div>*/}
                 {/*</div>*/}

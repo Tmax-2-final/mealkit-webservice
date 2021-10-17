@@ -20,13 +20,15 @@ public class CatalogServiceImpl implements CatalogService{
     CatalogRepository catalogRepository;
     MenuRepository menuRepository;
     ChildrenRepository childrenRepository;
+    PackageRepository packageRepository;
 
 
     @Autowired
-    public CatalogServiceImpl(CatalogRepository catalogRepository, MenuRepository menuRepository, ChildrenRepository childrenRepository) {
+    public CatalogServiceImpl(CatalogRepository catalogRepository, MenuRepository menuRepository, ChildrenRepository childrenRepository, PackageRepository packageRepository) {
         this.catalogRepository = catalogRepository;
         this.menuRepository = menuRepository;
         this.childrenRepository = childrenRepository;
+        this.packageRepository = packageRepository;
     }
 
     @Override
@@ -46,6 +48,9 @@ public class CatalogServiceImpl implements CatalogService{
     public Iterable<ChildrenEntity> getAllChildren() {
         return childrenRepository.findAll();
     }
+
+    @Override
+    public Iterable<PackageEntity> getAllPackage() { return packageRepository.findAll() ;}
 
     @Override
     public CatalogDto createCatalog(CatalogDto catalog) {
