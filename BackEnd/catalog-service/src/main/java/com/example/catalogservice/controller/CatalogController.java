@@ -4,6 +4,7 @@ import com.example.catalogservice.dto.CatalogDto;
 import com.example.catalogservice.jpa.CatalogEntity;
 import com.example.catalogservice.jpa.ChildrenEntity;
 import com.example.catalogservice.jpa.MenuEntity;
+import com.example.catalogservice.jpa.PackageEntity;
 import com.example.catalogservice.service.CatalogService;
 import com.example.catalogservice.vo.RequestCatalog;
 import com.example.catalogservice.vo.ResponseCatalog;
@@ -68,6 +69,15 @@ public class CatalogController {
         Iterable<ChildrenEntity> childrenList = catalogService.getAllChildren();
         log.info("after children");
         return ResponseEntity.status(HttpStatus.OK).body(childrenList);
+    }
+
+    @ApiOperation(value = "메뉴 패키지메뉴 조회", notes = "각 메뉴에 대한 패키지메뉴 조회한다")
+    @GetMapping("/package")
+    public ResponseEntity<Iterable<PackageEntity>> getPackage() {
+        log.info("berfore package");
+        Iterable<PackageEntity> packageList = catalogService.getAllPackage();
+        log.info("after package");
+        return ResponseEntity.status(HttpStatus.OK).body(packageList);
     }
 
     @ApiOperation(value = "상품 등록", notes = "상품을 등록한다")
