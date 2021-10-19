@@ -16,7 +16,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="apigateway-service" target="1.8" />
+      <module name="apigateway-service" target="11" />
       <module name="catalog-service" target="11" />
       <module name="config-service" target="1.8" />
       <module name="order-service" target="11" />

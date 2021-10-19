@@ -6,7 +6,7 @@ import Compare from './components/pages/compare/Compare';
 import Wishlist from './components/pages/wishlist/Wishlist';
 import ProductDetail from './components/pages/ProductDetail/ProductDetail';
 import ProductList from './components/pages/productlist/ProductList';
-import PackageList from './components/pages/productlist/PackageList';
+import PackageList from './components/pages/packagelist/PackageList';
 import Features from './components/pages/Features/Features';
 import MyAccount from './components/pages/myaccount/MyAccount';
 import "./assets/css/mystyle.css";

@@ -47,7 +47,7 @@ export default function ComareTable() {
                 <Link className="image" to={`/productdetail/${item.id}`}>{item.name}</Link>
             </div>
             <div className="compare-btn">
-                <Link className="image" to={`/productdetail/${item.id}`}>Select Option</Link>
+                <Link className="image" to={`/productdetail/${item.id}`}>패키지 상세 페이지</Link>
             </div>
         </td>
     )).slice(0,3);
@@ -87,11 +87,11 @@ export default function ComareTable() {
                                 <table className="table table-bordered mb-0">
                                     <tbody>
                                         <tr>
-                                            <th className="title-column">Product Info</th>
+                                            <th className="title-column">패키지 정보</th>
                                             {comparelist01}
                                         </tr>
                                         <tr>
-                                            <th className="title-column">Price</th>
+                                            <th className="title-column">가격</th>
                                             {comparelist02}
                                         </tr>
                                         <tr>
