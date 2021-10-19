@@ -5,54 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c8addc70-71b4-4001-ae4b-36261f5935b6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/dto/PatalogDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/jpa/PatalogEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/jpa/PatalogRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/vo/RequestPatalog.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/vo/ResponsePatalog.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../FrontEnd/src/components/elements/widgets/packagelist/PackageShop.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithm2/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithm2/.mvn/wrapper/MavenWrapperDownloader.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithm2/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithm2/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithm2/mvnw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithm2/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithm2/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithm2/src/main/java/com/example/algorithm2/Algorithm2Application.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithm2/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithm2/src/test/java/com/example/algorithm2/Algorithm2ApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/.idea/runConfigurations.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/Algorithms2.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/out/production/Algorithms2/greedy1015/Main01.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/out/production/Algorithms2/greedy1015/Main02.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/out/production/Algorithms2/greedy1015/Main03.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/out/production/Algorithms2/implementation1015/Main01.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/out/production/Algorithms2/implementation1017/Main01.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/out/production/Algorithms2/implementation1017/Main02.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/src/greedy1015/Main01.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/src/greedy1015/Main02.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/src/greedy1015/Main03.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/src/implementation1015/Main01.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/src/implementation1017/Main01.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/src/implementation1017/Main02.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms2/src/implementation1017/Main03.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/controller/CatalogController.java" beforeDir="false" afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/controller/CatalogController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/service/CatalogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/service/CatalogService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/service/CatalogServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/catalog-service/src/main/java/com/example/catalogservice/service/CatalogServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/components/elements/widgets/comparetable/CompareTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/components/elements/widgets/comparetable/CompareTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/components/elements/widgets/productlist/Shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/components/elements/widgets/productlist/Shop.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/components/pages/compare/Compare.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/components/pages/compare/Compare.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/components/pages/productlist/PackageList.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/components/pages/packagelist/PackageList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/utilities/Routers.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/utilities/Routers.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,7 +157,7 @@
       <workItem from="1634194285318" duration="3273000" />
       <workItem from="1634275171878" duration="4995000" />
       <workItem from="1634469668085" duration="9789000" />
-      <workItem from="1634545853396" duration="7449000" />
+      <workItem from="1634545853396" duration="7745000" />
     </task>
     <servers />
   </component>
