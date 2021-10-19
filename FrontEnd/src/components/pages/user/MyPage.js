@@ -14,20 +14,22 @@ function MyPage(props) {
     useEffect(() => {
 
         let userId = localStorage.getItem('userid');
-        let token = localStorage.getItem('token');
+        // let token = localStorage.getItem('token');
 
         if(!userId || userId === 'undefined') {
             window.location.href="/login";
         }
-        if(!token || token === 'undefined') {
-            window.location.href="/login";
-        }
+        // if(!token || token === 'undefined') {
+        //     window.location.href="/login";
+        // }
 
-        axios.get(`/user-service/users/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        axios.get(`/user-service/users/${userId}`, 
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
+        )
             .then(response => {
                 console.log(response);
                 setData(response.data);

@@ -8,12 +8,12 @@ import axios from 'axios';
 
 
 export default function Login(props) {
-    const [email, setEamil] = useState("");
+    const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");
 
-    const emailHandler = (e) => {
+    const userIdHandler = (e) => {
         e.preventDefault();
-        setEamil(e.target.value);
+        setUserId(e.target.value);
     };
 
     const passwordHandler = (e) => {
@@ -24,8 +24,8 @@ export default function Login(props) {
     const submitHandler = (e) => {
         e.preventDefault();
 
-        if(email === "") {
-            alert("이메일을 입력해 주세요")
+        if(userId === "") {
+            alert("아이디를 입력해 주세요")
             return;
         }
         if(password === "") {
@@ -34,7 +34,7 @@ export default function Login(props) {
         }
 
         let body = {
-            email: email,
+            userId: userId,
             password: password
         };
 
@@ -43,7 +43,12 @@ export default function Login(props) {
                 .then((res) => {
                     console.log(res)
                     if (res.status === 200) {
-                        window.localStorage.setItem('token', res.headers.token)
+
+                        const { accessToken } = res.headers.token;
+                        alert(accessToken);
+                        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+                        
+                        // window.localStorage.setItem('token', res.headers.token)
                         window.localStorage.setItem('userid', res.headers.userid)
                         window.localStorage.setItem('role', res.headers.role)
                         window.location.href = "/";
@@ -73,7 +78,7 @@ export default function Login(props) {
                                         <ul variant="pills" className="login-register-tab-list">
                                             <li>
                                                 <Link eventKey="login">
-                                                    <h4>Login</h4>
+                                                    <h4>로그인</h4>
                                                 </Link>
                                             </li>
                                         </ul>
@@ -83,33 +88,33 @@ export default function Login(props) {
                                                     <div className="login-register-form">
                                                         <form onSubmit={submitHandler}>
                                                             <input
-                                                                name="email"
-                                                                placeholder="Email"
-                                                                type="email"
-                                                                value={email}
-                                                                onChange={emailHandler}
+                                                                name="userId"
+                                                                placeholder="아이디를 입력하세요"
+                                                                type="text"
+                                                                value={userId}
+                                                                onChange={userIdHandler}
 
                                                             />
                                                             <input
                                                                 type="password"
                                                                 name="password"
-                                                                placeholder="Password"
+                                                                placeholder="비밀번호를 입력하세요"
                                                                 value={password}
                                                                 onChange={passwordHandler}
                                                             />
                                                             <div className="button-box">
                                                                 <div className="login-toggle-btn">
                                                                     <Link to={process.env.PUBLIC_URL + "/find/pw"}>
-                                                                        Forgot Password?
+                                                                        비밀번호 찾기
                                                                     </Link>
                                                                 </div>
                                                                 <div className="login-toggle-btn">
                                                                     <Link to={process.env.PUBLIC_URL + "/register"} >
-                                                                        Register
+                                                                        회원가입
                                                                     </Link>
                                                                 </div>
                                                                 <button type="submit">
-                                                                    <span>Login</span>
+                                                                    <span>로그인</span>
                                                                 </button>                                                
                                                             </div>
                                                         </form>

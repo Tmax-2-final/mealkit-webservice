@@ -83,9 +83,22 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(responseUsersList);
     }
 
+    @ApiOperation(value = "아이디 중복검사", notes="아이디 중복검사")
+    @GetMapping("/users/id/{userId}")
+    public ResponseEntity<Map<String, Integer>> getUserIdForCreateUser(@PathVariable("userId") String userId) {
+        boolean userIdCheck = userService.getUserIdForCreateUser(userId);
+        Map<String, Integer> result = new HashMap<>();
+        // 중복되는 아이디가 없다면
+        if(userIdCheck == false) {
+            result.put("result", 2);
+        } else {
+            result.put("result", 1);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
 
     /* 사용자 상세 보기 (with 주문 목록) */
-    @ApiOperation(value = "사용자별 주문 조회", notes="사용자의 주문목록 상세 조회")
+    @ApiOperation(value = "사용자 상세 조회", notes="사용자 상세 조회")
     @GetMapping("/users/{userId}")
     public ResponseEntity<ResponseUser> getUser(@PathVariable("userId") String userId) {
         UserDto userDto = userService.getUserByUserId(userId);

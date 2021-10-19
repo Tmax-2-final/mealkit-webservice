@@ -11,12 +11,17 @@ import java.util.Optional;
 
 public interface UserService extends UserDetailsService {
 
+    /* 회원 가입하기 */
     UserDto createUser(UserDto userDto);
 
+    /* 아이디 중복검사 */
+    boolean getUserIdForCreateUser(String userId);
+
+    /* 유저 상세 조회 */
     UserDto getUserByUserId(String userId);
 
     /* 이메일을 가지고 유저 상세 정보 검사하기 */
-    UserDto getUserDetailsByEmail(String email);
+    UserDto getUserDetailsByUserId(String email);
 
     /* 비밀번호 찾기(이메일, 이름) */
     UserDto getUserByUserEmailAndName(String email, String username);
@@ -51,4 +56,6 @@ public interface UserService extends UserDetailsService {
     CartDto getCartByProductId(CartDto cartDto);
 
     void deleteUser(UserEntity userEntity);
+
+
 }
