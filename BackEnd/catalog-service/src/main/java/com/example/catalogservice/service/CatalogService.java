@@ -8,6 +8,7 @@ public interface CatalogService {
     Iterable<CatalogEntity> getAllCatalogs();
     Iterable<PatalogEntity> getAllPatalogs();
     CatalogEntity getCatalog(Long productId);
+    PatalogEntity getPatalog(Long patalogsId);
     Iterable<MenuEntity> getAllMenus();
     Iterable<ChildrenEntity> getAllChildren();
     Iterable<PackageEntity> getAllPackage();

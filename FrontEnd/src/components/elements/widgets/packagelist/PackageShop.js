@@ -48,13 +48,13 @@ export default function Shop({search, categoryName, setSearch, props}) {
         <div className={`col-xl-${columNumber} col-md-6 col-lg-${columNumber} col-sm-6`} key={item.patalogsId}>
             <div className="product-wrap mb-25">
                 <div className="product-img">
-                    <Link to={`/productdetail/${item.patalogsId}`}>
+                    <Link to={`/packagedetail/${item.patalogsId}`}>
                         <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
                         <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
                     </Link>
                 </div>
                 <div className="product-content text-center">
-                    <h3><Link to={`/productdetail/${item.patalogsId}`}>{item.name}</Link></h3>
+                    <h3><Link to={`/packagedetail/${item.patalogsId}`}>{item.name}</Link></h3>
                     <div className="product-rating">
                         {item.rating && item.rating > 0 ? (
                             <Rating ratingValue={item.rating} />
@@ -79,13 +79,13 @@ export default function Shop({search, categoryName, setSearch, props}) {
         <div className={`col-xl-${columNumber} col-md-6 col-lg-${columNumber} col-sm-6`} key={item.patalogsId}>
             <div className="product-wrap mb-25">
                 <div className="product-img">
-                    <Link to={`/productdetail/${item.patalogsId}`}>
+                    <Link to={`/packagedetail/${item.patalogsId}`}>
                         <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
                         <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
                     </Link>
                 </div>
                 <div className="product-content text-center">
-                    <h3><Link to={`/productdetail/${item.patalogsId}`}>{item.name}</Link></h3>
+                    <h3><Link to={`/packagedetail/${item.patalogsId}`}>{item.name}</Link></h3>
                     <div className="product-rating">
                         {item.rating && item.rating > 0 ? (
                             <Rating ratingValue={item.rating} />

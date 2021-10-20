@@ -95,16 +95,28 @@ export default function ComareTable() {
                                             {comparelist02}
                                         </tr>
                                         <tr>
-                                            <th className="title-column">Description</th>
+                                            <th className="title-column">상품 설명</th>
                                             {comparelist03}
                                         </tr>
                                         <tr>
-                                            <th className="title-column">Rating</th>
+                                            <th className="title-column">평점</th>
                                             {comparelist04}
                                             
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-12">
+                                <div className="cart-shiping-update-wrapper">
+                                    <div className="cart-shiping-update">
+                                        <a href="/productlist">상품 찾기</a>
+                                    </div>
+                                    <div className="cart-clear">
+                                        <button>패키지 비우기</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
