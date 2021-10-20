@@ -11,30 +11,28 @@ function MyPage(props) {
 
     const [data, setData] = useState([]);
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        let userId = localStorage.getItem('userid');
-        let token = localStorage.getItem('token');
+    //     let userId = localStorage.getItem('userid');
+    //     let token = localStorage.getItem('token');
 
-        if(!userId || userId === 'undefined') {
-            window.location.href="/login";
-        }
-        // if(!token || token === 'undefined') {
-        //     window.location.href="/login";
-        // }
+    //     if(!userId || userId === 'undefined') {
+    //         window.location.href="/login";
+    //     }
+    //     if(!token || token === 'undefined') {
+    //         window.location.href="/login";
+    //     }
 
-        axios.get(`/user-service/users/${userId}`, 
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // }
-        )
-            .then(response => {
-                console.log(response);
-                setData(response.data);
-            })
-    }, []);
+    //     axios.get(`/user-service/users/${userId}`, {
+    //         headers: {
+    //             Authorization: `Bearer ${token}`
+    //         }
+    //     })
+    //         .then(response => {
+    //             console.log(response);
+    //             setData(response.data);
+    //         })
+    // }, []);
 
     return (
         <Fragment>
@@ -52,7 +50,7 @@ function MyPage(props) {
                             <SideBar />
                         </div>
                         <div className="col-9">
-                            <Title title="My Account" />
+                            {/* <Title title="My Account" />
 
                             <SubTitle title="회원 정보" />
                             <hr></hr>
@@ -72,7 +70,92 @@ function MyPage(props) {
                                         <br /><br />
 
                                     </ul>
-                                </div>
+                                </div> */}
+
+                            <div className="table-content table-responsive cart-table-content">
+                                <table className="usertable">
+
+                                    <thead>
+                                        <tr>
+                                            <th><br /><strong>고객 상세 정보</strong><br /><br /></th>
+                                            <th></th>
+                                            <th></th>
+
+
+                                            <th >            <div className="button-box">
+                                                <div className="row justify-content-between">
+                                                    <div className="col-4">
+                                                        <button type="submit" >
+                                                            <span>edit</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div></th>
+                                        </tr>
+                                        <tr>
+                                            <th style={{ borderBottom: "hidden" }}><br />아이디</th>
+                                            <td align='left' style={{ borderBottom: "hidden" }}><br /> hyewon </td>
+                                            <th style={{ borderBottom: "hidden" }}></th>
+                                            <th style={{ borderBottom: "hidden" }}></th>
+
+                                        </tr>
+                                        <tr>
+                                            <th style={{ borderBottom: "hidden" }}>이메일</th>
+                                            <td align='left' style={{ borderBottom: "hidden" }}> hyewon@test.com </td>
+                                            <th style={{ borderBottom: "hidden" }}></th>
+                                            <th style={{ borderBottom: "hidden" }}></th>
+
+                                        </tr>
+                                        <tr>
+                                            <th style={{ borderBottom: "hidden" }}>생년월일</th>
+                                            <td align='left' style={{ borderBottom: "hidden" }}> 94.11.23 </td>
+                                            <th style={{ borderBottom: "hidden" }}></th>
+                                            <th style={{ borderBottom: "hidden" }}></th>
+
+                                        </tr>
+                                        <tr>
+                                            <th style={{ borderBottom: "hidden" }}>연락처</th>
+                                            <td align='left' style={{ borderBottom: "hidden" }}> 010-0000-0000 </td>
+                                            <th style={{ borderBottom: "hidden" }}></th>
+                                            <th style={{ borderBottom: "hidden" }}></th>
+
+                                        </tr>
+                                        <tr>
+                                            <th style={{ borderBottom: "hidden" }}>주소</th>
+                                            <td align='left' style={{ borderBottom: "hidden" }}>경기도 성남시 분당구 황새울로258번길 29 티맥스소프트</td>
+                                            <th style={{ borderBottom: "hidden" }}></th>
+                                            <th style={{ borderBottom: "hidden" }}></th>
+
+                                        </tr>
+                                        <tr>
+                                            <th style={{ borderBottom: "hidden" }}>상세 주소</th>
+                                            <td align='left' style={{ borderBottom: "hidden" }}>1층 ~ 2층</td>
+                                            <th style={{ borderBottom: "hidden" }}></th>
+                                            <th style={{ borderBottom: "hidden" }}></th>
+
+                                        </tr>
+                                        <tr>
+                                            <th>가입일<br /><br /></th>
+                                            <td align='left'>21.10.15<br /><br /></td>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+                                        {
+                                            // userDatas.map(item => (
+                                            //     <UserListView
+                                            //         key={item.userid}
+                                            //         data={item}
+                                            //         setUserDatas={setUserDatas}
+                                            //     />
+                                            // ))
+                                        }
+                                    </tbody>
+                                </table>
+                                <br /><br /><br />
                             </div>
                         </div>
                     </div>

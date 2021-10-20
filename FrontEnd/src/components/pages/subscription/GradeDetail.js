@@ -8,8 +8,14 @@ function GradeDetail(props) {
     const [loading, setLoading] = useState(false);
     const [isActive, setIsActive] = useState(false);
 
+    const [chkBasic, setChkBasic] = useState(true);
+    const [chkStandard, setChkStandard] = useState(false);
+    const [chkPremium, setChkPremium] = useState(false);
+
+    const [grade, setGrade] = useState("1");
+
     // 구독신청 버튼클릭 이벤트 핸들러
-    const gradeHandler = (e) => {
+    const gradeClickHandler = (e) => {
         // Link 태그의 기본 이벤트 중지
         e.preventDefault();
 
@@ -23,9 +29,39 @@ function GradeDetail(props) {
             props.history.push({
                 pathname: '/subscription/register',
                 state: {
+                    grade: grade,
                 }
             })
         }, 1000) 
+    }
+
+    // 멤버십 등급변경 이벤트 핸들러
+    const gradeChangeHandler = (e) => {
+        switch (e.target.id) {
+            case "basic":
+                setChkBasic(true);
+                setChkStandard(false);
+                setChkPremium(false);
+                setGrade("1");
+                break;
+            case "standard":
+                setChkBasic(false);
+                setChkStandard(true);
+                setChkPremium(false);
+                setGrade("2");
+            break;
+            case "premium":
+                setChkBasic(false);
+                setChkStandard(false);
+                setChkPremium(true);
+                setGrade("3");
+            break;
+        
+            default:
+                break;
+        }
+        
+
     }
 
     // styled-components 라이브러리를 활용해서 css가 적용된 컴포넌트 생성
@@ -77,16 +113,22 @@ function GradeDetail(props) {
                     <tr>
                         <th scope="row"></th>
                         <td>
-                            <RadioButton type="radio" id="option1" name="grade" value="basic"/>
-                            <label for="option1">베이직</label>
+                            <RadioButton type="radio" id="basic" name="grade" value="1" 
+                                        onChange={gradeChangeHandler} checked={chkBasic ? true : false}
+                            />
+                            <label for="basic">베이직</label>
                         </td>
                         <td>
-                            <RadioButton type="radio" id="option2" name="grade" value="standard"/>
-                            <label for="option2">스탠다드</label>
+                            <RadioButton type="radio" id="standard" name="grade" value="2" 
+                            onChange={gradeChangeHandler} checked={chkStandard ? true : false}
+                            />
+                            <label for="standard">스탠다드</label>
                         </td>
                         <td>
-                            <RadioButton type="radio" id="option3" name="grade" value="premium"/>
-                            <label for="option3">프리미엄</label>
+                            <RadioButton type="radio" id="premium" name="grade" value="3" 
+                            onChange={gradeChangeHandler} checked={chkPremium ? true : false}
+                            />
+                            <label for="premium">프리미엄</label>
                         </td>
                     </tr>
                     <tr>
@@ -96,13 +138,13 @@ function GradeDetail(props) {
                         <td>168,000</td>
                     </tr>
                     <tr>
-                        <th scope="row">구독상품 배송 개수</th>
+                        <th scope="row">구독상품 수</th>
                         <td>매주 3개 상품 배송 (총 12개)</td>
                         <td>매주 5개 상품 배송 (총 20개)</td>
                         <td>매주 7개 상품 배송 (총 28개)</td>
                     </tr>
                     <tr>
-                        <th scope="row">1 개 상품당 가격</th>
+                        <th scope="row">상품 가격</th>
                         <td>7,000 원 / 1 개</td>
                         <td>6,500 원 / 1 개</td>
                         <td>6,000 원 / 1 개</td>
@@ -114,7 +156,7 @@ function GradeDetail(props) {
                     <div className="product-details-content">
                             <div className="pro-details-quality">
                             <div className="pro-details-cart btn-hover mx-auto">
-                                <Link onClick={gradeHandler}
+                                <Link onClick={gradeClickHandler}
                                     className={"text-center " + (isActive ? "disabled-link" : "")} 
                                     style={{width:"8rem", height:"4rem"}}>
                                     <span className="align-middle">{
@@ -134,7 +176,6 @@ function GradeDetail(props) {
                 </div>
             </div> 
         </div>
-        
         </>
     );
 }

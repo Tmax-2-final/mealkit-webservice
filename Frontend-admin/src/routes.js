@@ -1,7 +1,7 @@
 import React from 'react'
 // import AdminUser from './views/admin/AdminUser'
 
-
+const AdminShipping = React.lazy(() => import('./views/shipping/AdminShipping'))
 const UserDetail = React.lazy(() => import('./views/user/UserDetail'))
 const AdminUser = React.lazy(() => import('./views/user/AdminUser'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -56,7 +56,7 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/userdetail', name: '회원 상세', component: UserDetail },
   { path: '/adminuser', name: '회원 관리', component: AdminUser },
-  
+  { path: '/adminshipping', name: '배송 관리', component: AdminShipping },
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },
   { path: '/theme/typography', name: 'Typography', component: Typography },
