@@ -31,8 +31,8 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://tmax-2-database-order-subscription.cnohqzdklodx.ap-northeast-2.rds.amazonaws.com:3306/mydb
-    username: root
-    password: test1357
+    username: ENC(mMc6npZ1bCdXn4TmdgDr/g==)
+    password: ENC(G7HL3bNXiWVN8DARTbL4juPodvTotQUN)
 #    driver-class-name: org.h2.Driver
 #    url: jdbc:h2:mem:testdb
 #    username: sa
@@ -67,3 +67,7 @@ logging:
             sql:
               BasicBinder: TRACE
 
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
