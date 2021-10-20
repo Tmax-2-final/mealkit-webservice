@@ -134,6 +134,19 @@ public class CatalogController {
         }
     }
 
+    @ApiOperation(value = "상품 조회", notes = "해당하는 상품번호의 상품을 조회한다")
+    @GetMapping("/catalogs/{patalogsId}")
+    public ResponseEntity<PatalogEntity> getPatalog(@PathVariable Long patalogsId) {
+        log.info("before retrieve catalogs data");
+        PatalogEntity patalogEntity = catalogService.getPatalog(patalogsId);
+        log.info("after retrieve catalogs data");
+        if (patalogEntity != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(patalogEntity);
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @ApiOperation(value = "상품 수정", notes = "해당하는 상품번호의 상품을 수정한다")
     @PutMapping("/catalogs/{productId}")
     public ResponseEntity<String> updateCatalog(@RequestBody CatalogDto catalog,  @PathVariable Long productId ){
