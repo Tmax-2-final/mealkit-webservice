@@ -71,17 +71,36 @@ export default function Register(props) {
             }
             // 통과 시 아이디 중복 검사
             // 로직 작성
-
-            // 만약에 같은 아이디가 있을 때
-            if(id !== "backdoor"){
-                setValiId(1);
-            }
-            // 같은 아이디가 없을 떄
-            else {
-                setValiId(2);
-            }
-
-            
+            let response = 
+                axios.get("/user-service/users/id/" + id)
+                    .then((res) => {
+                        console.log(res)
+                        if(res.status === 200) {
+                            if(res.data.result === 2) {
+                                alert("사용 가능한 아이디입니다.")
+                                setValiId(2);
+                            }
+                            else {
+                                alert("이미 사용중인 아이디입니다. 다른 아이디를 사용해주세요.")
+                                setValiId(1);
+                            }
+                        }
+                        else {
+                            alert("서버 오류")
+                        }
+                    })
+                    .catch((err) => {
+                        alert("서버 오류")
+                    })
+            // 백도어 코드
+            // // 만약에 같은 아이디가 있을 때
+            // if(id === "backdoor"){
+            //     setValiId(1);
+            // }
+            // // 같은 아이디가 없을 떄
+            // else {
+            //     setValiId(2);
+            // }
         }
 
         // 본인 확인용 이메일 인증코드 발송
@@ -207,7 +226,7 @@ export default function Register(props) {
                 return;
             }
             let body = {
-                id: id,
+                userId: id,
                 pwd: pwd,
                 name: name,
                 email: email,
@@ -352,7 +371,7 @@ export default function Register(props) {
                                                             <input
                                                                 name="birth"
                                                                 placeholder="YYYYMMDD (예: 19991010)"
-                                                                type="text"
+                                                                type="date"
                                                                 value={birth}
                                                                 onChange={birthHandler}
                                                             />

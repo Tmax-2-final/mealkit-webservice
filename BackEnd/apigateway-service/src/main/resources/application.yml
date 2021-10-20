@@ -57,6 +57,15 @@ spring:
           filters:
             # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        # user-아이디 중복검사
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users/id/**
+            - Method=GET
+          filters:
+            # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         # user-비밀번호 찾기 /find/pw
         - id: user-service
           uri: lb://USER-SERVICE
