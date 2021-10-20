@@ -1,6 +1,7 @@
 package com.example.catalogservice.service;
 
 import com.example.catalogservice.dto.CatalogDto;
+import com.example.catalogservice.dto.PatalogDto;
 import com.example.catalogservice.jpa.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -21,20 +22,25 @@ public class CatalogServiceImpl implements CatalogService{
     MenuRepository menuRepository;
     ChildrenRepository childrenRepository;
     PackageRepository packageRepository;
+    PatalogRepository patalogRepository;
 
 
     @Autowired
-    public CatalogServiceImpl(CatalogRepository catalogRepository, MenuRepository menuRepository, ChildrenRepository childrenRepository, PackageRepository packageRepository) {
+    public CatalogServiceImpl(CatalogRepository catalogRepository, MenuRepository menuRepository, ChildrenRepository childrenRepository, PackageRepository packageRepository, PatalogRepository patalogRepository) {
         this.catalogRepository = catalogRepository;
         this.menuRepository = menuRepository;
         this.childrenRepository = childrenRepository;
         this.packageRepository = packageRepository;
+        this.patalogRepository = patalogRepository;
     }
 
     @Override
     public Iterable<CatalogEntity> getAllCatalogs() {
         return catalogRepository.findAll();
     }
+
+    @Override
+    public Iterable<PatalogEntity> getAllPatalogs() { return patalogRepository.findAll(); }
 
     @Override
     public CatalogEntity getCatalog(Long productId) {
@@ -66,6 +72,22 @@ public class CatalogServiceImpl implements CatalogService{
         CatalogDto catalogDto = mapper.map(catalogEntity, CatalogDto.class);
 
         return catalogDto;
+    }
+
+    @Override
+    public PatalogDto createPatalog(PatalogDto patalog) {
+        long i = 0;
+        patalog.setPatalogsId(i++);
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        PatalogEntity patalogEntity = mapper.map(patalog, PatalogEntity.class);
+
+        patalogRepository.save(patalogEntity);
+
+        PatalogDto patalogDto = mapper.map(patalogEntity, PatalogDto.class);
+
+        return patalogDto;
     }
 
     @Override

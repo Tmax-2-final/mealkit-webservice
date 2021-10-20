@@ -1,13 +1,13 @@
 package com.example.catalogservice.controller;
 
 import com.example.catalogservice.dto.CatalogDto;
-import com.example.catalogservice.jpa.CatalogEntity;
-import com.example.catalogservice.jpa.ChildrenEntity;
-import com.example.catalogservice.jpa.MenuEntity;
-import com.example.catalogservice.jpa.PackageEntity;
+import com.example.catalogservice.dto.PatalogDto;
+import com.example.catalogservice.jpa.*;
 import com.example.catalogservice.service.CatalogService;
 import com.example.catalogservice.vo.RequestCatalog;
+import com.example.catalogservice.vo.RequestPatalog;
 import com.example.catalogservice.vo.ResponseCatalog;
+import com.example.catalogservice.vo.ResponsePatalog;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -62,6 +62,15 @@ public class CatalogController {
         return ResponseEntity.status(HttpStatus.OK).body(catalogList);
     }
 
+    @ApiOperation(value = "전체상품 조회", notes = "전체 상품을 조회한다")
+    @GetMapping("/patalogs")
+    public ResponseEntity<Iterable<PatalogEntity>> getPatalogs() {
+        log.info("berfore patalogs");
+        Iterable<PatalogEntity> patalogList = catalogService.getAllPatalogs();
+        log.info("after patalogs");
+        return ResponseEntity.status(HttpStatus.OK).body(patalogList);
+    }
+
     @ApiOperation(value = "메뉴 자식창 조회", notes = "각 메뉴에 대한 자식창을 조회한다")
     @GetMapping("/children")
     public ResponseEntity<Iterable<ChildrenEntity>> getChildren() {
@@ -91,6 +100,18 @@ public class CatalogController {
         ResponseCatalog responseCatalog = mapper.map(catalogDto, ResponseCatalog.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseCatalog);
     }
+
+//    @ApiOperation(value = "패키지 등록", notes = "패키지를 등록한다")
+//    @PostMapping( "/patalogs")
+//    public ResponseEntity<ResponsePatalog> createPatalogs(@RequestBody @Valid RequestPatalog patalog) throws IOException {
+//
+//        ModelMapper mapper = new ModelMapper();
+//        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+//        PatalogDto patalogDto = mapper.map(patalog, PatalogDto.class);
+//        catalogService.createPatalog(patalogDto);
+//        ResponsePatalog responsePatalog = mapper.map(patalogDto, ResponsePatalog.class);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(responsePatalog);
+//    }
 
     @ApiOperation(value = "상품 삭제", notes = "해당하는 상품번호의 상품을 삭제한다")
     @DeleteMapping("/catalogs/{productId}")
