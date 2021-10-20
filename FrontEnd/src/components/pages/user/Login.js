@@ -45,10 +45,9 @@ export default function Login(props) {
                     if (res.status === 200) {
 
                         const { accessToken } = res.headers.token;
-                        alert(accessToken);
                         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
                         
-                        // window.localStorage.setItem('token', res.headers.token)
+                        window.localStorage.setItem('token', res.headers.token)
                         window.localStorage.setItem('userid', res.headers.userid)
                         window.localStorage.setItem('role', res.headers.role)
                         window.location.href = "/";

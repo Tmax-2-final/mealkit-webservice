@@ -14,7 +14,7 @@ function MyPage(props) {
     useEffect(() => {
 
         let userId = localStorage.getItem('userid');
-        // let token = localStorage.getItem('token');
+        let token = localStorage.getItem('token');
 
         if(!userId || userId === 'undefined') {
             window.location.href="/login";
