@@ -1,9 +1,9 @@
 server:
-  port: 50003
+  port: 50004
 
 spring:
   application:
-    name: order-service
+    name: subscription-service
   rabbitmq:
     host: 127.0.0.1
     port: 5672
@@ -16,11 +16,11 @@ spring:
     sampler:
       probability: 1.0
   #  h2:
-#    console:
-#      enabled: true
-#      settings:
-#        web-allow-others: true
-#      path: /h2-console
+  #    console:
+  #      enabled: true
+  #      settings:
+  #        web-allow-others: true
+  #      path: /h2-console
   jpa:
     hibernate:
       ddl-auto: update
