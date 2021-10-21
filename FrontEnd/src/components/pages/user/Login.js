@@ -62,7 +62,6 @@ export default function Login(props) {
 
     };
 
-
     return (
         <Fragment>
 
@@ -114,7 +113,7 @@ export default function Login(props) {
                                                                 </div>
                                                                 <button type="submit">
                                                                     <span>로그인</span>
-                                                                </button>                                                
+                                                                </button> 
                                                             </div>
                                                         </form>
                                                     </div>
