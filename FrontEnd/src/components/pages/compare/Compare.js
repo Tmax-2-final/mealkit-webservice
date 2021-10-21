@@ -8,7 +8,7 @@ export default function Compare() {
     return(
         <Fragment>
             <Header />
-            <Bread productName = "Compare"/>
+            <Bread productName = "패키지 직접 제작"/>
             <CompareTable />
             <Footer />
         </Fragment>

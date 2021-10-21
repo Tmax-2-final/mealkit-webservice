@@ -69,18 +69,18 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        UserEntity userEntity = userRepository.findByUserId(userId);
 
         if(userEntity == null)
-            throw new UsernameNotFoundException(email + ": not found");
+            throw new UsernameNotFoundException(userId + ": not found");
 
         /* 권한 */
         Collection<GrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority(userEntity.getRole()));
 
         // User in an UserDetails
-        User user = new User(userEntity.getEmail(), userEntity.getEncryptedPwd(),
+        User user = new User(userEntity.getUserId(), userEntity.getEncryptedPwd(),
                 true, true, true, true, roles);
 
         return user;
@@ -88,9 +88,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        userDto.setUserId(UUID.randomUUID().toString());
         /* 권한 부여 */
-        if(userDto.getName().equals("admin")){
+        if(userDto.getUserId().contains("admin")){
             userDto.setRole("ROLE_ADMIN");
         } else {
             userDto.setRole("ROLE_USER");
@@ -108,6 +107,16 @@ public class UserServiceImpl implements UserService{
         UserDto userVo = mapper.map(userEntity, UserDto.class);
 
         return userVo;
+    }
+
+    @Override
+    public boolean getUserIdForCreateUser(String userId) {
+        boolean userExists = userRepository.existsById(userId);
+        // 존재한다면
+        if(userExists == true)
+            return true;
+        else
+            return false;
     }
 
     @Override
@@ -151,10 +160,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDto getUserDetailsByEmail(String email) {
-        UserEntity userEntity = userRepository.findByEmail(email);
+    public UserDto getUserDetailsByUserId(String userId) {
+        UserEntity userEntity = userRepository.findByUserId(userId);
         if(userEntity == null)
-            throw new UsernameNotFoundException(email);
+            throw new UsernameNotFoundException(userId);
 
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭

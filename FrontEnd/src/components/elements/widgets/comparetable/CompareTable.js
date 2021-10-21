@@ -47,7 +47,7 @@ export default function ComareTable() {
                 <Link className="image" to={`/productdetail/${item.id}`}>{item.name}</Link>
             </div>
             <div className="compare-btn">
-                <Link className="image" to={`/productdetail/${item.id}`}>Select Option</Link>
+                <Link className="image" to={`/productdetail/${item.id}`}>패키지 상세 페이지</Link>
             </div>
         </td>
     )).slice(0,3);
@@ -87,24 +87,36 @@ export default function ComareTable() {
                                 <table className="table table-bordered mb-0">
                                     <tbody>
                                         <tr>
-                                            <th className="title-column">Product Info</th>
+                                            <th className="title-column">패키지 정보</th>
                                             {comparelist01}
                                         </tr>
                                         <tr>
-                                            <th className="title-column">Price</th>
+                                            <th className="title-column">가격</th>
                                             {comparelist02}
                                         </tr>
                                         <tr>
-                                            <th className="title-column">Description</th>
+                                            <th className="title-column">상품 설명</th>
                                             {comparelist03}
                                         </tr>
                                         <tr>
-                                            <th className="title-column">Rating</th>
+                                            <th className="title-column">평점</th>
                                             {comparelist04}
                                             
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-12">
+                                <div className="cart-shiping-update-wrapper">
+                                    <div className="cart-shiping-update">
+                                        <a href="/productlist">상품 찾기</a>
+                                    </div>
+                                    <div className="cart-clear">
+                                        <button>패키지 비우기</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

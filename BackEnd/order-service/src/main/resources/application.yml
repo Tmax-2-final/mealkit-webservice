@@ -1,5 +1,5 @@
 server:
-  port: 50004
+  port: 50003
 
 spring:
   application:
@@ -30,7 +30,7 @@ spring:
         format_sql: true
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://aws-mariadb-skuser23.cyjfstseikqi.us-east-1.rds.amazonaws.com:3306/mydb
+    url: jdbc:mariadb://tmax-2-database-order-subscription.cnohqzdklodx.ap-northeast-2.rds.amazonaws.com:3306/mydb
     username: root
     password: test1357
 #    driver-class-name: org.h2.Driver

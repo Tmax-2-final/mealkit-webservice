@@ -6,7 +6,8 @@ import Compare from './components/pages/compare/Compare';
 import Wishlist from './components/pages/wishlist/Wishlist';
 import ProductDetail from './components/pages/ProductDetail/ProductDetail';
 import ProductList from './components/pages/productlist/ProductList';
-import PackageList from './components/pages/productlist/PackageList';
+import PackageDetail from './components/pages/packagedetail/PackageDetail';
+import PackageList from './components/pages/packagelist/PackageList';
 import Features from './components/pages/Features/Features';
 import MyAccount from './components/pages/myaccount/MyAccount';
 import "./assets/css/mystyle.css";
@@ -40,6 +41,7 @@ import ReviewList from './components/pages/review/ReviewList';
 
 
 function App() {
+  
 
   return (
     <BrowserRouter>
@@ -57,6 +59,7 @@ function App() {
           <Redirect exact from="/productlist/:selCategoryName/reload" to="/productlist/:selCategoryName" />
           <Route exact path="/productlist"><ProductList /></Route>
           <Route exact path="/packagelist"><PackageList /></Route>
+          <Route exact path="/packagedetail/:id" component={PackageDetail}></Route>
           <Route exact path="/myaccount"><MyAccount /></Route>
           <Route exact path="/login"><Login /></Route>
           <Route exact path="/register"><Register /></Route>

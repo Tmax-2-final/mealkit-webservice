@@ -42,7 +42,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             RequestLogin creds = new ObjectMapper().readValue(request.getInputStream(), RequestLogin.class);
 
             return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getPassword(), new ArrayList<>())
+                    new UsernamePasswordAuthenticationToken(creds.getUserId(), creds.getPassword(), new ArrayList<>())
             );
 
         } catch (IOException e){
@@ -57,7 +57,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String userName = ((User)authResult.getPrincipal()).getUsername();
         System.out.println(userName);
         // 토큰 생성을 위해 userDto로 가져온다.
-        UserDto userDetails = userService.getUserDetailsByEmail(userName);
+        UserDto userDetails = userService.getUserDetailsByUserId(userName);
         // 토근 생성
         String token = Jwts.builder()
                 .setSubject(userDetails.getUserId()) // 어떤 정보를 가지고 토큰을 만들 것인가 - userId

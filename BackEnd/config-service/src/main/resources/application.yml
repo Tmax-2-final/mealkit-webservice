@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: config-service
+  profiles:
+    active: default
   # api , config server 통신
 #  rabbitmq:
 #    host: 127.0.0.1
@@ -14,8 +16,11 @@ spring:
     config:
       server:
         git:
-          uri: file:///Users/namgonkim/Documents/Work/git-local-repo
-#          uri: https://github.com/namgonkim/msa-ecommerce-config-tmax
+          uri: https://github.com/Tmax-2-final/mealkit-config
+          username: namgonkim
+          password: <secret>
+          default-label: main
+#          uri: file:///Users/namgonkim/Documents/GitHub/mealkit-config
 #          username:
 #          password:
 

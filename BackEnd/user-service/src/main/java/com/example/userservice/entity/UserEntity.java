@@ -30,8 +30,14 @@ public class UserEntity {
     @Column(nullable = false, length = 50, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 20)
     private String name;
+
+    @Column
+    private Integer gender;
+
+    @Column
+    private Date birth;
 
     @Column(length = 20)
     private String role;

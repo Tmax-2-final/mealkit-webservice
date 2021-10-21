@@ -47,8 +47,8 @@ export default function Shop({search, categoryName, setSearch, props}) {
             <div className="product-wrap mb-25">
                 <div className="product-img">
                     <Link to={`/productdetail/${item.productId}`}>
-                        <img className="default-img" src={`https://bookstore-image.s3.us-east-2.amazonaws.com/${item.image}`} alt="" />
-                        <img className="hover-img" src={`https://bookstore-image.s3.us-east-2.amazonaws.com/${item.image}`} alt="" />
+                        <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
+                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
                     </Link>
                 </div>
                 <div className="product-content text-center">
@@ -77,8 +77,8 @@ export default function Shop({search, categoryName, setSearch, props}) {
             <div className="product-wrap mb-25">
                 <div className="product-img">
                     <Link to={`/productdetail/${item.productId}`}>
-                        <img className="default-img" src={`https://bookstore-image.s3.us-east-2.amazonaws.com/${item.image}`} alt="" />
-                        <img className="hover-img" src={`https://bookstore-image.s3.us-east-2.amazonaws.com/${item.image}`} alt="" />
+                        <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
+                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
                     </Link>
                 </div>
                 <div className="product-content text-center">

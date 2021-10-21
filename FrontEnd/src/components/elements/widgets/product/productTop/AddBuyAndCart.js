@@ -64,7 +64,7 @@ export default function AddBuyAndCart({props, productData}) {
         }
         else {
             let body = {
-                productId: productData.productId,
+                patalogId: productData.patalogId,
                 name: productData.name,
                 image: productData.image,
                 unitPrice: productData.unitPrice,
@@ -110,22 +110,22 @@ export default function AddBuyAndCart({props, productData}) {
                     <button className="inc qtybutton" onClick={()=>handleCountAdd()}>+</button>
                 </div>
                 <div className="pro-details-cart btn-hover" style={{display:isDisply}}>
-                    <button onClick={()=> handlePutCartList()}>장바구니 담기</button>
+                    <button onClick={()=> handlePutCartList()}>마이패키지에 담기</button>
                 </div>
                 
-                <div className="pro-details-cart btn-hover ml-30"> 
-                    <Link to={{
-                                pathname: "/payment",
-                                state: {
-                                    data:[productData],
-                                    totalPriceData:count*productData.unitPrice
-                                },
-                    }} 
-                    onClick={addQty}
-                    style={{backgroundColor:buyBtnColor}}>
-                        {productData.stock !== 0 ? "구매하기" : "품절"}
-                    </Link>
-                </div>                
+                {/*<div className="pro-details-cart btn-hover ml-30"> */}
+                {/*    <Link to={{*/}
+                {/*                pathname: "/payment",*/}
+                {/*                state: {*/}
+                {/*                    data:[productData],*/}
+                {/*                    totalPriceData:count*productData.unitPrice*/}
+                {/*                },*/}
+                {/*    }} */}
+                {/*    onClick={addQty}*/}
+                {/*    style={{backgroundColor:buyBtnColor}}>*/}
+                {/*        {productData.stock !== 0 ? "구매하기" : "품절"}*/}
+                {/*    </Link>*/}
+                {/*</div>                */}
             </div>
             <div class="pro-details-meta">
                 <span>재고 :</span>
