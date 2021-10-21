@@ -306,4 +306,9 @@ public class UserServiceImpl implements UserService{
         userRepository.delete(userEntity);
     }
 
+    @Override
+    public String getUserEmailByUserId(String userId) {
+        return userRepository.findEmailByUserId(userId);
+    }
+
 }

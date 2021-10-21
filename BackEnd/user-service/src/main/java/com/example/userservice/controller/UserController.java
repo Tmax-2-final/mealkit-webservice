@@ -241,8 +241,8 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("고객님의 정보를 수정했습니다.");
     }
 
-    /* 날짜별 유저 검색 */
-    @ApiOperation(value = "날짜별 유저 검색", notes="날짜별 유저 검색")
+    /* 특정 기간과 검색어가 포함된 모든 유저 검색 */
+    @ApiOperation(value = "특정 기간동안 검색어가 포함된 모든 유저 검색", notes="날짜별 유저 검색")
     @PostMapping("/users/date")
     public ResponseEntity<List<ResponseUser>> getUsersByDate(@RequestBody RequestDate requestDate) {
         Iterable<UserEntity> usersList = userService.getUserAllBetween(requestDate);
@@ -257,5 +257,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(responseUsersList);
     }
 
-
+    /* 유저 아이디로 유저 이메일 찾기 */
+    @ApiOperation(value="유저 이메일 검색", notes="특정 유저 아이디로 유저 이메일 찾기")
+    @GetMapping("/users/email/{userId}")
+    public String getUserEmailByUserId(@PathVariable("userId") String userId) {
+        String result = userService.getUserEmailByUserId(userId);
+        return result;
+    }
 }

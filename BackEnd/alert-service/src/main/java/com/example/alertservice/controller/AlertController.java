@@ -1,5 +1,6 @@
 package com.example.alertservice.controller;
 
+import com.example.alertservice.client.UserServiceClient;
 import com.example.alertservice.entity.MailEntity;
 import com.example.alertservice.service.AlertService;
 import com.example.alertservice.service.KakaoService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,14 +29,18 @@ public class AlertController {
     private final UtilService utilService;
     private final AlertService alertService;
     private final KakaoService kakaoService;
+    private final UserServiceClient userServiceClient;
     private final Environment env;
 
     @Autowired
-    public AlertController(MailService mailService, UtilService utilService, AlertService alertService, KakaoService kakaoService, Environment env) {
+    public AlertController(MailService mailService, UtilService utilService,
+                           AlertService alertService, KakaoService kakaoService,
+                           UserServiceClient userServiceClient, Environment env) {
         this.mailService = mailService;
         this.utilService = utilService;
         this.alertService = alertService;
         this.kakaoService = kakaoService;
+        this.userServiceClient = userServiceClient;
         this.env = env;
     }
 
@@ -108,10 +114,45 @@ public class AlertController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @ApiOperation(value="일반 상품 결제 알람", notes="일반 상품 결제 카카오톡 [나에게 보내기]으로 알림")
-    @RequestMapping("/alert/orders/{userId}")
-    public RedirectView kakaoOAuthAndCallback(@PathVariable("userId") String userId) {
-        return kakaoService.goKakaoOAuth();
+    @ApiOperation(value="일반 상품 결제 완료 알람", notes="일반 상품 결제 완료 이메일 및 카카오 알림")
+    @RequestMapping("/alert/orders/{userId}/{orderId}")
+    public Map<String, Integer> sendOrderComplete(HttpSession httpSession, @PathVariable("userId") String userId, @PathVariable("orderId") String orderId) {
+        Map<String, Integer> result = new HashMap<>();
+        // 카카오 알림 발송 코드
+        if(httpSession.getAttribute("token") != null || httpSession.getAttribute("token") != "") {
+            // kakaoService.goKakaoOAuth();
+            // kakaoService.message();
+        }
+        // 이메일 발송 코드
+        log.info("일반 상품 결제 완료 이메일 알림 발송 시작");
+        // 유저 이메일 확보
+        String email = userServiceClient.getUserEmailByUserId(userId);
+        try {
+            // 메일 메시지 생성
+            StringBuilder msg = new StringBuilder();
+            msg.append(userId);
+            msg.append("회원님이 선택하신 상품의 결제가 완료되었습니다.\n\n");
+            msg.append("주문번호: ");
+            msg.append(orderId);
+            msg.append("\n\n저희 서비스를 이용해주셔서 감사합니다.");
+            msg.append("\n\n<a href=\"http://localhost:3000/mypage/myOrder\">확인하기</a>");
+
+            // 메일 폼 세팅 및 메일 전송
+            MailEntity mailEntity = new MailEntity();
+            mailEntity.setAddress(email);
+            mailEntity.setTitle("[매일(mail)키트] 회원님의 상품 결제가 완료되었습니다.");
+            mailEntity.setMessage(msg.toString());
+            mailService.sendMail(mailEntity);
+            log.info("일반 상품 결제 완료 이메일 알림 발송 완료");
+
+            result.put("result_code", 0);
+        }
+        catch(Exception e) {
+            log.error("이메일 발송 실패");
+            result.put("result_code", 550);
+        }
+        // 데이터베이스에 저장
+        return result;
     }
 
 }
