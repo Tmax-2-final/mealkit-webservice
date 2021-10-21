@@ -1,22 +1,22 @@
 package com.example.alertservice.controller;
 
-import com.example.alertservice.entity.MailAuthEntity;
 import com.example.alertservice.entity.MailEntity;
 import com.example.alertservice.service.AlertService;
+import com.example.alertservice.service.KakaoService;
 import com.example.alertservice.service.MailService;
 import com.example.alertservice.util.UtilService;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -26,15 +26,31 @@ public class AlertController {
     private final MailService mailService;
     private final UtilService utilService;
     private final AlertService alertService;
+    private final KakaoService kakaoService;
+    private final Environment env;
 
     @Autowired
-    public AlertController(MailService mailService, UtilService utilService, AlertService alertService) {
+    public AlertController(MailService mailService, UtilService utilService, AlertService alertService, KakaoService kakaoService, Environment env) {
         this.mailService = mailService;
         this.utilService = utilService;
         this.alertService = alertService;
+        this.kakaoService = kakaoService;
+        this.env = env;
     }
 
-    @GetMapping("/send")
+    @ApiOperation(value = "상태", notes="상태 조회")
+    @GetMapping("/health_check")
+    public String status(HttpServletRequest request) {
+
+        return String.format("It`s Working in User Service, " +
+                        "Port(local.server.port)=%s,  Port(server.port)=%s, " +
+                        "token.secret=%s, token.expiration_time=%s, gateway.ip=%s",
+                env.getProperty("local.server.port"), env.getProperty("server.port"),
+                env.getProperty("token.secret"), env.getProperty("token.expiration_time"), env.getProperty("gateway.ip"));
+    }
+
+    @ApiOperation(value = "이메일 테스트 발송", notes="이메일 테스트 발송")
+    @GetMapping("/send-test")
     public MailEntity sendTestMail(String email) {
         MailEntity mailEntity = new MailEntity();
 
@@ -47,7 +63,8 @@ public class AlertController {
         return mailEntity;
     }
 
-    @GetMapping("/users/email")
+    @ApiOperation(value = "이메일 인증", notes="회원가입 본인 인증용 이메일 발송")
+    @GetMapping("/alert/email")
     public ResponseEntity<String> createUserCheckEmail(String email) {
         StringBuilder message = new StringBuilder();
 
@@ -72,7 +89,8 @@ public class AlertController {
         return ResponseEntity.status(HttpStatus.OK).body(message.toString());
     }
 
-    @GetMapping("/users/code")
+    @ApiOperation(value = "인증코드 조회", notes="회원가입 시 이메일 별 인증코드 검사")
+    @GetMapping("/alert/code")
     public ResponseEntity<Map<String, Integer>> getUsersEmailAndAuthCode(@RequestParam("email") String email, @RequestParam("code") String code) {
         Map<String,Integer> result = new HashMap<>();
 
@@ -89,4 +107,11 @@ public class AlertController {
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
+
+    @ApiOperation(value="일반 상품 결제 알람", notes="일반 상품 결제 카카오톡 [나에게 보내기]으로 알림")
+    @RequestMapping("/alert/orders/{userId}")
+    public RedirectView kakaoOAuthAndCallback(@PathVariable("userId") String userId) {
+        return kakaoService.goKakaoOAuth();
+    }
+
 }
