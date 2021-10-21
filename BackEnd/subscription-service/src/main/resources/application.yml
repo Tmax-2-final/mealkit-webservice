@@ -10,7 +10,7 @@ spring:
     username: guest
     password: guest
   zipkin:
-    base-url: http://13.208.132.90:9411
+    base-url: http://localhost:9411
     enabled: true
   sleuth:
     sampler:
@@ -29,10 +29,10 @@ spring:
       hibernate:
         format_sql: true
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://tmax-2-database-order-subscription.cnohqzdklodx.ap-northeast-2.rds.amazonaws.com:3306/mydb
-    username: ENC(mMc6npZ1bCdXn4TmdgDr/g==)
-    password: ENC(ZFtguXwzeOdjBWv635iOMtCm/OzMoMTK)
+    driver-class-name:
+    url:
+    username:
+    password:
 #    driver-class-name: org.h2.Driver
 #    url: jdbc:h2:mem:testdb
 #    username: sa
