@@ -6,6 +6,7 @@ import com.example.alertservice.service.AlertService;
 import com.example.alertservice.service.KakaoService;
 import com.example.alertservice.service.MailService;
 import com.example.alertservice.util.UtilService;
+import com.example.alertservice.vo.RequestAlert;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,18 +30,16 @@ public class AlertController {
     private final UtilService utilService;
     private final AlertService alertService;
     private final KakaoService kakaoService;
-    private final UserServiceClient userServiceClient;
     private final Environment env;
 
     @Autowired
     public AlertController(MailService mailService, UtilService utilService,
                            AlertService alertService, KakaoService kakaoService,
-                           UserServiceClient userServiceClient, Environment env) {
+                           Environment env) {
         this.mailService = mailService;
         this.utilService = utilService;
         this.alertService = alertService;
         this.kakaoService = kakaoService;
-        this.userServiceClient = userServiceClient;
         this.env = env;
     }
 
@@ -59,13 +58,16 @@ public class AlertController {
     @GetMapping("/send-test")
     public MailEntity sendTestMail(String email) {
         MailEntity mailEntity = new MailEntity();
+        try {
+            mailEntity.setAddress(email);
+            mailEntity.setTitle("테스트 발송 이메일입니다.");
+            mailEntity.setMessage("안녕하세요. 반가워요!");
 
-        mailEntity.setAddress(email);
-        mailEntity.setTitle("테스트 발송 이메일입니다.");
-        mailEntity.setMessage("안녕하세요. 반가워요!");
-
-        mailService.sendMail(mailEntity);
-
+            mailService.sendMail(mailEntity);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         return mailEntity;
     }
 
@@ -79,18 +81,28 @@ public class AlertController {
         code.append(utilService.createKey());
 
         log.info("회원 가입 인증 이메일 전송 시작");
-        // 메일 폼 세팅 및 메일 전송
-        MailEntity mailEntity = new MailEntity();
-        mailEntity.setAddress(email);
-        mailEntity.setTitle("[매일(mail)키트] 회원가입을 위한 인증 코드 메일입니다.");
-        mailEntity.setMessage(code.toString());
-        mailService.sendMail(mailEntity);
+        try{
+            // 메일 폼 세팅 및 메일 전송
+            // MailEntity mailEntity = mailService.createMailForm(101);
+            MailEntity mailEntity = new MailEntity();
+            mailEntity.setAddress(email);
+            mailEntity.setTitle("[매일(mail)키트] 회원가입을 위한 인증 코드 메일입니다.");
+            mailEntity.setMessage(code.toString());
+            mailService.sendMail(mailEntity);
 
-        message.append("회원가입 인증 코드 이메일을 성공적으로 발송했습니다. 잠시 후 확인해주세요.");
+            message.append("회원가입 인증 코드 이메일을 성공적으로 발송했습니다. 잠시 후 확인해주세요.");
 
-        log.info("회원 가입 인증 이메일 전송 완료");
-        // 유저 이메일 별 인증 코드 DB에 저장
-        alertService.createMailAuth(email, code.toString());
+            log.info("회원 가입 인증 이메일 전송 완료");
+            // 유저 이메일 별 인증 코드 DB에 저장
+            alertService.createMailAuth(email, code.toString());
+        }
+        catch (Exception e){
+            log.error("회원 가입 인증 이메일 전송 실패");
+            e.printStackTrace();
+            message.append("이메일 전송 실패\n\n 사유:\n");
+            message.append(e.getMessage());
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message.toString());
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(message.toString());
     }
@@ -114,9 +126,9 @@ public class AlertController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @ApiOperation(value="일반 상품 결제 완료 알람", notes="일반 상품 결제 완료 이메일 및 카카오 알림")
-    @RequestMapping("/alert/orders/{userId}/{orderId}")
-    public Map<String, Integer> sendOrderComplete(HttpSession httpSession, @PathVariable("userId") String userId, @PathVariable("orderId") String orderId) {
+    @ApiOperation(value="알림 발송", notes="알림 코드에 따른 알림 발송(메일&카카오)")
+    @PostMapping("/alerts")
+    public Map<String, Integer> sendOrderComplete(HttpSession httpSession, @RequestBody RequestAlert requestAlert) {
         Map<String, Integer> result = new HashMap<>();
         // 카카오 알림 발송 코드
         if(httpSession.getAttribute("token") != null || httpSession.getAttribute("token") != "") {
@@ -124,34 +136,23 @@ public class AlertController {
             // kakaoService.message();
         }
         // 이메일 발송 코드
-        log.info("일반 상품 결제 완료 이메일 알림 발송 시작");
-        // 유저 이메일 확보
-        String email = userServiceClient.getUserEmailByUserId(userId);
+        log.info("이메일 알림 발송 시작");
         try {
-            // 메일 메시지 생성
-            StringBuilder msg = new StringBuilder();
-            msg.append(userId);
-            msg.append("회원님이 선택하신 상품의 결제가 완료되었습니다.\n\n");
-            msg.append("주문번호: ");
-            msg.append(orderId);
-            msg.append("\n\n저희 서비스를 이용해주셔서 감사합니다.");
-            msg.append("\n\n<a href=\"http://localhost:3000/mypage/myOrder\">확인하기</a>");
-
-            // 메일 폼 세팅 및 메일 전송
-            MailEntity mailEntity = new MailEntity();
-            mailEntity.setAddress(email);
-            mailEntity.setTitle("[매일(mail)키트] 회원님의 상품 결제가 완료되었습니다.");
-            mailEntity.setMessage(msg.toString());
+            // 1. 알림 코드로 어떤 메일 알림을 보낼 건지 service layer 에서 파악
+            // 2. 메일 알림 폼 제작
+            MailEntity mailEntity = mailService.createMailForm(requestAlert);
+            // 3. 알림 발송
             mailService.sendMail(mailEntity);
-            log.info("일반 상품 결제 완료 이메일 알림 발송 완료");
-
+            // 4. 알림 전송 성공 코드
             result.put("result_code", 0);
+            // 5. 알림 내역 db 저장
+            alertService.saveAlerts(requestAlert.getCode(), requestAlert.getUserId(), mailEntity);
+
         }
         catch(Exception e) {
             log.error("이메일 발송 실패");
             result.put("result_code", 550);
         }
-        // 데이터베이스에 저장
         return result;
     }
 

@@ -115,7 +115,7 @@ export default function Register(props) {
             // 유효성 검사 통과
             // 로직 작성
             let response = 
-                axios.get("/alert-service/users/email?email=" + email)
+                axios.get("/alert-service/alert/email?email=" + email)
                     .then((res) => {
                         console.log(res)
                         if(res.status === 200) {
@@ -159,7 +159,7 @@ export default function Register(props) {
             // 인증번호 확인 로직 작성
             let data = "email=" + email + "&code=" + code;
             let response = 
-                axios.get("/alert-service/users/code?" + data)
+                axios.get("/alert-service/alert/code?" + data)
                     .then((res) => {
                         console.log(res)
                         if(res.status === 200) {
