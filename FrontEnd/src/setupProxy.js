@@ -25,4 +25,10 @@ module.exports = function (app) {
             changeOrigin: true,
         })
     );
+    app.use(
+        createProxyMiddleware('/subscription-service', {
+            target: 'http://localhost:8000',
+            changeOrigin: true,
+        })
+    );
 }

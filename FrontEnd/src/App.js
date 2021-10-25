@@ -38,6 +38,8 @@ import Preference from "./components/pages/user/Preference";
 import ShippingTable from './components/pages/shipping/ShippingTable';
 import ReviewForm from './components/pages/review/ReviewForm';
 import ReviewList from './components/pages/review/ReviewList';
+import EditGrade from './components/pages/subscription/EditGrade';
+import Cancel from './components/pages/subscription/Cancel';
 
 
 function App() {
@@ -79,6 +81,8 @@ function App() {
           <Route exact path="/admin/catalogs" component={AdminCatalog}></Route>
           <Route exact path="/admin/catalogs/:productId"><CatalogRegisterSub /></Route>
           <Route exact path="/admin/catalog-register"><CatalogRegister /></Route>
+          <Route exact path="/subscription/editgrade" component={EditGrade} />
+          <Route exact path="/subscription/cancel" component={Cancel} />
         </Switch>
         <Routers/>
       </ToTop>

@@ -1,15 +1,15 @@
-package com.example.subscriptionservice.dto;
+package com.example.subscriptionservice.vo;
 
+import com.example.subscriptionservice.dto.SubscriptionGradeDto;
 import com.example.subscriptionservice.entity.SubscriptionGradeEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
 
 @Data
-public class SubscriptionDto implements Serializable {
+public class ResponseSubscription implements Serializable {
     private Long subId;
     private Integer subGradeId;
     private String userId;

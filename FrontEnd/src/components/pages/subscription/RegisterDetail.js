@@ -11,6 +11,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
+import axios from 'axios';
 
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 6;
@@ -48,21 +49,8 @@ const monthList = [
 
 function RegisterDetail(props) {
     useEffect(() => {
-        switch (props.grade) {
-            case "1":
-                setGradeText("베이직")
-                break;
-            case "2":
-                setGradeText("스탠다드")
-                break;
-            case "3":
-                setGradeText("프리미엄")
-            break;
-            default:
-                setGradeText("베이직")
-                break;
-        }
-    }, [props.grade]);
+        setGradeText(props.chkedGradeData.name);
+    }, [props.chkedGradeData]);
 
     const [gradeText, setGradeText] = useState('');
     const [birthDay, setBirthDay] = useState('');
@@ -139,14 +127,147 @@ function RegisterDetail(props) {
         },
     }));
 
+    const subscriptionClickHandler = (e) => {
+        e.preventDefault();
+
+        if(error){
+            alert("모든 약관에 동의를 해야 구독이 가능합니다.");
+        }
+        else {
+            if (window.confirm(`구독하시겠습니까?`)) {
+                const subscriptionData = new Object();
+                subscriptionData.subGradeId=props.chkedGradeData.subGradeId;
+                subscriptionData.userId="jiwoong";
+                subscriptionData.nextPaymentDate="2021-10-21";
     
+                let payload = JSON.stringify({
+                    // order_mgt: orderMgtData,
+                    // orders: orderData
+                });
+
+                props.history.push({
+                    pathname: '/',
+                    state: {
+                    }
+                })
+            }
+        }
+
+        
+    }
+
+    const testHandler = () => {
+        var IMP = window.IMP;
+        IMP.init('imp19758798');
+        var money = 3000;
+        console.log(money);
+
+        IMP.request_pay({
+            pg: 'kakao',
+            merchant_uid: 'merchant_' + new Date().getTime(),
+
+            name: '주문명 : 주문명 설정',
+            amount: money,
+            buyer_email: 'iamport@siot.do',
+            buyer_name: '구매자이름',
+            buyer_tel: '010-1234-5678',
+            buyer_addr: '인천광역시 부평구',
+            buyer_postcode: '123-456'
+        }, function (rsp) {
+            console.log(rsp);
+            if (rsp.success) {
+                var msg = '결제가 완료되었습니다.';
+                msg += '고유ID : ' + rsp.imp_uid;
+                msg += '상점 거래ID : ' + rsp.merchant_uid;
+                msg += '결제 금액 : ' + rsp.paid_amount;
+                msg += '카드 승인번호 : ' + rsp.apply_num;
+                // $.ajax({
+                //     type: "GET", 
+                //     url: "/user/mypage/charge/point", //충전 금액값을 보낼 url 설정
+                //     data: {
+                //         "amount" : money
+                //     },
+                // });
+            } else {
+                var msg = '결제에 실패하였습니다.';
+                msg += '에러내용 : ' + rsp.error_msg;
+            }
+            alert(msg);
+            document.location.href="/user/mypage/home"; //alert창 확인 후 이동할 url 설정
+        });
+    }
+
+    const requestPay = () => {
+        var IMP = window.IMP;
+        IMP.init('imp197587982');
+
+        // IMP.request_pay(param, callback) 결제창 호출
+        IMP.request_pay({ // param
+            pg: 'kakao',
+            merchant_uid: 'merchant_' + new Date().getTime(),
+
+            name: '밀키트 정기구독',
+            amount: 3000,
+            buyer_email: 'iamport@siot.do',
+            buyer_name: '구매자이름',
+            buyer_tel: '010-1234-5678',
+            buyer_addr: '인천광역시 부평구',
+            buyer_postcode: '123-456'
+        }, rsp => { // callback
+            if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
+                // axios로 HTTP 요청
+                axios({
+                    url: "/subscription/introduce", // 예: https://www.myservice.com/payments/complete
+                    method: "post",
+                    headers: { "Content-Type": "application/json" },
+                    data: {
+                        imp_uid: rsp.imp_uid,
+                        merchant_uid: rsp.merchant_uid
+                    }
+                }).then((data) => {
+                  // 서버 결제 API 성공시 로직
+                })
+            } else {
+                alert(`결제에 실패하였습니다. 에러 내용: ${rsp.error_msg}`);
+            }
+        });
+    }
+
+    const requestPay2 = () => {
+        var IMP = window.IMP;
+        IMP.init('imp19758798');
+
+        // IMP.request_pay(param, callback) 결제창 호출
+        IMP.request_pay({ // param
+            pg: 'kakao',
+            merchant_uid: 'merchant_' + new Date().getTime(),
+
+            name : '최초인증결제',
+            amount : 1004, // 빌링키 발급과 함께 1,004원 결제승인을 시도합니다.
+            customer_uid : 'imp19758798', // 필수 입력
+            buyer_email : 'iamport@siot.do',
+            buyer_name : '아임포트',
+            buyer_tel : '02-1234-1234'
+        }, rsp => { // callback
+            if ( rsp.success ) {
+                alert('빌링키 발급 성공');
+            } else {
+                alert('빌링키 발급 실패');
+            }
+        });
+    }
+
+    // 3자리마다 ,(콤마) 붙이기 (8000000 => 8,000,000)
+    function numberToCommasNumber(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
     return (
         <>
         <div className="container mt-40">
             <div className="row">
                 <h4>2/2단계</h4>
-                <h3 className="font-weight-bold">신용카드나 체크카드를 등록해주세요.</h3>
+                <h3 className="font-weight-bold">결제 정보를 입력해주세요.</h3>
                 <br>
                 </br>
             </div>
@@ -231,11 +352,11 @@ function RegisterDetail(props) {
                                 </Link>
                             }
                             title={
-                                <span style={{fontWeight: 'bold', fontSize: '1rem'}}>월 84,000</span> 
+                                <span style={{fontWeight: 'bold', fontSize: '1rem'}}>월 {numberToCommasNumber(props.chkedGradeData.monthlyFee)}</span> 
                             }
                             subheader={
                                 
-                                <span style={{fontWeight: 'bold', fontSize: '0.8rem'}}>{gradeText} 멤버십</span> 
+                                <span style={{fontWeight: 'bold', fontSize: '0.8rem'}}>{gradeText} 등급</span> 
                             }
                         />
                     </Card>
@@ -278,7 +399,7 @@ function RegisterDetail(props) {
                                     <Checkbox checked={chk4} onChange={handleChange} name="chk4"/>
                                 } 
                                 label={
-                                    <span>멤버십을 해지하지 않으면 자동으로 멤버십을 계속 유지하며, <br/>멤버십 요금이 등록한 결제수단으로 매월 청구됩니다. <br/>멤버십은 마이페이지에서 언제든지 해지 가능합니다.</span>
+                                    <span>구독을 해지하지 않으면 자동으로 구독을 계속 유지하며, 구독 요금이 등록한 결제수단으로 매월 청구됩니다. 구독은 마이페이지에서 언제든지 해지 가능합니다.</span>
                                     
                                 }
                                 />
@@ -296,7 +417,7 @@ function RegisterDetail(props) {
                     <div className="product-details-content">
                             <div className="pro-details-quality">
                             <div className="pro-details-cart btn-hover mx-auto">
-                                <Link onClick="subscriptionClickHandler"
+                                <Link onClick={subscriptionClickHandler}
                                 className="text-center">
                                     <span className="align-middle">구독하기</span>
                                 </Link>
@@ -306,7 +427,9 @@ function RegisterDetail(props) {
                 </div>
             </div> 
         </div>
-        
+        <div class="card-body bg-white mt-0 shadow">
+            <button onClick={requestPay2}>결제하기</button>             
+        </div>
         </>
     );
 }

@@ -4,6 +4,7 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import Introduction from '../components/pages/subscription/Introduction';
 import Grade from '../components/pages/subscription/Grade';
 import SubRegister from '../components/pages/subscription/Register';
+import EditGrade from '../components/pages/subscription/EditGrade';
 
 function Routers({ location }) {
   return (
@@ -18,7 +19,6 @@ function Routers({ location }) {
             <Route exact path="/subscription/introduce" component={Introduction} />
             <Route exact path="/subscription/grade" component={Grade} />
             <Route exact path="/subscription/register" component={SubRegister} />
-              
           </Switch>
         </section>
       </CSSTransition>
