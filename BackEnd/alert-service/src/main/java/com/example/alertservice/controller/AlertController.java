@@ -1,16 +1,25 @@
 package com.example.alertservice.controller;
 
 import com.example.alertservice.client.UserServiceClient;
+import com.example.alertservice.entity.AlertsEntity;
 import com.example.alertservice.entity.MailEntity;
+import com.example.alertservice.querydsl.AlertsSearchParam;
 import com.example.alertservice.service.AlertService;
 import com.example.alertservice.service.KakaoService;
 import com.example.alertservice.service.MailService;
 import com.example.alertservice.util.UtilService;
 import com.example.alertservice.vo.RequestAlert;
+import com.example.alertservice.vo.ResponseAlert;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +27,9 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @RestController
 @Slf4j
@@ -72,7 +82,7 @@ public class AlertController {
     }
 
     @ApiOperation(value = "이메일 인증", notes="회원가입 본인 인증용 이메일 발송")
-    @GetMapping("/alert/email")
+    @GetMapping("/alerts/email")
     public ResponseEntity<String> createUserCheckEmail(String email) {
         StringBuilder message = new StringBuilder();
 
@@ -108,7 +118,7 @@ public class AlertController {
     }
 
     @ApiOperation(value = "인증코드 조회", notes="회원가입 시 이메일 별 인증코드 검사")
-    @GetMapping("/alert/code")
+    @GetMapping("/alerts/code")
     public ResponseEntity<Map<String, Integer>> getUsersEmailAndAuthCode(@RequestParam("email") String email, @RequestParam("code") String code) {
         Map<String,Integer> result = new HashMap<>();
 
@@ -128,7 +138,7 @@ public class AlertController {
 
     @ApiOperation(value="알림 발송", notes="알림 코드에 따른 알림 발송(메일&카카오)")
     @PostMapping("/alerts")
-    public Map<String, Integer> sendOrderComplete(HttpSession httpSession, @RequestBody RequestAlert requestAlert) {
+    public Map<String, Integer> sendAndSaveAlerts(HttpSession httpSession, @RequestBody RequestAlert requestAlert) {
         Map<String, Integer> result = new HashMap<>();
         // 카카오 알림 발송 코드
         if(httpSession.getAttribute("token") != null || httpSession.getAttribute("token") != "") {
@@ -146,7 +156,7 @@ public class AlertController {
             // 4. 알림 전송 성공 코드
             result.put("result_code", 0);
             // 5. 알림 내역 db 저장
-            alertService.saveAlerts(requestAlert.getCode(), requestAlert.getUserId(), mailEntity);
+            alertService.saveAlerts(requestAlert.getType(), requestAlert.getUserId(), mailEntity);
 
         }
         catch(Exception e) {
@@ -154,6 +164,68 @@ public class AlertController {
             result.put("result_code", 550);
         }
         return result;
+    }
+
+    @ApiOperation(value = "알림 내역 전체 페이징 조회", notes = "모든 알림 내역을 페이지별로 조회")
+    @GetMapping("/alerts")
+    public ResponseEntity<Page<ResponseAlert>> getAllAlerts(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
+        Page<AlertsEntity> alertsList = alertService.getAllAlerts(pageRequest);
+        Page<ResponseAlert> responseAlertList = alertsList.map(
+                v -> new ModelMapper().map(v, ResponseAlert.class)
+        );
+
+//        alertsList.forEach(v -> {
+//            responseAlertList.add(new ModelMapper().map(v, ResponseAlert.class));
+//        });
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseAlertList);
+    }
+
+    @ApiOperation(value = "알림 내역 타입+기간 별 페이징 조회", notes = "모든 알림 내역 중 일정 기간 내 타입 별로 페이징 조회")
+    @GetMapping("/alerts/{type}")
+    public ResponseEntity<Page<ResponseAlert>> getAlertsByCode(@PathVariable("type") Integer type,
+                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value="startDate", required = false) LocalDate startDate,
+                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value="endDate", required = false) LocalDate endDate,
+                                                               @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
+        Page<AlertsEntity> alertsList = null;
+        // 1. 특정 기간이 포함된 경우
+        if(startDate != null && endDate != null) {
+            // 날짜 타입 변경 LocalDate -> Date
+            Date fromDate = java.sql.Date.valueOf(startDate);
+            Date toDate = java.sql.Date.valueOf(endDate.plusDays(1L));
+            log.info(fromDate.toString());
+            log.info(toDate.toString());
+            alertsList = alertService.getAlertsByCodeAndCreatedAtBetween(type, fromDate, toDate, pageRequest);
+        }
+        // 2. 특정 기간이 포함되지 않은 경우(기간 제외)
+        else {
+            alertsList = alertService.getAlertsByCode(type, pageRequest);
+        }
+        Page<ResponseAlert> responseAlertList = alertsList.map(
+                v -> new ModelMapper().map(v, ResponseAlert.class)
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseAlertList);
+    }
+
+    @ApiOperation(value = "알림 내역 일정 기간 내 키워드 페이징 조회", notes = "모든 알림 내역 중 일정 기간 내 검색한 유저아이디 별로 페이징 조회")
+    @GetMapping("/alerts/search")
+    public ResponseEntity<Page<ResponseAlert>> getAlertsByUserIdContaining(@RequestParam(value = "searchType", required = false, defaultValue = "all") String searchType,
+                                                               @RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue,
+                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "startDate", required = false) LocalDate startDate,
+                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "endDate", required = false) LocalDate endDate,
+                                                               @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
+        // 검색에 필요한 parameter 세팅 작업
+        AlertsSearchParam alertsSearchParam = utilService.setAlertsSearchParameter(searchType, searchValue, startDate, endDate);
+
+        // 데이터 찾기
+        Page<AlertsEntity> alertsList = alertService.getAlertsBySearchKeyword(alertsSearchParam, pageRequest);
+
+        Page<ResponseAlert> responseAlertList = alertsList.map(
+                v -> new ModelMapper().map(v, ResponseAlert.class)
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseAlertList);
     }
 
 }

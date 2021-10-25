@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 public class RequestAlert {
     // 알림 코드
-    private Integer code;
+    private Integer type;
     // 유저 아이디
     private String userId;
     // 주문 번호

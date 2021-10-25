@@ -41,7 +41,7 @@ public class MailService {
         msg.append("<h2><span style=\"color:#03c75a\">" + requestAlert.getUserId() + "</span>");
 
         // 일반 상품 결제 완료
-        if(requestAlert.getCode() == 201) {
+        if(requestAlert.getType() == 201) {
             // 메일 제목 생성 및 주입
             title.append("[매일(mail)키트] 회원님의 상품 결제가 완료되었습니다.");
             // 메일 메시지 생성
@@ -74,7 +74,7 @@ public class MailService {
 
         }
         // 정기 구독 결제 완료
-        else if(requestAlert.getCode() == 202) {
+        else if(requestAlert.getType() == 202) {
             // 메일 제목 생성 및 주입
             title.append("[매일(mail)키트] 회원님의 구독 결제가 완료되었습니다.");
             // 메일 메시지 생성
@@ -105,7 +105,7 @@ public class MailService {
                     "구독내역</a>에서 확인하세요</li></ul><br/><br/>");
         }
         // 구독 확정
-        else if(requestAlert.getCode() == 203) {
+        else if(requestAlert.getType() == 203) {
             // 메일 제목 생성 및 주입
             title.append("[매일(mail)키트] 회원님의 구독이 확정되었습니다.");
             // 메일 메시지 생성
@@ -132,7 +132,7 @@ public class MailService {
                     "구독내역</a>에서 확인하세요</li></ul><br/><br/>");
         }
         // 배송 시작
-        else if(requestAlert.getCode() == 301) {
+        else if(requestAlert.getType() == 301) {
             // 메일 제목 생성 및 주입
             title.append("[매일(mail)키트] 회원님의 상품 배송이 시작되었습니다.");
             // 메일 메시지 생성
@@ -159,7 +159,7 @@ public class MailService {
                     "배송내역</a>에서 확인하세요</li></ul><br/><br/>");
         }
         // 배송 완료
-        else if(requestAlert.getCode() == 302) {
+        else if(requestAlert.getType() == 302) {
             // 메일 제목 생성 및 주입
             title.append("[매일(mail)키트] 회원님의 상품 배송이 완료되었습니다.");
             // 메일 메시지 생성
