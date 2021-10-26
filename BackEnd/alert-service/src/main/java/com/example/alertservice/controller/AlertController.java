@@ -1,15 +1,25 @@
 package com.example.alertservice.controller;
 
 import com.example.alertservice.client.UserServiceClient;
+import com.example.alertservice.entity.AlertsEntity;
 import com.example.alertservice.entity.MailEntity;
+import com.example.alertservice.querydsl.AlertsSearchParam;
 import com.example.alertservice.service.AlertService;
 import com.example.alertservice.service.KakaoService;
 import com.example.alertservice.service.MailService;
 import com.example.alertservice.util.UtilService;
+import com.example.alertservice.vo.RequestAlert;
+import com.example.alertservice.vo.ResponseAlert;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +27,9 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @RestController
 @Slf4j
@@ -29,18 +40,16 @@ public class AlertController {
     private final UtilService utilService;
     private final AlertService alertService;
     private final KakaoService kakaoService;
-    private final UserServiceClient userServiceClient;
     private final Environment env;
 
     @Autowired
     public AlertController(MailService mailService, UtilService utilService,
                            AlertService alertService, KakaoService kakaoService,
-                           UserServiceClient userServiceClient, Environment env) {
+                           Environment env) {
         this.mailService = mailService;
         this.utilService = utilService;
         this.alertService = alertService;
         this.kakaoService = kakaoService;
-        this.userServiceClient = userServiceClient;
         this.env = env;
     }
 
@@ -59,18 +68,21 @@ public class AlertController {
     @GetMapping("/send-test")
     public MailEntity sendTestMail(String email) {
         MailEntity mailEntity = new MailEntity();
+        try {
+            mailEntity.setAddress(email);
+            mailEntity.setTitle("테스트 발송 이메일입니다.");
+            mailEntity.setMessage("안녕하세요. 반가워요!");
 
-        mailEntity.setAddress(email);
-        mailEntity.setTitle("테스트 발송 이메일입니다.");
-        mailEntity.setMessage("안녕하세요. 반가워요!");
-
-        mailService.sendMail(mailEntity);
-
+            mailService.sendMail(mailEntity);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         return mailEntity;
     }
 
     @ApiOperation(value = "이메일 인증", notes="회원가입 본인 인증용 이메일 발송")
-    @GetMapping("/alert/email")
+    @GetMapping("/alerts/email")
     public ResponseEntity<String> createUserCheckEmail(String email) {
         StringBuilder message = new StringBuilder();
 
@@ -79,24 +91,34 @@ public class AlertController {
         code.append(utilService.createKey());
 
         log.info("회원 가입 인증 이메일 전송 시작");
-        // 메일 폼 세팅 및 메일 전송
-        MailEntity mailEntity = new MailEntity();
-        mailEntity.setAddress(email);
-        mailEntity.setTitle("[매일(mail)키트] 회원가입을 위한 인증 코드 메일입니다.");
-        mailEntity.setMessage(code.toString());
-        mailService.sendMail(mailEntity);
+        try{
+            // 메일 폼 세팅 및 메일 전송
+            // MailEntity mailEntity = mailService.createMailForm(101);
+            MailEntity mailEntity = new MailEntity();
+            mailEntity.setAddress(email);
+            mailEntity.setTitle("[매일(mail)키트] 회원가입을 위한 인증 코드 메일입니다.");
+            mailEntity.setMessage(code.toString());
+            mailService.sendMail(mailEntity);
 
-        message.append("회원가입 인증 코드 이메일을 성공적으로 발송했습니다. 잠시 후 확인해주세요.");
+            message.append("회원가입 인증 코드 이메일을 성공적으로 발송했습니다. 잠시 후 확인해주세요.");
 
-        log.info("회원 가입 인증 이메일 전송 완료");
-        // 유저 이메일 별 인증 코드 DB에 저장
-        alertService.createMailAuth(email, code.toString());
+            log.info("회원 가입 인증 이메일 전송 완료");
+            // 유저 이메일 별 인증 코드 DB에 저장
+            alertService.createMailAuth(email, code.toString());
+        }
+        catch (Exception e){
+            log.error("회원 가입 인증 이메일 전송 실패");
+            e.printStackTrace();
+            message.append("이메일 전송 실패\n\n 사유:\n");
+            message.append(e.getMessage());
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message.toString());
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(message.toString());
     }
 
     @ApiOperation(value = "인증코드 조회", notes="회원가입 시 이메일 별 인증코드 검사")
-    @GetMapping("/alert/code")
+    @GetMapping("/alerts/code")
     public ResponseEntity<Map<String, Integer>> getUsersEmailAndAuthCode(@RequestParam("email") String email, @RequestParam("code") String code) {
         Map<String,Integer> result = new HashMap<>();
 
@@ -114,9 +136,9 @@ public class AlertController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @ApiOperation(value="일반 상품 결제 완료 알람", notes="일반 상품 결제 완료 이메일 및 카카오 알림")
-    @RequestMapping("/alert/orders/{userId}/{orderId}")
-    public Map<String, Integer> sendOrderComplete(HttpSession httpSession, @PathVariable("userId") String userId, @PathVariable("orderId") String orderId) {
+    @ApiOperation(value="알림 발송", notes="알림 코드에 따른 알림 발송(메일&카카오)")
+    @PostMapping("/alerts")
+    public Map<String, Integer> sendAndSaveAlerts(HttpSession httpSession, @RequestBody RequestAlert requestAlert) {
         Map<String, Integer> result = new HashMap<>();
         // 카카오 알림 발송 코드
         if(httpSession.getAttribute("token") != null || httpSession.getAttribute("token") != "") {
@@ -124,35 +146,86 @@ public class AlertController {
             // kakaoService.message();
         }
         // 이메일 발송 코드
-        log.info("일반 상품 결제 완료 이메일 알림 발송 시작");
-        // 유저 이메일 확보
-        String email = userServiceClient.getUserEmailByUserId(userId);
+        log.info("이메일 알림 발송 시작");
         try {
-            // 메일 메시지 생성
-            StringBuilder msg = new StringBuilder();
-            msg.append(userId);
-            msg.append("회원님이 선택하신 상품의 결제가 완료되었습니다.\n\n");
-            msg.append("주문번호: ");
-            msg.append(orderId);
-            msg.append("\n\n저희 서비스를 이용해주셔서 감사합니다.");
-            msg.append("\n\n<a href=\"http://localhost:3000/mypage/myOrder\">확인하기</a>");
-
-            // 메일 폼 세팅 및 메일 전송
-            MailEntity mailEntity = new MailEntity();
-            mailEntity.setAddress(email);
-            mailEntity.setTitle("[매일(mail)키트] 회원님의 상품 결제가 완료되었습니다.");
-            mailEntity.setMessage(msg.toString());
+            // 1. 알림 코드로 어떤 메일 알림을 보낼 건지 service layer 에서 파악
+            // 2. 메일 알림 폼 제작
+            MailEntity mailEntity = mailService.createMailForm(requestAlert);
+            // 3. 알림 발송
             mailService.sendMail(mailEntity);
-            log.info("일반 상품 결제 완료 이메일 알림 발송 완료");
-
+            // 4. 알림 전송 성공 코드
             result.put("result_code", 0);
+            // 5. 알림 내역 db 저장
+            alertService.saveAlerts(requestAlert.getType(), requestAlert.getUserId(), mailEntity);
+
         }
         catch(Exception e) {
             log.error("이메일 발송 실패");
             result.put("result_code", 550);
         }
-        // 데이터베이스에 저장
         return result;
+    }
+
+    @ApiOperation(value = "알림 내역 전체 페이징 조회", notes = "모든 알림 내역을 페이지별로 조회")
+    @GetMapping("/alerts")
+    public ResponseEntity<Page<ResponseAlert>> getAllAlerts(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
+        Page<AlertsEntity> alertsList = alertService.getAllAlerts(pageRequest);
+        Page<ResponseAlert> responseAlertList = alertsList.map(
+                v -> new ModelMapper().map(v, ResponseAlert.class)
+        );
+
+//        alertsList.forEach(v -> {
+//            responseAlertList.add(new ModelMapper().map(v, ResponseAlert.class));
+//        });
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseAlertList);
+    }
+
+    @ApiOperation(value = "알림 내역 타입+기간 별 페이징 조회", notes = "모든 알림 내역 중 일정 기간 내 타입 별로 페이징 조회")
+    @GetMapping("/alerts/{type}")
+    public ResponseEntity<Page<ResponseAlert>> getAlertsByCode(@PathVariable("type") Integer type,
+                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value="startDate", required = false) LocalDate startDate,
+                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value="endDate", required = false) LocalDate endDate,
+                                                               @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
+        Page<AlertsEntity> alertsList = null;
+        // 1. 특정 기간이 포함된 경우
+        if(startDate != null && endDate != null) {
+            // 날짜 타입 변경 LocalDate -> Date
+            Date fromDate = java.sql.Date.valueOf(startDate);
+            Date toDate = java.sql.Date.valueOf(endDate.plusDays(1L));
+            log.info(fromDate.toString());
+            log.info(toDate.toString());
+            alertsList = alertService.getAlertsByCodeAndCreatedAtBetween(type, fromDate, toDate, pageRequest);
+        }
+        // 2. 특정 기간이 포함되지 않은 경우(기간 제외)
+        else {
+            alertsList = alertService.getAlertsByCode(type, pageRequest);
+        }
+        Page<ResponseAlert> responseAlertList = alertsList.map(
+                v -> new ModelMapper().map(v, ResponseAlert.class)
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseAlertList);
+    }
+
+    @ApiOperation(value = "알림 내역 일정 기간 내 키워드 페이징 조회", notes = "모든 알림 내역 중 일정 기간 내 검색한 유저아이디 별로 페이징 조회")
+    @GetMapping("/alerts/search")
+    public ResponseEntity<Page<ResponseAlert>> getAlertsByUserIdContaining(@RequestParam(value = "searchType", required = false, defaultValue = "all") String searchType,
+                                                               @RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue,
+                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "startDate", required = false) LocalDate startDate,
+                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "endDate", required = false) LocalDate endDate,
+                                                               @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
+        // 검색에 필요한 parameter 세팅 작업
+        AlertsSearchParam alertsSearchParam = utilService.setAlertsSearchParameter(searchType, searchValue, startDate, endDate);
+
+        // 데이터 찾기
+        Page<AlertsEntity> alertsList = alertService.getAlertsBySearchKeyword(alertsSearchParam, pageRequest);
+
+        Page<ResponseAlert> responseAlertList = alertsList.map(
+                v -> new ModelMapper().map(v, ResponseAlert.class)
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseAlertList);
     }
 
 }

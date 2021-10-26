@@ -7,18 +7,6 @@ export default function SideMenu() {
     const [isRole, setIsRole] = useState(localStorage.getItem('role'));
     const [isLogin, setIsLogin] = useState(localStorage.getItem('token'));
 
-    // useEffect(() => {
-
-    //     fetch("http://localhost:3005/sidemenu")
-    //         .then(res => {
-    //             return res.json();
-    //         })
-    //         .then(data => {
-    //             setMenuData(data);
-    //             console.log(data);
-    //         });
-    // }, []);
-
     const onClickHandler = () => {
         localStorage.removeItem('userid');
         localStorage.removeItem('token');
@@ -44,46 +32,46 @@ export default function SideMenu() {
                 <button styles="background:white;"><i type="button" className="las la-search" /></button>
             </form> */}
 
-                <div className=" main-menu  " style={{paddingLeft:"15px"}}>
+                <div className=" main-menu  " style={{paddingLeft:"15px", marginTop:"30px"}}>
                     <nav>
                         <ul>
-                            <Link style={{paddingLeft:"15px"}} to="/cart">구독하기</Link>
-                            <Link style={{paddingLeft:"15px"}} to="/cart">회원가입</Link>
-                            <Link style={{paddingLeft:"15px"}} to="/cart">로그인</Link>
-                            <Link style={{paddingLeft:"15px"}} to="/cart">고객센터</Link>
+                            <Link style={{paddingLeft:"15px"}} to="/subscription/introduce">구독하기</Link>
+                            <Link style={{paddingLeft:"15px"}} to="/register">회원가입</Link>
+                            <Link style={{paddingLeft:"15px"}} to="/login">로그인</Link>
+                            <Link style={{paddingLeft:"15px"}} to="/cscenter">고객센터</Link>
                         </ul>
                     </nav>
                 </div>
 
-                {/*<div className="dropdown">*/}
-                {/*<div className="same-style header-compare">*/}
-                {/*    <a href="/register"><i>회원가입</i></a>*/}
-                {/*    <ul className="sub">*/}
-                {/*        {*/}
-                {/*            !isLogin ?*/}
-                {/*                (*/}
-                {/*                    <>*/}
-                {/*                    <li><Link to="/login">login</Link></li>*/}
-                {/*                    <li><Link to="/register">register</Link></li>*/}
-                {/*                    </>*/}
-                {/*                )*/}
-                {/*                    :*/}
-                {/*                (*/}
-                {/*                    <>*/}
-                {/*                    <li><Link onClick={onClickHandler}>logout</Link></li>*/}
-                {/*                    {*/}
-                {/*                        isRole === "ROLE_ADMIN" ?*/}
-                {/*                            <li><Link to="/admin/users">admin</Link></li>*/}
-                {/*                            :*/}
-                {/*                            <li><Link to="/mypage">mypage</Link></li>*/}
-                {/*                    }*/}
-                {/*                    </>*/}
-                {/*                )*/}
-                {/*        }*/}
+                {/* <div className="">
+                <div className="">
+                   <a href="/register"><i>회원가입</i></a>
+                    <ul className="sub">
+                       {
+                            !isLogin ?
+                                (
+                                   <>
+                                   <li><Link to="/login">login</Link></li>
+                                   <li><Link to="/register">register</Link></li>
+                                   </>
+                                )
+                                    :
+                                (
+                                    <>
+                                    <li><Link onClick={onClickHandler}>logout</Link></li>
+                                   {
+                                        isRole === "ROLE_ADMIN" ?
+                                            <li><Link to="/admin/users">admin</Link></li>
+                                            :
+                                            <li><Link to="/mypage">mypage</Link></li>
+                                    }
+                                    </>
+                                )
+                        }
 
-                {/*    </ul>*/}
-                {/*</div>*/}
-                {/*</div>*/}
+                    </ul>
+                </div>
+                </div> */}
                 <div className="same-style mobile-off-canvas d-block d-lg-none">
                     <button className="mobile-aside-button"><i className="las la-bars"></i></button>
                 </div>

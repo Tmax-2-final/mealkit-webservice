@@ -1,8 +1,10 @@
 package com.example.alertservice.util;
 
+import com.example.alertservice.querydsl.AlertsSearchParam;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Random;
 
 @Service
@@ -34,5 +36,20 @@ public class UtilService {
 //        }
 
         return key.toString();
+    }
+
+    // 검색 파라미터 세팅하기
+    public AlertsSearchParam setAlertsSearchParameter(String searchType, String searchValue,
+                                                      LocalDate startDate, LocalDate endDate) {
+        AlertsSearchParam alertsSearchParam = new AlertsSearchParam();
+
+        alertsSearchParam.setSearchType(searchType);
+        alertsSearchParam.setSearchValue(searchValue);
+        if(startDate != null && endDate != null) {
+            alertsSearchParam.setStartDate(startDate.atStartOfDay());
+            alertsSearchParam.setEndDate(endDate.plusDays(1L).atStartOfDay());
+        }
+
+        return alertsSearchParam;
     }
 }
