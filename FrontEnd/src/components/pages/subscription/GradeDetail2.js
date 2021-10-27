@@ -5,12 +5,19 @@ import GradeView2 from './GradeView2';
 
 
 function GradeDetail2(props) {
+    const token = localStorage.getItem('token');
 
     const [chkedGrade, setChkedGrade] = useState(0);
     const [gradeData, setGradedata] = useState([]);
 
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
+
     useEffect(() => {
-        axios.get("/subscription-service/subscription/grade")
+        axios.get("/subscription-service/subscription/grade",{
+            headers: headers
+        })
             .then(res => {
                 console.log(`====== ${props.location.pathname} DATA INFO ======`);
                 

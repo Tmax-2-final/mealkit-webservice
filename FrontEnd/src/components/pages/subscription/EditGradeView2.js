@@ -8,6 +8,9 @@ import { withRouter } from 'react-router';
 import axios from 'axios';
 
 function EditGradeView2(props) {
+    const userId = localStorage.getItem('userid');
+    const token = localStorage.getItem('token');
+
     const [subGradeId, setSubGradeId] = useState(props.gradeData.subGradeId);
     const [monthlyFee, setMonthlyFee] = useState(props.gradeData.monthlyFee); 
     const [weeklyDeliveryQty, setWeeklyDeliveryQty] = useState(props.gradeData.weeklyDeliveryQty);
@@ -17,6 +20,10 @@ function EditGradeView2(props) {
     const [userSubData, setUserSubdate] = useState(props.userSubData);
 
     const [isDisabled, setIsDisabled] = useState(false);
+
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
 
     useEffect(() => {
 
@@ -32,33 +39,55 @@ function EditGradeView2(props) {
 
         
 
-        if (window.confirm(`구독등급을 "${name}" 등급으로 변경하시겠습니까? \r\n(현재 구독등급 : ${props.userSubData.subscriptionGradeDto.name})`)) {
+        if (window.confirm(`구독등급을 "${name}" 등급으로 변경하시겠습니까? \r\n(현재 구독등급 : ${props.userSubData.subscriptionGradeDto.name})\r\n다음 결제일부터 변경된 구독으로 시작됩니다.`)) {
             setIsDisabled(true);
             
             let body = {
                 subGradeId: subGradeId,
-                userId: "jiwoong2",
+                userId: userId,
             }
 
-            axios.put(`/subscription-service/subscription`, body)
-                .then(res => {
-                    console.log(res);
-                    if (res.status === 201) {
-                        alert("구독변경이 완료되었습니다.");
-                        
-                        props.history.push({
-                            pathname: '/',
-                            state: {
-                                //chkedGradeData : props.gradeData
-                            }
-                        })
-                    }
-                    else {
-
-                    }
-                })
-                .catch(err => {
-                });
+            axios.put(`/subscription-service/subscription`, body, {
+                headers : headers
+            })
+            .then(res => {
+                console.log(res);
+                if (res.status === 200) {
+                    alert("구독변경이 완료되었습니다.");
+                    
+                    props.history.push({
+                        pathname: '/',
+                        state: {
+                            //chkedGradeData : props.gradeData
+                        }
+                    })
+                }
+                else {
+                    alert(`응답상태코드 Error (응답상태코드 : ${res.status}`);
+                }
+            })
+            .catch(error => {
+                alert(`구독변경에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+                console.log(`====== ${props.location.pathname} ERROR INFO ======`);
+                if (error.response) {
+                    console.log(error.response);
+                    // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
+                    console.log(error.response.data);
+                    console.log(error.response.headers);
+                }
+                else if (error.request) {
+                    // 요청이 이루어 졌으나 응답을 받지 못했습니다.
+                    // `error.request`는 브라우저의 XMLHttpRequest 인스턴스 또는
+                    // Node.js의 http.ClientRequest 인스턴스입니다.
+                    console.log(error.request);
+                }
+                else {
+                    // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다.
+                    console.log('Error', error.message);
+                }
+                console.log(error.config);
+                console.log(`====== ${props.location.pathname} ERROR INFO ======`);
+            })
         }
     }
 
@@ -121,7 +150,12 @@ function EditGradeView2(props) {
                         </Typography>
                     </CardContent>
                     <CardContent sx={{textAlign:"center", pb:"2rem"}}>
-                        <Button sx={{px:"0.6rem", py:"0.4rem"}} size="large" variant="contained"  >
+                        <Button sx={{
+                            px:"0.6rem", 
+                            py:"0.4rem", 
+                            backgroundColor: userSubData.subGradeId === subGradeId ? "rgba(0,0,0,0.3)" : ""
+                        }} 
+                            size="large" variant="contained"  >
                         <Typography 
                             sx = {{pr:"2rem", mb:0}}
                             gutterBottom 
