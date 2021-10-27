@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class SubscriptionGradeEntity implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long subGradeId;
+    private Integer subGradeId;
 
     @Column(nullable = false, length = 30)
     private String name;
