@@ -1,71 +1,108 @@
 import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import Rating from '../../ui/Rating';
+import axios from "axios";
 
 export default function ComareTable() {
 
-    const [comapareDatas, setCompareDatas] = useState([]);
+    const [myPackageDatas, setMyPackageDatas] = useState([]);
 
     let process = require('../../../../myProcess.json');
 
-    useEffect(()=>{
-        fetch(`http://${process.IP}:${process.PORT}/compare`)
-        .then(res => {
-            return res.json();
-        })
-        .then(data => {
-            setCompareDatas(data);
-        });
-    },[process.IP, process.PORT]);
+    useEffect(() => {
+        axios.get("/catalog-service/mypackage")
+            .then(res => {
+                setMyPackageDatas(res.data);
+                console.log(res.data);
+            })
+    },[]);
+
+    console.log(myPackageDatas);
+
+    // useEffect(()=>{
+    //     fetch(`http://${process.IP}:${process.PORT}/compare`)
+    //     .then(res => {
+    //         return res.json();
+    //     })
+    //     .then(data => {
+    //         setCompareDatas(data);
+    //     });
+    // },[process.IP, process.PORT]);
+
+
+
 
     const handleDelete = (id) => {
-        
-        fetch(`http://${process.IP}:${process.PORT}/compare/${id}`,{
-            method: "DELETE"
-        }).then(
-            alert("삭제되었습니다."),
-            fetch(`http://${process.IP}:${process.PORT}/compare`)
+
+        axios.delete(`/catalog-service/hello1/mypackage/${id}`)
             .then(res => {
-                return res.json();
+                alert("삭제 되었습니다.")
+                axios.get(`/catalog-service/mypackage`)
+                    .then(data => {
+                        console.log(data.data);
+                        setMyPackageDatas(data.data);
+                        // setCatalogDatas(data.data);
+                    })
             })
-            .then(data => {
-                setCompareDatas(data);
-                console.log(data);
+        
+        // fetch(`http://${process.IP}:${process.PORT}/compare/${id}`,{
+        //     method: "DELETE"
+        // }).then(
+        //     alert("삭제되었습니다."),
+        //     fetch(`http://${process.IP}:${process.PORT}/compare`)
+        //     .then(res => {
+        //         return res.json();
+        //     })
+        //     .then(data => {
+        //         setMyPackageDatas(data);
+        //         console.log(data);
+        //     })
+        // )
+    }
+
+    const handleAllDelete = (id) => {
+        axios.delete(`/catalog-service/hello1/mypackage`)
+            .then(res => {
+                alert("삭제 되었습니다.")
+                axios.get(`catalog-service/mypackage`)
+                    .then(data =>{
+                        console.log(data.data);
+                        setMyPackageDatas(data.data);
+                    })
             })
-        )
     }
 
 
 
-    const comparelist01 = comapareDatas.map(item => (
+    const comparelist01 = myPackageDatas.map(item => (
         <td className="product-image-title">
             <div className="compare-remove">
-                <button onClick={()=>handleDelete(item.id)}><i className="las la-trash"></i></button>
+                <button onClick={()=>handleDelete(item.patalogId)}><i className="las la-trash"></i></button>
             </div>
-            <Link className="image" to={`/productdetail/${item.id}`}><img className="img-fluid" src={item.image[0]} alt=""/></Link>
+            <Link className="image" to={`/packagedetail/${item.patalogId}`}><img className="img-fluid" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt=""/></Link>
             <div className="product-title">
-                <Link className="image" to={`/productdetail/${item.id}`}>{item.name}</Link>
+                <Link className="image" to={`/packagedetail/${item.patalogId}`}>{item.name}</Link>
             </div>
             <div className="compare-btn">
-                <Link className="image" to={`/productdetail/${item.id}`}>패키지 상세 페이지</Link>
+                <Link className="image" to={`/packagedetail/${item.patalogId}`}>패키지 상세 페이지</Link>
             </div>
         </td>
     )).slice(0,3);
 
-    const comparelist02 = comapareDatas.map(item => (
+    const comparelist02 = myPackageDatas.map(item => (
         <td className="product-price">
-            <span className="amount old">{(item.price * ((100+item.discount)/100)).toFixed(2)}</span>
-            <span className="amount">{item.price}</span>
+            {/*<span className="amount old">{item.unitPrice.toFixed(2)}</span>*/}
+            <span className="amount">{item.unitPrice}</span>
         </td>
     )).slice(0,3);
 
-    const comparelist03 = comapareDatas.map(item => (
+    const comparelist03 = myPackageDatas.map(item => (
         <td className="product-desc">
-            <p>{item.shortDescription}</p>
+            <p>N/A</p>
         </td>
     )).slice(0,3);
 
-    const comparelist04 = comapareDatas.map(item => (
+    const comparelist04 = myPackageDatas.map(item => (
         <td className="product-rating">
             {item.rating && item.rating > 0 ? (
                 <Rating ratingValue={item.rating} />
@@ -114,7 +151,7 @@ export default function ComareTable() {
                                         <a href="/productlist">상품 찾기</a>
                                     </div>
                                     <div className="cart-clear">
-                                        <button>패키지 비우기</button>
+                                        <button onClick={()=>handleAllDelete("hello1")}>패키지 비우기</button>
                                     </div>
                                 </div>
                             </div>

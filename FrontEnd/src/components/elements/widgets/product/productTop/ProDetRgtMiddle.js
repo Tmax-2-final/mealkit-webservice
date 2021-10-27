@@ -1,6 +1,7 @@
 import { Fragment, useEffect } from "react";
 import {useParams} from 'react-router-dom';
 import AddBuyAndCart from './AddBuyAndCart';
+import AddPackage from "../../package/AddPackage";
 
 export default function ProDetRgtMiddle({props, productData}) {
     const { id } = useParams();
@@ -16,7 +17,7 @@ export default function ProDetRgtMiddle({props, productData}) {
                 setColor = {setColor}
                 setSize = {setSize}
             /> */}
-            <AddBuyAndCart 
+            <AddPackage
                 props = {props}
                 productData = {productData}
             /> 

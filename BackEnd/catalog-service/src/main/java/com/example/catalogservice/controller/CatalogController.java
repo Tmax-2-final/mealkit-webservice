@@ -1,13 +1,11 @@
 package com.example.catalogservice.controller;
 
 import com.example.catalogservice.dto.CatalogDto;
+import com.example.catalogservice.dto.MyPackageDto;
 import com.example.catalogservice.dto.PatalogDto;
 import com.example.catalogservice.jpa.*;
 import com.example.catalogservice.service.CatalogService;
-import com.example.catalogservice.vo.RequestCatalog;
-import com.example.catalogservice.vo.RequestPatalog;
-import com.example.catalogservice.vo.ResponseCatalog;
-import com.example.catalogservice.vo.ResponsePatalog;
+import com.example.catalogservice.vo.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -62,13 +60,22 @@ public class CatalogController {
         return ResponseEntity.status(HttpStatus.OK).body(catalogList);
     }
 
-    @ApiOperation(value = "전체상품 조회", notes = "전체 상품을 조회한다")
+    @ApiOperation(value = "전체패키지 조회", notes = "전체 패키지를 조회한다")
     @GetMapping("/patalogs")
     public ResponseEntity<Iterable<PatalogEntity>> getPatalogs() {
         log.info("berfore patalogs");
         Iterable<PatalogEntity> patalogList = catalogService.getAllPatalogs();
         log.info("after patalogs");
         return ResponseEntity.status(HttpStatus.OK).body(patalogList);
+    }
+
+    @ApiOperation(value = "마이패키지 조회", notes = "마이 패키지를 조회한다")
+    @GetMapping("/mypackage")
+    public ResponseEntity<Iterable<MyPackageEntity>> getMyPackage() {
+        log.info("berfore mypackage");
+        Iterable<MyPackageEntity> myPackageList = catalogService.getAllMyPackage();
+        log.info("after mypackage");
+        return ResponseEntity.status(HttpStatus.OK).body(myPackageList);
     }
 
     @ApiOperation(value = "메뉴 자식창 조회", notes = "각 메뉴에 대한 자식창을 조회한다")
@@ -87,6 +94,36 @@ public class CatalogController {
         Iterable<PackageEntity> packageList = catalogService.getAllPackage();
         log.info("after package");
         return ResponseEntity.status(HttpStatus.OK).body(packageList);
+    }
+
+    @ApiOperation(value = "마이패키지 등록", notes="마이패키지 등록")
+    @PostMapping("/{userId}/mypackage")
+    public ResponseEntity<ResponseMyPackage> createMyPackage(@RequestBody @Valid RequestMyPackage requestMyPackage, @PathVariable("userId") String userId) {
+        System.out.println(userId);
+        // 1. requestCart + userId => cartDto
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+        MyPackageDto myPackageDto = mapper.map(requestMyPackage, MyPackageDto.class); // userDto -> userEntity 로 매핑
+        myPackageDto.setUserId(userId);
+
+//        // 등록된 카트가 있는지 조회하기
+//        MyPackageDto existMyPackageDto = catalogService.getMyPackageByPatalogId(myPackageDto);
+//
+//        // 있으면 수량만 변경한다.
+//        if(existMyPackageDto.getFind() == 1) { // 0은 없음 1은 있음
+//            // 기존 수량 + 새로 들어오는 수량
+//            existMyPackageDto.setQty(myPackageDto.getQty() + existMyPackageDto.getQty());
+//            catalogService.updateMyPackage(existMyPackageDto);
+//
+//            return ResponseEntity.status(HttpStatus.OK).body(null);
+//        }
+
+        // 2. service -> jpa -> mariadb 저장 = 카트 등록 서비스
+        catalogService.createMyPackage(myPackageDto);
+        // 3. responseCart 로 지정
+        ResponseMyPackage responseMyPackage = mapper.map(myPackageDto, ResponseMyPackage.class);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseMyPackage);
     }
 
     @ApiOperation(value = "상품 등록", notes = "상품을 등록한다")
@@ -120,6 +157,31 @@ public class CatalogController {
         return ResponseEntity.status(HttpStatus.OK).body("해당 상품을 삭제했습니다.");
     }
 
+    @ApiOperation(value = "마이패키지 삭제", notes = "해당 마이패키지를 삭제한다")
+    @DeleteMapping("/{userId}/mypackage/{patalogId}")
+    public ResponseEntity<String> deleteMyPackage(@PathVariable("patalogId") Long patalogId){
+        catalogService.deleteMyPackage(patalogId);
+        return ResponseEntity.status(HttpStatus.OK).body("해당 상품을 삭제했습니다.");
+    }
+
+    /* 유저가 담은 카트 삭제하기 : 주문-결제 과정을 지나 카트에 담긴 상품이 삭제된다. */
+    @ApiOperation(value = "마이패키지 전체 삭제", notes="결제 이후 카트 속 상품 삭제")
+    @DeleteMapping("/{userId}/mypackage")
+    public ResponseEntity<String> deleteAllMypackage(@PathVariable("userId") String userId) {
+        // 1. 회원이 담은 상품 리스트 조회
+        Iterable<MyPackageEntity> myPackageList = catalogService.getUserMyPackageByUserIdAll(userId);
+        // 2. 하나씩 삭제
+        myPackageList.forEach(v -> {
+            try {
+                catalogService.deleteMyPackage(v);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        return ResponseEntity.status(HttpStatus.OK).body("삭제가 완료 되었습니다.");
+    }
+
 
     @ApiOperation(value = "상품 조회", notes = "해당하는 상품번호의 상품을 조회한다")
     @GetMapping("/catalogs/{productId}")
@@ -134,11 +196,11 @@ public class CatalogController {
         }
     }
 
-    @ApiOperation(value = "상품 조회", notes = "해당하는 상품번호의 상품을 조회한다")
-    @GetMapping("/catalogs/{patalogsId}")
-    public ResponseEntity<PatalogEntity> getPatalog(@PathVariable Long patalogsId) {
+    @ApiOperation(value = "패키지 조회", notes = "해당하는 패키지번호의 패키지번호를 조회한다")
+    @GetMapping("/patalogs/{patalogId}")
+    public ResponseEntity<PatalogEntity> getPatalog(@PathVariable Long patalogId) {
         log.info("before retrieve catalogs data");
-        PatalogEntity patalogEntity = catalogService.getPatalog(patalogsId);
+        PatalogEntity patalogEntity = catalogService.getPatalog(patalogId);
         log.info("after retrieve catalogs data");
         if (patalogEntity != null) {
             return ResponseEntity.status(HttpStatus.OK).body(patalogEntity);

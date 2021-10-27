@@ -1,6 +1,7 @@
 package com.example.catalogservice.service;
 
 import com.example.catalogservice.dto.CatalogDto;
+import com.example.catalogservice.dto.MyPackageDto;
 import com.example.catalogservice.dto.PatalogDto;
 import com.example.catalogservice.jpa.*;
 import lombok.Data;
@@ -10,6 +11,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.Math.floor;
@@ -23,15 +25,17 @@ public class CatalogServiceImpl implements CatalogService{
     ChildrenRepository childrenRepository;
     PackageRepository packageRepository;
     PatalogRepository patalogRepository;
+    MyPackageRepository myPackageRepository;
 
 
     @Autowired
-    public CatalogServiceImpl(CatalogRepository catalogRepository, MenuRepository menuRepository, ChildrenRepository childrenRepository, PackageRepository packageRepository, PatalogRepository patalogRepository) {
+    public CatalogServiceImpl(CatalogRepository catalogRepository, MenuRepository menuRepository, ChildrenRepository childrenRepository, PackageRepository packageRepository, PatalogRepository patalogRepository, MyPackageRepository myPackageRepository) {
         this.catalogRepository = catalogRepository;
         this.menuRepository = menuRepository;
         this.childrenRepository = childrenRepository;
-        this.packageRepository = packageRepository;
         this.patalogRepository = patalogRepository;
+        this.packageRepository = packageRepository;
+        this.myPackageRepository = myPackageRepository;
     }
 
     @Override
@@ -43,9 +47,15 @@ public class CatalogServiceImpl implements CatalogService{
     public Iterable<PatalogEntity> getAllPatalogs() { return patalogRepository.findAll(); }
 
     @Override
+    public Iterable<MyPackageEntity> getAllMyPackage() { return myPackageRepository.findAll();}
+
+    @Override
     public CatalogEntity getCatalog(Long productId) {
         return catalogRepository.findByProductId(productId);
     }
+
+    @Override
+    public PatalogEntity getPatalog(Long patalogId) { return patalogRepository.findByPatalogId(patalogId);}
 
     @Override
     public Iterable<MenuEntity> getAllMenus() {return menuRepository.findAll();}
@@ -75,9 +85,24 @@ public class CatalogServiceImpl implements CatalogService{
     }
 
     @Override
+    public MyPackageDto createMyPackage(MyPackageDto myPackageDto) {
+        // 1. cartDto -> cartEntity -> jpa -> mariadb
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+        MyPackageEntity myPackageEntity = mapper.map(myPackageDto, MyPackageEntity.class); // userDto -> userEntity 로 매핑
+        // 2. repository save
+        myPackageRepository.save(myPackageEntity);
+        // 3. result entity -> dto
+        MyPackageDto resultMyPackageDto = mapper.map(myPackageEntity, MyPackageDto.class);
+
+        return resultMyPackageDto;
+    }
+
+
+    @Override
     public PatalogDto createPatalog(PatalogDto patalog) {
         long i = 0;
-        patalog.setPatalogsId(i++);
+        patalog.setPatalogId(i++);
 
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -91,9 +116,53 @@ public class CatalogServiceImpl implements CatalogService{
     }
 
     @Override
+    public MyPackageDto getMyPackageByPatalogId(MyPackageDto myPackageDto) {
+        Optional<MyPackageEntity> myPackageEntity = myPackageRepository.findByPatalogIdAndUserId(myPackageDto.getPatalogId(), myPackageDto.getUserId());
+        if(!myPackageEntity.isPresent()) {
+            MyPackageDto nullDto = new MyPackageDto();
+            nullDto.setFind(0);
+
+            return nullDto;
+        }
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+        MyPackageDto resultDto = mapper.map(myPackageEntity.get(), MyPackageDto.class);
+        resultDto.setFind(1);
+
+        return resultDto;
+    }
+
+    @Override
+    public Iterable<MyPackageEntity> getUserMyPackageByUserIdAll(String userId) {
+        Iterable<MyPackageEntity> result = myPackageRepository.findAllByUserId(userId);
+
+        PatalogEntity patalogEntity = null;
+
+        for (MyPackageEntity myPackageEntity : result) {
+            Long patalogId = myPackageEntity.getPatalogId();
+            patalogEntity = patalogRepository.findByPatalogId(patalogId);
+            String image = patalogEntity.getImage();
+            String patalogName = patalogEntity.getName();
+            myPackageEntity.setImage(image);
+            myPackageEntity.setName(patalogName);
+
+
+        }
+        return result;
+    }
+
+    @Override
+    public void deleteMyPackage(MyPackageEntity myPackageEntity) { myPackageRepository.delete(myPackageEntity);};
+
+
+    @Override
     public void deleteCatalog(Long productId){
          catalogRepository.deleteById(productId);
     }
+
+    @Override
+    public void deleteMyPackage(Long patalogId) { myPackageRepository.deleteById(patalogId);}
 
     @Override
     public void updateCatalog(CatalogDto catalogDto) {
@@ -108,6 +177,15 @@ public class CatalogServiceImpl implements CatalogService{
     @Override
     public void updateStock(CatalogEntity catalogEntity) {
         catalogRepository.save(catalogEntity);
+    }
+
+    @Override
+    public void updateMyPackage(MyPackageDto myPackageDto) {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+        MyPackageEntity myPackageEntity = mapper.map(myPackageDto, MyPackageEntity.class);
+
+        myPackageRepository.save(myPackageEntity);
     }
 
 }
