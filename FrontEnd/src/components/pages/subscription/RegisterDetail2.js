@@ -13,6 +13,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import axios from 'axios';
 
 function RegisterDetail2(props) {
+
+    const userId = localStorage.getItem('userid');
+    const token = localStorage.getItem('token');
+
     useEffect(() => {
         setGradeText(props.chkedGradeData.name);
     }, [props.chkedGradeData]);
@@ -25,6 +29,7 @@ function RegisterDetail2(props) {
         chk4: false,
         chk5: false,
     });
+    
 
     const { chk1, chk2, chk3, chk4, chk5 } = state;
     const error = [chk1, chk2, chk3, chk4, chk5].filter((v) => v).length !== 5;
@@ -117,16 +122,22 @@ function RegisterDetail2(props) {
         else {
             if (window.confirm(`밀키트 정기구독을 시작하시겠습니까?`)) {
                 
-                let body = {
+                const body = {
                     subGradeId: props.chkedGradeData.subGradeId,
-                    userId: "jiwoong",
+                    userId: userId,
+                }
+                
+                const headers = {
+                    Authorization: `Bearer ${token}`
                 }
 
-                console.log("====== /subscription-service/subscription API BODY ======");
+                console.log("====== 구독 등록 API BODY ======");
                 console.log(body);
-                console.log("====== /subscription-service/subscription API BODY ======");
+                console.log("====== 구독 등록 API BODY ======");
 
-                axios.post(`/subscription-service/subscription`, body)
+                axios.post(`/subscription-service/subscription` ,body,{
+                    headers: headers
+                })
                 .then(res => {
                     console.log(res)
                     if (res.status === 201) {
@@ -139,11 +150,31 @@ function RegisterDetail2(props) {
                         })
 
                     } else {
-                        
+                        alert(`구독 응답상태코드 에러 (응답 상태코드 : ${res.status})`)
                     }
                 })
-                .catch(err => {
-                });
+                .catch(error => {
+                    alert(`구독 등록에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+                    console.log(`====== ${props.location.pathname} ERROR INFO ======`);
+                    if (error.response) {
+                        console.log(error.response);
+                        // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
+                        console.log(error.response.data);
+                        console.log(error.response.headers);
+                    }
+                    else if (error.request) {
+                        // 요청이 이루어 졌으나 응답을 받지 못했습니다.
+                        // `error.request`는 브라우저의 XMLHttpRequest 인스턴스 또는
+                        // Node.js의 http.ClientRequest 인스턴스입니다.
+                        console.log(error.request);
+                    }
+                    else {
+                        // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다.
+                        console.log('Error', error.message);
+                    }
+                    console.log(error.config);
+                    console.log(`====== ${props.location.pathname} ERROR INFO ======`);
+                })
             }
         }
     }
