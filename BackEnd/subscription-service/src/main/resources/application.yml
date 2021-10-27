@@ -4,23 +4,17 @@ server:
 spring:
   application:
     name: subscription-service
-  rabbitmq:
-    host: 127.0.0.1
-    port: 5672
-    username: guest
-    password: guest
-  zipkin:
-    base-url: http://localhost:9411
-    enabled: true
-  sleuth:
-    sampler:
-      probability: 1.0
-  #  h2:
-  #    console:
-  #      enabled: true
-  #      settings:
-  #        web-allow-others: true
-  #      path: /h2-console
+#  rabbitmq:
+#    host: 127.0.0.1
+#    port: 5672
+#    username: guest
+#    password: guest
+#  zipkin:
+#    base-url: http://localhost:9411
+#    enabled: true
+#  sleuth:
+#    sampler:
+#      probability: 1.0
   jpa:
     hibernate:
       ddl-auto: update
@@ -53,9 +47,6 @@ management:
     web:
       exposure:
         include: info, refresh, health, beans, busrefresh
-
-kafka:
-  url: 13.208.132.90:9092
 
 logging:
   level:

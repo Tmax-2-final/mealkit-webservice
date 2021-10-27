@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -14,10 +15,10 @@ public class ResponseSubscription implements Serializable {
     private Integer subGradeId;
     private String userId;
     private Character status;
-    private Date lastPaymentDate;
-    private Date nextPaymentDate;
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime lastPaymentDate;
+    private LocalDateTime nextPaymentDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private String cancelContent;
 
     private SubscriptionGradeDto subscriptionGradeDto;
