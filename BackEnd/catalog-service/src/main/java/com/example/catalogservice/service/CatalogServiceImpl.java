@@ -57,6 +57,7 @@ public class CatalogServiceImpl implements CatalogService{
     @Override
     public PatalogEntity getPatalog(Long patalogId) { return patalogRepository.findByPatalogId(patalogId);}
 
+
     @Override
     public Iterable<MenuEntity> getAllMenus() {return menuRepository.findAll();}
 

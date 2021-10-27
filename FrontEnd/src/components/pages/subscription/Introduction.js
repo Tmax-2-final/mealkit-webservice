@@ -12,7 +12,7 @@ export default function Introduction(props) {
             <Header/>
             <Bread
                 productId = ""
-                productName = "구독 혜택"
+                productName = "정기구독 혜택"
                 productUrl = "/subscription/grade"
             />
             <IntroductionDetail

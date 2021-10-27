@@ -50,12 +50,16 @@ public interface UserService extends UserDetailsService {
     /* 특정 회원의 정보 수정하기 */
     void updateUsers(UserDto userDto);
 
+    /* 특정 기간(날짜) 및 검색어가 포함된 모든 유저 조회하기 */
     Iterable<UserEntity> getUserAllBetween(RequestDate requestDate);
 
     /* 동일한 상품이 있는지 확인하기 */
     CartDto getCartByProductId(CartDto cartDto);
 
+    /* 유저 탈퇴하기 */
     void deleteUser(UserEntity userEntity);
 
+    /* 유저 아이디로 유저 이메일 정보 획득하기 */
+    String getUserEmailByUserId(String userId);
 
 }

@@ -3,3 +3,5 @@
 BackEnd/.idea
 BackEnd/.idea/*
 FrontEnd/package-lock.json
+FrontEnd/package-lock.json
+BackEnd/config-service/src/main/resources/application.yml

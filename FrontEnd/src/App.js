@@ -36,7 +36,10 @@ import CatalogRegisterSub from "./components/pages/productlist/CatalogRegisterSu
 import Routers from './utilities/Routers';
 import Preference from "./components/pages/user/Preference";
 import ShippingTable from './components/pages/shipping/ShippingTable';
-import ReviewWrite from './components/pages/review/ReviewWrite';
+import ReviewForm from './components/pages/review/ReviewForm';
+import ReviewList from './components/pages/review/ReviewList';
+import EditGrade from './components/pages/subscription/EditGrade';
+import Cancel from './components/pages/subscription/Cancel';
 
 
 function App() {
@@ -68,8 +71,9 @@ function App() {
           <Route exact path="/mypage/myInfo"><MyInfoEdit /></Route>
           <Route exact path="/mypage/myOrder"><MyOrder /></Route>
           <Route exact path="/mypage/myReview"><MyReview /></Route>
-          <Route exact path="/mypage/myReview/reviewwrite"><ReviewWrite /></Route>
           <Route exact path="/mypage/shipping"><ShippingTable /></Route>
+          <Route exact path="/review/register"><ReviewForm /></Route>
+          <Route exact path="/review/list"><ReviewList /></Route>
           <Route exact path="/payment" component={Payment}></Route>
           <Route exact path="/paymentcomplete" component={PaymetComplete}></Route>
           <Route exact path="/admin/users"><AdminUser /></Route>
@@ -77,6 +81,8 @@ function App() {
           <Route exact path="/admin/catalogs" component={AdminCatalog}></Route>
           <Route exact path="/admin/catalogs/:productId"><CatalogRegisterSub /></Route>
           <Route exact path="/admin/catalog-register"><CatalogRegister /></Route>
+          <Route exact path="/subscription/editgrade" component={EditGrade} />
+          <Route exact path="/subscription/cancel" component={Cancel} />
         </Switch>
         <Routers/>
       </ToTop>

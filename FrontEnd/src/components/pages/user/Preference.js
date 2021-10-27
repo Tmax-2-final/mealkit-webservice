@@ -57,55 +57,29 @@ export default function Preference(props) {
                                                             <br /><br />
                                                             <div>
                                                                 <strong>3. 좋아하는 테마를 두가지 골라주세요. </strong><br /><br />
-                                                                <input type="checkbox" name="teamname" value="Unlike" style={{ margin: "8px" }} /> 고기류
-                                                                <input type="checkbox" name="teamname" value="little" style={{ margin: "8px" }} /> 채식
-                                                                <input type="checkbox" name="teamname" value="medium" style={{ margin: "8px" }} /> 술 안주
-                                                                <input type="checkbox" name="teamname" value="like" style={{ margin: "8px" }} /> 한식
-                                                                <input type="checkbox" name="teamname" value="like" style={{ margin: "8px" }} /> 양식
-                                                                <input type="checkbox" name="teamname" value="like" style={{ margin: "8px" }} /> 아이를 위한 음식
+                                                                <input type="checkbox" name="teamname" value="Unlike" style={{ margin: "8px" }} /> 한식
+                                                                <input type="checkbox" name="teamname" value="little" style={{ margin: "8px" }} /> 양식
+                                                                <input type="checkbox" name="teamname" value="medium" style={{ margin: "8px" }} /> 중식
+                                                                <input type="checkbox" name="teamname" value="like" style={{ margin: "8px" }} /> 일식
+                                                                <input type="checkbox" name="teamname" value="like" style={{ margin: "8px" }} /> 동남아 음식
                                                             </div>
+                                                            <br /><br />
                                                             <div>
-                                                                <br /><br /><strong>4. 새콤한 맛을 좋아하는 정도는?</strong><br /><br />
-                                                                <input type="radio" name="teamname" value="Unlike" style={{ width: "15px", height: "15px", margin: "8px" }} /> 좋아하지 않음
-                                                                <input type="radio" name="teamname" value="little" style={{ width: "15px", height: "15px", margin: "8px" }} /> 약간 새콤한 맛
-                                                                <input type="radio" name="teamname" value="medium" style={{ width: "15px", height: "15px", margin: "8px" }} /> 적당히 새콤한 맛
-                                                                <input type="radio" name="teamname" value="like" style={{ width: "15px", height: "15px", margin: "8px" }} /> 아주 새콤한 맛
+                                                                <strong>4. 좋아하는 맛을 골라주세요. (중복 가능)</strong><br /><br />
+                                                                <input type="checkbox" name="teamname" value="Unlike" style={{ margin: "8px" }} /> 짠 맛
+                                                                <input type="checkbox" name="teamname" value="little" style={{ margin: "8px" }} /> 매운 맛
+                                                                <input type="checkbox" name="teamname" value="medium" style={{ margin: "8px" }} /> 느끼한 맛
+                                                                <input type="checkbox" name="teamname" value="like" style={{ margin: "8px" }} /> 새콤한 맛ㅊ
                                                             </div>
+                                                     
                                                             <div>
-                                                                <br /><br /><strong>5. 단 맛을 좋아하는 정도는?</strong><br /><br />
-                                                                <input type="radio" name="teamname" value="Unlike" style={{ width: "15px", height: "15px", margin: "8px" }} /> 좋아하지 않음
-                                                                <input type="radio" name="teamname" value="Cake" style={{ width: "15px", height: "15px", margin: "8px" }} /> 약간 단 맛
-                                                                <input type="radio" name="teamname" value="Macaron" style={{ width: "15px", height: "15px", margin: "8px" }} /> 적당히 단 맛
-                                                                <input type="radio" name="teamname" value="Macaron" style={{ width: "15px", height: "15px", margin: "8px" }} /> 아주 단 맛
-                                                            </div>
-                                                            <div>
-                                                                <br /><br /><strong>6. 짠 맛을 좋아하는 정도는?</strong><br /><br />
-                                                                <input type="radio" name="teamname" value="Unlike" style={{ width: "15px", height: "15px", margin: "8px" }} /> 좋아하지 않음
-                                                                <input type="radio" name="teamname" value="Cake" style={{ width: "15px", height: "15px", margin: "8px" }} /> 약간 짠 맛
-                                                                <input type="radio" name="teamname" value="Macaron" style={{ width: "15px", height: "15px", margin: "8px" }} /> 적당히 짠 맛
-                                                                <input type="radio" name="teamname" value="Macaron" style={{ width: "15px", height: "15px", margin: "8px" }} /> 아주 짠 맛
-                                                            </div>
-                                                            <div>
-                                                                <br /><br /><strong>7. 단백한 맛을 좋아하는 정도는?</strong><br /><br />
-                                                                <input type="radio" name="teamname" value="Unlike" style={{ width: "15px", height: "15px", margin: "8px" }} /> 좋아하지 않음
-                                                                <input type="radio" name="teamname" value="Cake" style={{ width: "15px", height: "15px", margin: "8px" }} /> 약간 단백한 맛
-                                                                <input type="radio" name="teamname" value="Macaron" style={{ width: "15px", height: "15px", margin: "8px" }} /> 적당히 단백한 맛
-                                                                <input type="radio" name="teamname" value="Macaron" style={{ width: "15px", height: "15px", margin: "8px" }} /> 아주 단백한 맛
-                                                            </div>
-                                                            <div>
-                                                                <br /><br /><strong>8. 매운 맛을 좋아하는 정도는?</strong><br /><br />
-                                                                <input type="radio" name="teamname" value="Unlike" style={{ width: "15px", height: "15px", margin: "8px" }} /> 좋아하지 않음
-                                                                <input type="radio" name="teamname" value="Cake" style={{ width: "15px", height: "15px", margin: "8px" }} /> 약간 매운 맛
-                                                                <input type="radio" name="teamname" value="Macaron" style={{ width: "15px", height: "15px", margin: "8px" }} /> 적당히 매운 맛
-                                                                <input type="radio" name="teamname" value="Macaron" style={{ width: "15px", height: "15px", margin: "8px" }} /> 아주 매운 맛
-                                                            </div>
-                                                            <div>
-                                                                <br /><br /><strong>9. 원하는 요리의 소요 시간은? </strong><br /><br />
+                                                                <br /><br /><strong>5. 원하는 요리의 소요 시간은? </strong><br /><br />
                                                                 <input type="radio" name="teamname" value="Unlike" style={{ width: "15px", height: "15px", margin: "8px" }} /> 10분 이내
                                                                 <input type="radio" name="teamname" value="Cake" style={{ width: "15px", height: "15px", margin: "8px" }} /> 10 ~ 20분
                                                                 <input type="radio" name="teamname" value="Macaron" style={{ width: "15px", height: "15px", margin: "8px" }} /> 20분 이상
                                                             </div>
                                                             <br /><br />
+                                                            <br />
                                                             <div className="button-box">
                                                                 <div class="row justify-content-between">
                                                                     <div class="col-4">

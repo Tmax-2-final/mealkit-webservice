@@ -4,6 +4,7 @@ import Footer from '../../layout/Footer';
 import Bread from '../../elements/ui/Bread';
 import IntroductionDetail from './IntroductionDetail';
 import GradeDetail from './GradeDetail';
+import GradeDetail2 from './GradeDetail2';
 
 export default function Grade(props) {
 
@@ -12,10 +13,10 @@ export default function Grade(props) {
             <Header/>
             <Bread
                 productId = ""
-                productName = "구독 - 멤버십 선택"
+                productName = "구독 선택"
                 productUrl = "/subscription/grade"
             />
-            <GradeDetail/>
+            <GradeDetail2/>
             <Footer/>
         </Fragment>
     );
