@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ResponseSubscriptionGrade {
-    private Long subGradeId;
+    private Integer subGradeId;
     private String name;
     private String enName;
     private Integer weeklyDeliveryQty;

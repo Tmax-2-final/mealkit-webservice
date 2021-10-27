@@ -2,6 +2,7 @@ package com.example.subscriptionservice.service;
 
 import com.example.subscriptionservice.dto.SubscriptionDto;
 import com.example.subscriptionservice.dto.SubscriptionGradeDto;
+import com.example.subscriptionservice.entity.SubscriptionEntity;
 import com.example.subscriptionservice.entity.SubscriptionGradeEntity;
 import com.example.subscriptionservice.vo.RequestUpdateSubscription;
 
@@ -23,4 +24,7 @@ public interface SubscriptionService {
 
     /*구독 조회*/
     SubscriptionDto getSubscription(String userId);
+
+    /*구독 결제*/
+    void paymentSubscription();
 }

@@ -6,6 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -20,22 +21,24 @@ public class SubscriptionEntity implements Serializable {
     @Column(nullable = false, length = 50)
     private String userId;
     @Column(nullable = false, length = 50)
-    private String subGradeId;
+    private Integer subGradeId;
     @Column(nullable = false, insertable = false)
     private Character status;
     @Column(insertable = false)
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
-    private Date lastPaymentDate;
+    private LocalDateTime lastPaymentDate;
     @Column
-    private Date nextPaymentDate;
+    private LocalDateTime nextPaymentDate;
 
     @Column(updatable = false, insertable = false)
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
-    private Date startDate;
+    private LocalDateTime startDate;
     @Column
-    private Date endDate;
+    private LocalDateTime endDate;
     @Column
     private String cancelContent;
+    @Column
+    private Integer changeSubGradeId;
 
     // optional false = inner join
 //    @ManyToOne(optional = false, fetch = FetchType.LAZY)

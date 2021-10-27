@@ -1,20 +1,9 @@
 server:
-  port: 50004
+  port: 50008
 
 spring:
   application:
-    name: subscription-service
-#  rabbitmq:
-#    host: 127.0.0.1
-#    port: 5672
-#    username: guest
-#    password: guest
-#  zipkin:
-#    base-url: http://localhost:9411
-#    enabled: true
-#  sleuth:
-#    sampler:
-#      probability: 1.0
+    name: scheduler-service
   jpa:
     hibernate:
       ddl-auto: update
@@ -22,15 +11,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  datasource:
-    driver-class-name:
-    url:
-    username:
-    password:
-#    driver-class-name: org.h2.Driver
-#    url: jdbc:h2:mem:testdb
-#    username: sa
-#    password:
+    datasource:
+      driver-class-name:
+      url:
+      username:
+      password:
 
 eureka:
   client:
@@ -57,8 +42,3 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
-
-
-jasypt:
-  encryptor:
-    bean: jasyptStringEncryptor
