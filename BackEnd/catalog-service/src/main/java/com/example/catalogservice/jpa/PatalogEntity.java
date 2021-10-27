@@ -13,7 +13,7 @@ import java.util.Date;
 public class PatalogEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long patalogsId;
+    private Long patalogId;
 
     @Column(nullable = false)
     private String name;

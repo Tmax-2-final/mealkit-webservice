@@ -39,11 +39,11 @@ export default function AddBuyAndCart({props, productData}) {
             return;
         }
 
-        // if(count > productData.stock){
-        //     alert(`재고가 부족합니다.`);
-        //     e.preventDefault();
-        //     return;
-        // }
+        if(count > productData.stock){
+            alert(`재고가 부족합니다.`);
+            e.preventDefault();
+            return;
+        }
 
         productData.qty = count;
         
@@ -71,7 +71,7 @@ export default function AddBuyAndCart({props, productData}) {
                 qty: count
             }
     
-            axios.post(`/user-service/${userId}/carts`, body, {
+            axios.post(`/user-service/1/mypackage`, body, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

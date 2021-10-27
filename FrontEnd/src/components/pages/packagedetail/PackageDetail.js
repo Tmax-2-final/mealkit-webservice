@@ -4,19 +4,20 @@ import Header from '../../layout/Header';
 import Footer from '../../layout/Footer';
 import Bread from '../../elements/ui/Bread';
 import ProductTop from '../../elements/widgets/product/productTop/ProductTop'
+import PackageTop from "../../elements/widgets/package/PackageTop";
 
 export default function PackageDetail(props) {
 
     const { id } = useParams();
-    const [ productData , setProductData ] = useState([]);
+    const [ packageData , setPackageData ] = useState([]);
 
     useEffect(()=>{
-        fetch(`/catalog-service/catalogs/${id}`)
+        fetch(`/catalog-service/patalogs/${id}`)
         .then(res => {
             return res.json();
         })
         .then(data => {
-            setProductData(data);
+            setPackageData(data);
             console.log("==카탈로그 데이터==");
             console.log(data);
         });
@@ -26,13 +27,13 @@ export default function PackageDetail(props) {
         <Fragment>
             <Header/>
             <Bread
-                productId = {productData.id}
-                productName = {productData.name}
-                productUrl = {`/productdetail/${productData.id}`}
+                patalogId = {packageData.patalogId}
+                patalogName = {packageData.name}
+                patalogUrl = {`/pakagedetail/${packageData.patalogId}`}
             />
-            <ProductTop 
+            <PackageTop
                 props = {props}
-                productData = {productData}
+                packageData = {packageData}
             />
             {/*<ProductBottom/>*/}
             <Footer/>

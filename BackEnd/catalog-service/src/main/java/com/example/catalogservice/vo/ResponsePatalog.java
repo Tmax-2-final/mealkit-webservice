@@ -9,7 +9,7 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponsePatalog {
 
-    private Long patalogsId;
+    private Long patalogId;
     private String name;
     private String image;
     private String details;
