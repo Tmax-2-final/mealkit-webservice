@@ -15,6 +15,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -51,7 +54,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         // 다음 결제일 계산 및 설정
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, 1);
-        subscriptionDto.setNextPaymentDate(cal.getTime());
+
+        LocalDateTime nextMonthDate = LocalDateTime.of(LocalDate.now().plusMonths(1), LocalTime.now());
+
+        subscriptionDto.setNextPaymentDate(nextMonthDate);
 
         SubscriptionEntity subscriptionEntity = modelMapper.map(subscriptionDto, SubscriptionEntity.class);
 
@@ -82,7 +88,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         SubscriptionEntity cancelSubscriptionEntity = modelMapper.map(subscriptionDto, SubscriptionEntity.class);
         // 1: 구독중 , 2: 구독취소
         cancelSubscriptionEntity.setStatus('2');
-        cancelSubscriptionEntity.setEndDate(new Date());
+        cancelSubscriptionEntity.setEndDate(LocalDateTime.now());
 
         subscriptionRepository.save(cancelSubscriptionEntity);
     }
@@ -101,6 +107,29 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         returnValue.setSubscriptionGradeDto(subscriptionGradeDto);
 
         return returnValue;
+    }
+
+    @Override
+    public void paymentSubscription() {
+        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
+        LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
+
+        Iterable<SubscriptionEntity> subscriptionEntityList = subscriptionRepository.findByNextPaymentDateBetween(startDatetime, endDatetime);
+
+        // 구독 등급 변경 체크 (change_sub_grade_id)
+        subscriptionEntityList.forEach(v -> {
+            if(v.getChangeSubGradeId() != null){
+                //responseSubscriptionGradeList.add(new ModelMapper().map(v, ResponseSubscriptionGrade.class));
+                v.setSubGradeId(v.getChangeSubGradeId());
+                v.setChangeSubGradeId(null);
+
+                // 다음 결제일 계산 및 설정
+                LocalDateTime nextMonthDate = LocalDateTime.of(LocalDate.now().plusMonths(1), LocalTime.now());
+                v.setLastPaymentDate(LocalDateTime.now());
+                v.setNextPaymentDate(nextMonthDate);
+            }
+        });
+        subscriptionRepository.saveAll(subscriptionEntityList);
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.subscriptionservice.controller;
 
 import com.example.subscriptionservice.dto.SubscriptionDto;
+import com.example.subscriptionservice.entity.SubscriptionEntity;
 import com.example.subscriptionservice.entity.SubscriptionGradeEntity;
 import com.example.subscriptionservice.service.SubscriptionService;
 import com.example.subscriptionservice.vo.*;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -111,7 +113,7 @@ public class SubscriptionController {
 
         SubscriptionDto subscriptionDto = subscriptionService.getSubscription(requestUpdateSubscription.getUserId());
 
-        subscriptionDto.setSubGradeId(requestUpdateSubscription.getSubGradeId());
+        subscriptionDto.setChangeSubGradeId(requestUpdateSubscription.getSubGradeId());
 
         subscriptionService.updateSubscription(subscriptionDto);
 
@@ -154,6 +156,22 @@ public class SubscriptionController {
 
         log.info("구독 조회 API END");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseSubscription);
+        return ResponseEntity.status(HttpStatus.OK).body(responseSubscription);
+    }
+
+    @ApiOperation(value = "구독 결제", notes = "결제일이 당일인 구독들을 결제한다.")
+    @GetMapping(value = "/subscription/payment")
+    public ResponseEntity<String> paymentSubscription(){
+        log.info("구독 결제 API START");
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+
+        // 구독 결제 서비스 호출
+        subscriptionService.paymentSubscription();
+
+        log.info("구독 결제 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body("구독 결제 완료");
     }
 }
