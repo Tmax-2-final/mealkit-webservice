@@ -16,11 +16,13 @@ export default function Deal(){
 
         <section id="deal">
             <div className="container">
-                <Title title = "추천 상품"/>
-                <TabMenu 
+                <Title
+                    title = "베스트 밀키트"
+                    subtitle= "사람들이 많이 찾는 밀키트에요."/>
+                {/* <TabMenu 
                     setCategoryName = {setCategoryName}
                     categoryName = {categoryName}
-                />
+                /> */}
                 <ProductViewMain
                     categoryName = {categoryName}
                     sliceNumber = {sliceNumber}
