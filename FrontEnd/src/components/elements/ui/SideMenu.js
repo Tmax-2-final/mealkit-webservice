@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function SideMenu() {
@@ -17,6 +17,11 @@ export default function SideMenu() {
         window.location.href="/";
     }
 
+    const backdoorHandler = () => {
+        localStorage.setItem('token',"123")
+        window.location.href="/";
+    }
+
     const menuList = menuData.map((item, index) => (
 
         <div className="same-style header-compare">
@@ -27,21 +32,44 @@ export default function SideMenu() {
     return (
 
         <div className="col-xl-4 col-lg-4 col-md-6 col-8">
-            {/* <form className="pro-sidebar-search-form">
-                
-                <button styles="background:white;"><i type="button" className="las la-search" /></button>
-            </form> */}
-
-                <div className=" main-menu  " style={{paddingLeft:"15px", marginTop:"30px"}}>
+            <div className="side-menu" style={{ textAlign: "right" }}>
+                <div className=" main-menu  " style={{marginTop:"30px", marginBottom:"20px"}}>
                     <nav>
                         <ul>
-                            <Link style={{paddingLeft:"15px"}} to="/subscription/introduce">구독하기</Link>
-                            <Link style={{paddingLeft:"15px"}} to="/register">회원가입</Link>
-                            <Link style={{paddingLeft:"15px"}} to="/login">로그인</Link>
-                            <Link style={{paddingLeft:"15px"}} to="/cscenter">고객센터</Link>
+                            <Link to="/subscription/introduce"><b>구독하기</b></Link>
+                            {
+                                !isLogin ?
+                                (
+                                    <Fragment>
+                                            <Link style={{ paddingLeft: "15px" }} to="/register"><b>회원가입</b></Link>
+                                            <Link style={{ paddingLeft: "15px" }} to="/login"><b>로그인</b></Link>
+                                    </Fragment>
+                                )
+                                :
+                                (
+                                    <Fragment>
+                                            <Link style={{ paddingLeft: "15px" }} to="/mypage"><b>마이페이지</b></Link>
+                                            <Link style={{ paddingLeft: "15px" }} onClick={onClickHandler}><b>로그아웃</b></Link>
+                                            
+                                    </Fragment>
+                                )
+                            }
+                            <Link style={{ paddingLeft: "15px" }} onClick={backdoorHandler}><b>백도어</b></Link>
                         </ul>
-                    </nav>
+                    </nav>                
                 </div>
+                {
+                    isLogin ?
+                    (
+                            <div className=" sub-menu  ">
+                                <span style={{ color: "gray" }}>ooo회원님 안녕하세요.</span>
+                                <Link to="/mypkg"> <i type="button" class="fas fa-archive fa-2x" /></Link>
+                            </div>
+                    )
+                    :
+                    <Fragment></Fragment>
+                }
+
 
                 {/* <div className="">
                 <div className="">
@@ -72,10 +100,11 @@ export default function SideMenu() {
                     </ul>
                 </div>
                 </div> */}
-                <div className="same-style mobile-off-canvas d-block d-lg-none">
+                {/* <div className="same-style mobile-off-canvas d-block d-lg-none">
                     <button className="mobile-aside-button"><i className="las la-bars"></i></button>
-                </div>
+                </div> */}
             </div>
+        </div>
 
     );
 }

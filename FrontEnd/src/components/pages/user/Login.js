@@ -100,7 +100,8 @@ export default function Login(props) {
                                                                 value={password}
                                                                 onChange={passwordHandler}
                                                             />
-                                                            <div className="button-box">
+                                                            
+                                                            <div className="button-box" style={{marginBottom:"20px"}}>
                                                                 <div className="login-toggle-btn">
                                                                     <Link to={process.env.PUBLIC_URL + "/find/pw"}>
                                                                         비밀번호 찾기
@@ -113,7 +114,15 @@ export default function Login(props) {
                                                                 </div>
                                                                 <button type="submit">
                                                                     <span>로그인</span>
-                                                                </button> 
+                                                                </button>
+                                                            </div>
+                                                            <div className="oAuth-login-box">
+                                                                <Link to="/api/kakao/login">
+                                                                    <img alt="" width="150px" src="/assets/img/oauth/kakao_login.png"></img>
+                                                                </Link>
+                                                                <Link to="/api/kakao/login" style={{ paddingLeft: "10px" }}>
+                                                                    <img alt="" width="150px" src="/assets/img/oauth/kakao_login.png"></img>
+                                                                </Link>
                                                             </div>
                                                         </form>
                                                     </div>
