@@ -27,4 +27,7 @@ public interface SubscriptionService {
 
     /*구독 결제*/
     void paymentSubscription();
+
+    /*구독 여부확인*/
+    long existSubscription(String userId);
 }
