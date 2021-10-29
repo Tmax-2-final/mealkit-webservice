@@ -11,7 +11,7 @@ export default function FooterMenu(){
                 <Link to="" style={{ marginLeft: "20px" }}>사업자정보 확인</Link>
             </p>
             <p>
-                <span style={{ color: " black" }}>매일키트(주) 대표이사 : </span>손경식, 최은석
+                <span style={{ color: " black" }}>매일키트(주) 대표이사 : </span> 민웅기, 오지웅, 신혜원, 김남곤
                 <br/>
                 <span style={{ color: " black" }}>사업자등록번호 : </span>104-86-09535
                 <br />

@@ -1,0 +1,68 @@
+server:
+  port: 50002
+
+spring:
+  application:
+    name: alert-service
+#  # api , config server 통신
+#  rabbitmq:
+#    host: 127.0.0.1
+#    port: 5672
+#    username: guest
+#    password: guest
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/mydb?serverTimezone=Asia/Seoul
+    username: root
+    password:
+  jpa:
+    show-sql: true
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true  # 페이징 처리 후 page=0이 아닌 1로 처리
+        default-page-size: 10         # 페이징 처리 시 한 페이지 당 10개의 데이터를 가져오는걸 기본으로 한다
+        max-page-size: 2000           # 페이징 처리 시 페이지가 2000개 이상 넘어가지 않도록 한다. (너무 큰 페이징이 나왔을 때를 방지)
+        # 기본으로 설정되어 있으나, 직접 설정으로 바꿔줄 수 있는 것들
+        page-parameter: page          # 페이징 처리 시 페이지라는 인자 명은 page
+        size-parameter: size          # 페이징 처리 시 자르려는 데이터의 사이즈 명은 size
+      sort:
+        sort-parameter: sort          # 페이징 처리로 나온 데이터들을 정렬하는 인자 명은 sort
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: mailkit.omt@gmail.com
+    password: <secret>
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, refresh, health, beans, busrefresh
+
+# FeignClient 사용 시 발생한 로그 추적
+logging:
+  level:
+    com.example.alertservice.client: DEBUG
