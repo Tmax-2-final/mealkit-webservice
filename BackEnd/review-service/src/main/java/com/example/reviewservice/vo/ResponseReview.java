@@ -14,5 +14,6 @@ public class ResponseReview {
     private Integer orderType;
     private Long productId;
     private String userId;
+    private Date createdAt;
     private Date modifiedAt;
 }

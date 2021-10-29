@@ -69,7 +69,7 @@ export default function Preference(props) {
                                                                 <input type="checkbox" name="teamname" value="Unlike" style={{ margin: "8px" }} /> 짠 맛
                                                                 <input type="checkbox" name="teamname" value="little" style={{ margin: "8px" }} /> 매운 맛
                                                                 <input type="checkbox" name="teamname" value="medium" style={{ margin: "8px" }} /> 느끼한 맛
-                                                                <input type="checkbox" name="teamname" value="like" style={{ margin: "8px" }} /> 새콤한 맛ㅊ
+                                                                <input type="checkbox" name="teamname" value="like" style={{ margin: "8px" }} /> 새콤한 맛
                                                             </div>
                                                      
                                                             <div>

@@ -119,6 +119,14 @@ spring:
           filters:
             # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
             - RewritePath=/subscription-service/(?<segment>.*), /$\{segment}
+        # review service
+        - id: review-service
+          uri: lb://REVIEW-SERVICE
+          predicates:
+            - Path=/review-service/**
+          filters:
+            # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
+            - RewritePath=/review-service/(?<segment>.*), /$\{segment}
 
 eureka:
   client:
