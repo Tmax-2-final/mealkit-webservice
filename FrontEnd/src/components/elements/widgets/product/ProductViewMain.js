@@ -3,14 +3,12 @@ import {Link} from 'react-router-dom';
 import Rating from '../../ui/Rating';
 import axios from 'axios';
 
-export default function ProductView({categoryName, sliceNumber, columNumber, search, setSearch}){
+export default function ProductViewMain({categoryName, sliceNumber, columNumber, search, setSearch}){
     console.log(categoryName);
     console.log(search);
-    let process = require('../../../../myProcess.json');
-
+    
     const [newData, setnewData] = useState([]);
     
-
     useEffect(() => {
         axios.get("/catalog-service/catalogs")
         .then(res => {
@@ -24,70 +22,66 @@ export default function ProductView({categoryName, sliceNumber, columNumber, sea
 
     const searchDataMain = categoryName !== "전체메뉴" ? newData.filter(item => item.category === categoryName): newData;
 
+    // const handleDelete = (id) => {
+    //     fetch(`http://${process.IP}:${process.PORT}/wish/${id}`,{
+    //         method: "DELETE"
+    //     }).then(
+    //         alert("삭제되었습니다.")
+    //     )
+    // }
 
+    // const handlePutCompareList = (id) => {
 
+    //     fetch(`http://${process.IP}:${process.PORT}/product/${id}`)
+    //     .then(res => {
+    //         return res.json();
+    //     })
+    //     .then(data => {
+    //         fetch(`http://${process.IP}:${process.PORT}/compare`,{
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify({
+    //                 id: data.id,
+    //                 name: data.name,
+    //                 image: data.image,
+    //                 price: data.price,
+    //                 discount: data.discount,
+    //                 shortDescription: data.shortDescription,
+    //                 rating : data.rating,
+    //             }),
+    //         })
+    //     }).then(
+    //         alert("success")
+    //     )
 
+    // }
 
-    const handleDelete = (id) => {
-        fetch(`http://${process.IP}:${process.PORT}/wish/${id}`,{
-            method: "DELETE"
-        }).then(
-            alert("삭제되었습니다.")
-        )
-    }
-
-    const handlePutCompareList = (id) => {
-
-        fetch(`http://${process.IP}:${process.PORT}/product/${id}`)
-        .then(res => {
-            return res.json();
-        })
-        .then(data => {
-            fetch(`http://${process.IP}:${process.PORT}/compare`,{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    id: data.id,
-                    name: data.name,
-                    image: data.image,
-                    price: data.price,
-                    discount: data.discount,
-                    shortDescription: data.shortDescription,
-                    rating : data.rating,
-                }),
-            })
-        }).then(
-            alert("success")
-        )
-
-    }
-
-    const handlePutWishList = (id) => {
+    // const handlePutWishList = (id) => {
         
-        fetch(`http://${process.IP}:${process.PORT}/product/${id}`)
-        .then(res => {
-            return res.json();
-        })
-        .then(data => {
-            fetch(`http://${process.IP}:${process.PORT}/wish/`,{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    id: data.id,
-                    name: data.name,
-                    image: data.image,
-                    price: data.price,
-                    discount: data.discount
-                }),
-            })
-        }).then(
-            alert("success")
-        )
-    }
+    //     fetch(`http://${process.IP}:${process.PORT}/product/${id}`)
+    //     .then(res => {
+    //         return res.json();
+    //     })
+    //     .then(data => {
+    //         fetch(`http://${process.IP}:${process.PORT}/wish/`,{
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify({
+    //                 id: data.id,
+    //                 name: data.name,
+    //                 image: data.image,
+    //                 price: data.price,
+    //                 discount: data.discount
+    //             }),
+    //         })
+    //     }).then(
+    //         alert("success")
+    //     )
+    // }
     
     const productList = searchDataMain.map((item, index) => (
         
