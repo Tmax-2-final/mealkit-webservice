@@ -5,6 +5,8 @@ import Footer from '../../layout/Footer';
 import Bread from '../../elements/ui/Bread';
 import ProductTop from '../../elements/widgets/product/productTop/ProductTop'
 import PackageTop from "../../elements/widgets/package/PackageTop";
+import PackageMiddle from "../../elements/widgets/package/PackageMiddle";
+import PackageBottom from "../../elements/widgets/package/PackageBottom";
 
 export default function PackageDetail(props) {
 
@@ -35,6 +37,16 @@ export default function PackageDetail(props) {
                 props = {props}
                 packageData = {packageData}
             />
+
+            <PackageMiddle
+                props = {props}
+                packageData = {packageData}
+                />
+            <PackageBottom
+                props = {props}
+                packageData= {packageData}
+                />
+
             {/*<ProductBottom/>*/}
             <Footer/>
         </Fragment>

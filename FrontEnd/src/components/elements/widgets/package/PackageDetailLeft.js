@@ -1,4 +1,8 @@
 import { useEffect } from 'react';
+import * as React from 'react';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+
 
 export default function PackageDetailLeft({packageData}) {
     useEffect(()=>{
@@ -16,6 +20,57 @@ export default function PackageDetailLeft({packageData}) {
                             <div className="single-image">
                                 <img src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${packageData.image}`} className="img-fluid" alt=""/>
                             </div>
+                            <Grid container>
+                                <Box
+
+                                    sx={{
+                                        boxShadow: 0,
+                                        bgcolor: 'background.paper',
+                                        m: 1,
+                                        p: 1,
+                                        width: '7rem',
+                                        height: '5rem',
+                                    }}
+                                >
+                                    <img src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${packageData.image}`} className="img-fluid" alt=""/>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        boxShadow: 0,
+                                        bgcolor: 'background.paper',
+                                        m: 1,
+                                        p: 1,
+                                        width: '7rem',
+                                        height: '5rem',
+                                    }}
+                                >
+                                    <img src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${packageData.image}`} className="img-fluid" alt=""/>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        boxShadow: 0,
+                                        bgcolor: 'background.paper',
+                                        m: 1,
+                                        p: 1,
+                                        width: '7rem',
+                                        height: '5rem',
+                                    }}
+                                >
+                                    <img src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${packageData.image}`} className="img-fluid" alt=""/>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        boxShadow: 0,
+                                        bgcolor: 'background.paper',
+                                        m: 1,
+                                        p: 1,
+                                        width: '7rem',
+                                        height: '5rem',
+                                    }}
+                                >
+                                    <img src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${packageData.image}`} className="img-fluid" alt=""/>
+                                </Box>
+                            </Grid>
                         </div>
                     </div>
                     <span className="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
