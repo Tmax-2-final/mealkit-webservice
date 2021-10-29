@@ -33,20 +33,33 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewRepository.findAllByUserId(userId);
     }
 
+
+    @Override
+    public Iterable<ReviewEntity> getReviewsByPkgId(Long pkgId) {
+        return reviewRepository.findAllByPkgId(pkgId);
+    }
+
+    @Override
+    public Iterable<ReviewEntity> getReviewsByProductId(Long productId) {
+        return reviewRepository.findAllByProductId(productId);
+    }
+
+
+
     @Override
     public void deleteReview(String userId ,Long reviewId) {
         reviewRepository.deleteByUserIdAndReviewId(userId, reviewId);
     }
 
     @Override
-    public ReviewDto createReview(ReviewDto reviewDto, String userId, Long productId, Long pkgId, Integer orderType) {
+    public ReviewDto createReview(ReviewDto reviewDto) {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        reviewDto.setUserId(userId);
-        reviewDto.setProductId(productId);
-        reviewDto.setPkgId(pkgId);
-        reviewDto.setOrderType(orderType);
+//        reviewDto.setUserId(userId);
+//        reviewDto.setProductId(productId);
+//        reviewDto.setPkgId(pkgId);
+//        reviewDto.setOrderType(orderType);
 
         ReviewEntity reviewEntity = mapper.map(reviewDto, ReviewEntity.class);
 

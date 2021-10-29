@@ -11,6 +11,8 @@ public interface ReviewRepository extends CrudRepository<ReviewEntity, Long> {
     ReviewEntity findAllByOrderTypeAndPkgId(Integer orderType, Long pkgId);
     ReviewEntity findAllByOrderTypeAndProductId(Integer orderType, Long productId);
     Iterable<ReviewEntity> findAllByUserId(String userId);
+    Iterable<ReviewEntity> findAllByPkgId(Long pkgId);
+    Iterable<ReviewEntity> findAllByProductId(Long productId);
 
     ReviewEntity findByUserIdAndReviewId(String userId, Long reviewId);
 

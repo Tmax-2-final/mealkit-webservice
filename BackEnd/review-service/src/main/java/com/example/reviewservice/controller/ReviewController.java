@@ -49,15 +49,11 @@ public class ReviewController {
 
     @ApiOperation(value = "리뷰 등록", notes = "사용자의 리뷰 등록")
     @PostMapping("/reviews")
-    public ResponseEntity<ResponseReview> createReview(@RequestBody @Valid RequestReview review,
-                                                       @RequestParam(name = "userId") String userId,
-                                                       @RequestParam(name = "productId") Long productId,
-                                                       @RequestParam(name = "pkgId") Long pkgId,
-                                                       @RequestParam(name = "orderType") Integer orderType) {
+    public ResponseEntity<ResponseReview> createReview(@RequestBody @Valid RequestReview review) {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         ReviewDto reviewDto = mapper.map(review, ReviewDto.class);
-        reviewService.createReview(reviewDto, userId, productId, pkgId, orderType);
+        reviewService.createReview(reviewDto);
         ResponseReview responseReview = mapper.map(reviewDto, ResponseReview.class);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseReview);
@@ -87,6 +83,33 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(responseReviewList);
     }
 
+    @ApiOperation(value = "패키지별 리뷰 조회", notes = "특정 패키지 상품의 리뷰 모두 조회")
+    @GetMapping("/reviews/pkg/{pkgId}")
+    public ResponseEntity<List<ResponseReview>> getReviewByPkgId(@PathVariable("pkgId") Long pkgId){
+        Iterable<ReviewEntity> reviewList = reviewService.getReviewsByPkgId(pkgId);
+        List<ResponseReview> responseReviewList = new ArrayList<>();
+        // 람다 표현식; list 내에 있는 데이터를 v라고 두고, 이 v에 대한 어떤 액션을 하겠다는 '->'
+        // list 안의 데이터 요소를 mapper 를 활용해 responseUser 형태로 바꿔서 결과값을 반환할 list 에 저장
+        reviewList.forEach(v -> {
+            System.out.println(v.getReviewId());
+            responseReviewList.add(new ModelMapper().map(v, ResponseReview.class));
+        });
+        return ResponseEntity.status(HttpStatus.OK).body(responseReviewList);
+    }
+
+    @ApiOperation(value = "상품별 리뷰 조회", notes = "특정 상품의 리뷰 모두 조회")
+    @GetMapping("/reviews/product/{productId}")
+    public ResponseEntity<List<ResponseReview>> getReviewByProductId(@PathVariable("productId") Long productId){
+        Iterable<ReviewEntity> reviewList = reviewService.getReviewsByProductId(productId);
+        List<ResponseReview> responseReviewList = new ArrayList<>();
+        // 람다 표현식; list 내에 있는 데이터를 v라고 두고, 이 v에 대한 어떤 액션을 하겠다는 '->'
+        // list 안의 데이터 요소를 mapper 를 활용해 responseUser 형태로 바꿔서 결과값을 반환할 list 에 저장
+        reviewList.forEach(v -> {
+            System.out.println(v.getReviewId());
+            responseReviewList.add(new ModelMapper().map(v, ResponseReview.class));
+        });
+        return ResponseEntity.status(HttpStatus.OK).body(responseReviewList);
+    }
 
 
     @ApiOperation(value = "리뷰 삭제", notes = "해당 고객이 자신이 작성한 리뷰 삭제")

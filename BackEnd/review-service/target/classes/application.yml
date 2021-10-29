@@ -29,11 +29,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://tmax-2-database-review.cnohqzdklodx.ap-northeast-2.rds.amazonaws.com:3306/reviewdb
-    username: admin
-    password: tmax1234
+#  datasource:
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    url:
+#    username:
+#    password:
 #    driver-class-name: org.h2.Driver
 #    url: jdbc:h2:mem:testdb
 #    username: sa
