@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import "../../src/assets/css/modal.css";
 import DaumPost from './DaumPost';
 
@@ -12,11 +12,13 @@ export const Modal = ( props ) => {
     }
 
     return (
-        // 모달이 열릴때 openModal 클래스가 생성된다.
+    <Fragment>
+        {/* // 모달이 열릴때 openModal 클래스가 생성된다. */}
         <div className={ open ? 'openModal modal' : 'modal' } onClick={handlClick}>
-            { open ? (  
+            { open ? ( 
                 <DaumPost close={close} setAddress={setAddress} setPostcode={setPostcode} setModalOpen={setModalOpen}></DaumPost>
             ) : null }
         </div>
+    </Fragment>
     )
 }

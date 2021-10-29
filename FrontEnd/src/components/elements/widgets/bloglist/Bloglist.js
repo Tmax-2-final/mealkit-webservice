@@ -18,7 +18,7 @@ export default function Bloglist(){
     // },[]);
 
     useEffect(() => {
-        axios.get("catalog-service/catalogs")
+        axios.get("catalog-service/patalogs")
             .then(res => {
                 setNewBlogData(res.data);;
 
@@ -29,14 +29,14 @@ export default function Bloglist(){
 
 
     const blogList = newBlogData.map(item => (
-        <div key={item.id} className="col-12 col-md-4 mb-4">
+        <div key={item.id} className="col-12 col-md-3 mb-3">
             <Link to={`/blogdetail/${item.id}`}><div className="blogImg" style={{backgroundImage:`url(https://bookstore-image.s3.us-east-2.amazonaws.com/${item.image})`,backgroundSize:"cover"}}></div></Link>
             <div className="blogTxt">
             <Link to={`/blogdetail/${item.id}`}><p className="blogTitle">{item.name}</p></Link>
-            <Link to={`/authordetail/${item.author}`}><p className="blogAuth">지은이 : {item.author}</p></Link>
+            <Link to={`/authordetail/${item.author}`}><p className="blogAuth">제작자 : {item.author}</p></Link>
             </div>
         </div>
-    )).slice(0,3)
+    )).slice(0,4)
 
 
     return(

@@ -40,16 +40,18 @@ function MyPage(props) {
             <Header />
             <Bread
                 productId={`test`}
-                productName={`주문서`}
+                productName={``}
                 productUrl={`test3`}
             />
             <section id="mypage">
-                <div className="container">
+                <div className="">
                     <div className="row">
-                        <div className="col-3">
+                        <div className="col-2 offset-1">
+         
                             <SideBar />
+                            
                         </div>
-                        <div className="col-9">
+                        <div className="col-8 offset-1">
                             {/* <Title title="My Account" />
 
                             <SubTitle title="회원 정보" />
@@ -72,7 +74,7 @@ function MyPage(props) {
                                     </ul>
                                 </div> */}
 
-                            <div className="table-content table-responsive cart-table-content">
+                            <div className="table-content table-responsive cart-table-content" style={{ borderRadius: "30px"}}>
                                 <table className="usertable">
 
                                     <thead>
@@ -85,7 +87,7 @@ function MyPage(props) {
                                             <th >            <div className="button-box">
                                                 <div className="row justify-content-between">
                                                     <div className="col-4">
-                                                        <button type="submit" >
+                                                        <button className="btn btn-outline-primary btn-sm" type="submit" >
                                                             <span>edit</span>
                                                         </button>
                                                     </div>
