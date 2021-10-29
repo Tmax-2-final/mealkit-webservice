@@ -44,7 +44,7 @@ function CancelDetail(props) {
     }
 
     const cancelOnclickHandler = () => {
-        if (window.confirm(`밀키트 정기구독을 시작하시겠습니까?`)) {
+        if (window.confirm(`밀키트 정기구독을 취소하시겠습니까?`)) {
             const body = {
                 cancelContent: textareaRef.current.value,
                 userId: userId,
