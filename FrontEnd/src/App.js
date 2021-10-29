@@ -40,6 +40,10 @@ import ReviewForm from './components/pages/review/ReviewForm';
 import ReviewList from './components/pages/review/ReviewList';
 import EditGrade from './components/pages/subscription/EditGrade';
 import Cancel from './components/pages/subscription/Cancel';
+import Introduction from './components/pages/subscription/Introduction';
+import Grade from './components/pages/subscription/Grade';
+import SubRegister from './components/pages/subscription/Register';
+import ConfirmSubPkg from './components/pages/subscription/ConfirmSubPkg';
 
 
 function App() {
@@ -47,7 +51,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ToTop>
+      {/* <ToTop> */}
         <Switch>
           <Route exact path="/"><Home /></Route>
           <Route exact path="/compare"><Compare /></Route>
@@ -83,9 +87,12 @@ function App() {
           <Route exact path="/admin/catalog-register"><CatalogRegister /></Route>
           <Route exact path="/subscription/editgrade" component={EditGrade} />
           <Route exact path="/subscription/cancel" component={Cancel} />
+          <Route exact path="/subscription/introduce" component={Introduction} />
+          <Route exact path="/subscription/grade" component={Grade} />
+          <Route exact path="/subscription/register" component={SubRegister} />
+          <Route exact path="/subscription/confirmusubpkg" component={ConfirmSubPkg} />
         </Switch>
-        <Routers/>
-      </ToTop>
+      {/* </ToTop> */}
     </BrowserRouter>
   );
 }
