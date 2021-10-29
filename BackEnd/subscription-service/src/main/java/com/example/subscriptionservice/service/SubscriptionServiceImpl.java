@@ -132,6 +132,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         subscriptionRepository.saveAll(subscriptionEntityList);
     }
 
+    @Override
+    public long existSubscription(String userId) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        // 1이면 존재, 0이면 존재 x
+        Long existSubscription = subscriptionRepository.countByuserId(userId);
+
+        return existSubscription;
+    }
+
 
     private Sort sortByAscSubGradeId() {
         return Sort.by(Sort.Direction.ASC, "subGradeId");

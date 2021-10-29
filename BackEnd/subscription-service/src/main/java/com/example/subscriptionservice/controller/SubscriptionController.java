@@ -174,4 +174,20 @@ public class SubscriptionController {
 
         return ResponseEntity.status(HttpStatus.OK).body("구독 결제 완료");
     }
+
+
+    @ApiOperation(value = "구독여부 확인", notes = "구독여부를 확인한다.")
+    @GetMapping(value = "/subscription/exist/{userId}")
+    public ResponseEntity<Long> existSubscription(@PathVariable("userId") String userId){
+        log.info("구독여부 확인 API START");
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+
+        Long existSubscription = subscriptionService.existSubscription(userId);
+
+        log.info("구독여부 확인 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(existSubscription);
+    }
 }
