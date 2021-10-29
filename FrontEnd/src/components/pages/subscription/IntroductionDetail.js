@@ -1,29 +1,77 @@
 import React, { useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import Loading from '../../../utilities/Loading';
+import axios from "axios";
 
 function IntroductionDetail(props) {
     
     const [loading, setLoading] = useState(false);
     const [isActive, setIsActive] = useState(false);
 
+    const userId = localStorage.getItem('userid');
+    const token = localStorage.getItem('token');
+
     const subscriptionHandler = (e) => {
-        // Link 태그의 기본 이벤트 중지
         e.preventDefault();
 
-        // 버튼 로딩 생성 및 클릭 방지
-        setLoading(true);
-        setIsActive(true);
-
-        // 페이지 전환이 빠른 편이라 임의적으로 딜레이를 설정
-        // 1초 후 페이지 이동
-        setTimeout(() => {
+        if(!userId){
+            alert("로그인 후 구독해주세요.");
             props.history.push({
-                pathname: '/subscription/grade',
+                pathname: '/login',
                 state: {
                 }
             })
-        }, 1000) 
+
+            return;
+        }
+
+        const headers = {
+            Authorization: `Bearer ${token}`
+        }
+
+        const apiName = "회원 구독여부 조회";
+
+        axios.get(`/subscription-service/subscription/exist/${userId}`, {
+            headers : headers
+        })
+        .then(res => {
+            console.log(`====== ${apiName} DATA INFO ======`);
+            
+            console.log(res.data); 
+
+            console.log(`====== ${apiName} DATA INFO ======`);
+
+            // 구독여부 체크
+            // 0: 구독안함, 1: 구독함
+            const existSubscription = res.data;
+            if(existSubscription === 1){
+                alert("이미 구독중입니다. 구독 변경을 원하시면 마이페이지에서 구독 변경을 진행해주세요.");
+                return;
+            }
+            else {
+                // 버튼 로딩 생성 및 클릭 방지
+                setLoading(true);
+                setIsActive(true);
+
+                // 페이지 전환이 빠른 편이라 임의적으로 딜레이를 설정
+                // 1초 후 페이지 이동
+                setTimeout(() => {
+                    props.history.push({
+                        pathname: '/subscription/grade',
+                        state: {
+                        }
+                    })
+                }, 1000) 
+            }
+        })
+        .catch(error => {
+            
+            alert(`${apiName} 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+            
+            console.log(`====== ${apiName} 실패 data ======`);
+            console.log(error.response);
+            console.log(`====== ${apiName} 실패 data ======`);
+        })
     }
 
     return (

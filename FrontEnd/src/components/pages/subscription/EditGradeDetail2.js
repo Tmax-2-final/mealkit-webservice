@@ -30,37 +30,28 @@ function EditGradeDetail2(props) {
                 console.log(`====== 특정회원 구독 조회 DATA INFO ======`);
 
                 axios.get("/subscription-service/subscription/grade")
-            .then(res => {
-                console.log(`====== 구독등급 전체조회 DATA INFO ======`);
-                
-                console.log(res.data);
+                .then(res => {
+                    console.log(`====== 구독등급 전체조회 DATA INFO ======`);
+                    
+                    console.log(res.data);
 
-                setGradedata(res.data);
-                
-                console.log(`====== 구독등급 전체조회 DATA INFO ======`);  
-            })
-            .catch(error => {
-                alert(`구독조회에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
-                
-                console.log(`====== ${props.location.pathname} ERROR INFO ======`);
-                if (error.response) {
+                    setGradedata(res.data);
+                    
+                    console.log(`====== 구독등급 전체조회 DATA INFO ======`);  
+                })
+                .catch(error => {
+                    alert(`구독조회에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+                    
+                    console.log("====== 구독등급 조회 실패 data ======");
                     console.log(error.response);
-                    // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
-                    console.log(error.response.data);
-                    console.log(error.response.headers);
-                }
-                else if (error.request) {
-                    // 요청이 이루어 졌으나 응답을 받지 못했습니다.
-                    // `error.request`는 브라우저의 XMLHttpRequest 인스턴스 또는
-                    // Node.js의 http.ClientRequest 인스턴스입니다.
-                    console.log(error.request);
-                }
-                else {
-                    // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다.
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);
-                console.log(`====== ${props.location.pathname} ERROR INFO ======`);
+                    console.log("====== 구독등급 조회 실패 data ======");
+                })
+            .catch(error => {
+                alert(`특정에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+                
+                console.log("====== 특정회원 구독조회 실패 data ======");
+                console.log(error.response);
+                console.log("====== 특정회원 구독조회 실패 data ======");
             })
         })
     }, [])
