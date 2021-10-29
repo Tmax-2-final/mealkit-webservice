@@ -37,7 +37,9 @@ import Routers from './utilities/Routers';
 import Preference from "./components/pages/user/Preference";
 import ShippingTable from './components/pages/shipping/ShippingTable';
 import ReviewForm from './components/pages/review/ReviewForm';
-import ReviewList from './components/pages/review/ReviewList';
+import UserReviewList from './components/pages/review/UserReviewList';
+import ProductReviewList from './components/pages/review/ProductReviewList';
+import PkgReviewList from './components/pages/review/PkgReviewList';
 import EditGrade from './components/pages/subscription/EditGrade';
 import Cancel from './components/pages/subscription/Cancel';
 import Introduction from './components/pages/subscription/Introduction';
@@ -77,7 +79,9 @@ function App() {
           <Route exact path="/mypage/myReview"><MyReview /></Route>
           <Route exact path="/mypage/shipping"><ShippingTable /></Route>
           <Route exact path="/review/register"><ReviewForm /></Route>
-          <Route exact path="/review/list"><ReviewList /></Route>
+          <Route exact path="/review/list"><UserReviewList /></Route>
+          <Route exact path="/review/list"><ProductReviewList /></Route>
+          <Route exact path="/review/list"><PkgReviewList /></Route>
           <Route exact path="/payment" component={Payment}></Route>
           <Route exact path="/paymentcomplete" component={PaymetComplete}></Route>
           <Route exact path="/admin/users"><AdminUser /></Route>

@@ -31,4 +31,10 @@ module.exports = function (app) {
             changeOrigin: true,
         })
     );
+    app.use(
+        createProxyMiddleware('/review-service', {
+            target: 'http://localhost:8000',
+            changeOrigin: true,
+        })
+    );
 }
