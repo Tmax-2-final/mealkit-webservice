@@ -16,4 +16,5 @@ public class ResponseReview {
     private String userId;
     private Date createdAt;
     private Date modifiedAt;
+    private String image;
 }

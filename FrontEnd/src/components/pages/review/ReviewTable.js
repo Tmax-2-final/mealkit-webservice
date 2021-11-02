@@ -17,13 +17,13 @@ export default function ReviewTable({ reviewDatas, setReviewDatas }) {
                             <table>
                                 <thead>
                                     <tr>
-                                        
+                                        <th>이미지 </th>
                                         <th>제목 </th>
                                         <th>상품명</th>
                                         <th>내용</th>
                                         <th>평점</th>
-                                        <th>작성자 </th>
-                                        <th>작성일 </th>
+                                        {/* <th>작성자 </th> */}
+                                        
                                         <th>삭제 </th>
                                     </tr>
                                 </thead>

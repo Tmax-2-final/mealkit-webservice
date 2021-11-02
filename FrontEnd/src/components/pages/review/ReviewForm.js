@@ -1,10 +1,13 @@
 import PropTypes from "prop-types";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import LayoutOne from "../user/LayoutOne";
 import Bread from "../../elements/ui/Bread";
 import axios from 'axios';
-
+import S3 from 'react-aws-s3';
+import Rating from '@mui/material/Rating';
+import Typography from '@mui/material/Typography';
+    
 export default function ReviewForm(props) {
 
     // const pkgId = props.location.state.pkgId;
@@ -15,9 +18,16 @@ export default function ReviewForm(props) {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [rating, setRating] = useState(0);
+    const [image, setImage] = useState();
     
     let userId = localStorage.getItem('userid');
     let token = localStorage.getItem('token');
+    const fileInput = useRef();
+    const S3_BUCKET = 'tmax-2';
+    const REGION = 'ap-northeast-2';
+    let newFileName = '';
+    const ACCESS_KEY = '';
+    const SECRET_ACCESS_KEY = '';
 
     const titleHandler = (e) => {
         e.preventDefault();
@@ -45,11 +55,33 @@ export default function ReviewForm(props) {
             return;
         }
 
+        let file = fileInput.current.files[0];
+        newFileName = fileInput.current.files[0].name;
+        const config = {
+            bucketName: S3_BUCKET,
+            region: REGION,
+            accessKeyId: ACCESS_KEY,
+            secretAccessKey: SECRET_ACCESS_KEY
+        };
+        
+        const ReactS3Client = new S3(config);
+        ReactS3Client.uploadFile(file, newFileName).then(data => {
+            console.log(data);
+            if (data.status === 204) {
+                console.log("success");
+                console.log("--------------");
+                console.log(newFileName);
+            } else {
+                console.log("fail");
+            }
+        });
+
         let body = {
             title: title,
             content: content,
             rating: rating,
             userId: userId,
+            image: newFileName,
             pkgId: 0,
             productId: 3,
             orderType: 1
@@ -112,8 +144,8 @@ export default function ReviewForm(props) {
                                                                 onChange={titleHandler}
                                                             />
 
-                                                            <label>상품은 만족하셨나요?</label>
-                                                            <select
+                                                            <label>상품은 만족하셨나요?</label><br/>
+                                                            {/* <select
                                                                 name="rating"
                                                                 onChange={ratingHandler}
                                                                 value={rating}
@@ -124,7 +156,14 @@ export default function ReviewForm(props) {
                                                                 <option value="2" >★★</option>
                                                                 <option value="1" >★</option>
 
-                                                            </select>
+                                                            </select> */}
+                                                            <Rating
+                                                                name="rating"
+                                                                value={rating}
+                                                                onChange= {
+                                                                 ratingHandler
+                                                                }
+                                                            />
                                                             <br />
                                                             <br />
 
@@ -142,12 +181,15 @@ export default function ReviewForm(props) {
 
 
 
-                                                            <div className="billing-info">
-                                                                <label>이미지</label>
-                                                                <input
-                                                                    type="file"
-                                                                // ref={fileInput}
-                                                                />
+                                                            <div className="col-lg-12 col-md-12">
+                                                                <div className="billing-info">
+                                                                    <label>이미지</label>
+                                                                    <input
+                                                                        type="file"
+                                                                        ref={fileInput}
+                                                                    />
+                                                                    <label>{image}</label>
+                                                                </div>
                                                             </div>
 
                                                             <div className="button-box" style={{ float: "right" }}>
