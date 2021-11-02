@@ -4,10 +4,14 @@ import { Link } from "react-router-dom";
 import LayoutOne from "./LayoutOne";
 import Bread from "../../elements/ui/Bread";
 import axios from 'axios';
-
+import { useHistory } from "react-router";
+import { KAKAO_AUTH_URL } from "../../oauth/KakaoOAuth";
 
 
 export default function Login(props) {
+
+    const history = useHistory();
+
     const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");
 
@@ -61,6 +65,10 @@ export default function Login(props) {
                 })
 
     };
+
+    const kakaoLoginHandler = () => {
+        window.location.href = KAKAO_AUTH_URL;
+    }
 
     return (
         <Fragment>
@@ -117,10 +125,7 @@ export default function Login(props) {
                                                                 </button>
                                                             </div>
                                                             <div className="oAuth-login-box">
-                                                                <Link to="/api/kakao/login">
-                                                                    <img alt="" width="150px" src="/assets/img/oauth/kakao_login.png"></img>
-                                                                </Link>
-                                                                <Link to="/api/kakao/login" style={{ paddingLeft: "10px" }}>
+                                                                <Link className="kakaoLogins" onClick={kakaoLoginHandler}>
                                                                     <img alt="" width="150px" src="/assets/img/oauth/kakao_login.png"></img>
                                                                 </Link>
                                                             </div>

@@ -1,25 +1,24 @@
 package com.example.alertservice.service;
 
+import com.example.alertservice.client.UserServiceClient;
 import com.example.alertservice.common.Const;
-import com.example.alertservice.transformer.Trans;
-import com.google.gson.JsonParser;
+import com.example.alertservice.entity.KakaoEntity;
+import com.example.alertservice.entity.OAuthEntity;
+import com.example.alertservice.util.UtilService;
+import com.example.alertservice.vo.RequestAlert;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.HttpSession;
-
-@RequiredArgsConstructor
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class KakaoService {
-	
-	private final HttpSession httpSession;	
-	
-	@Autowired
-	public HttpCallService httpCallService;
-	
+
+	private final UserServiceClient userServiceClient;
+	private final HttpCallService httpCallService;
+	private final UtilService utilService;
 
 	@Value("${rest-api-key}")
 	private String REST_API_KEY;
@@ -32,54 +31,43 @@ public class KakaoService {
 	
 	@Value("${token-uri}")
 	public String TOKEN_URI;			
-	
-	@Value("${client-secret}")
-	private String CLIENT_SECRET;	
-	
+
 	@Value("${kakao-api-host}")
-	private String KAKAO_API_HOST;	
-	
-	
-	public RedirectView goKakaoOAuth() {
-       return goKakaoOAuth("");
-	}
-	
-	public RedirectView goKakaoOAuth(String scope) {
-	   
-	   String uri = AUTHORIZE_URI+"?redirect_uri="+REDIRECT_URI+"&response_type=code&client_id="+REST_API_KEY;
-	   if(!scope.isEmpty()) uri += "&scope="+scope;
-			   
-       return new RedirectView(uri);
-	}	
-	
-	public RedirectView loginCallback(String code) {	
-		String param = "grant_type=authorization_code&client_id="+REST_API_KEY+"&redirect_uri="+REDIRECT_URI+"&client_secret="+CLIENT_SECRET+"&code="+code;
-		String rtn = httpCallService.Call(Const.POST, TOKEN_URI, Const.EMPTY, param);
-        httpSession.setAttribute("token", Trans.token(rtn, new JsonParser()));
-		return new RedirectView("/index.html");
-	}
-			
-	public String getProfile() {	
-		String uri = KAKAO_API_HOST + "/v2/user/me";
-		return httpCallService.CallwithToken(Const.GET, uri, httpSession.getAttribute("token").toString());
-	}
-	
-	public String getFriends() {	
-		String uri = KAKAO_API_HOST + "/v1/api/talk/friends";
-		return httpCallService.CallwithToken(Const.GET, uri, httpSession.getAttribute("token").toString());
+	private String KAKAO_API_HOST;
+
+	public KakaoEntity createKakaoForm(RequestAlert requestAlert) {
+		KakaoEntity kakaoEntity = new KakaoEntity();
+		// 카카오 토큰 확보
+		OAuthEntity oAuthEntity = userServiceClient.getUserOauthByUserId(requestAlert.getUserId());
+
+		kakaoEntity.setUserId(requestAlert.getUserId());
+		kakaoEntity.setAccess_token(oAuthEntity.getAccess_token());
+
+		// 정기 구독 결제
+		if(requestAlert.getType() == 202) {
+			kakaoEntity.setTemplate_id("63885");
+		}
+		// 정기 구독 확정
+		else if(requestAlert.getType() == 203) {
+			kakaoEntity.setTemplate_id("64552");
+		}
+		// 배송 시작
+		else if(requestAlert.getType() == 301) {
+			kakaoEntity.setTemplate_id("63882");
+		}
+		// 배송 완료
+		else if(requestAlert.getType() == 302) {
+			kakaoEntity.setTemplate_id("64554");
+		}
+
+		return kakaoEntity;
 	}
 
-	public String messageTemplates() {
+	public void sendKakaoTalkToMe(KakaoEntity kakao) {
 		String uri = KAKAO_API_HOST + "/v2/api/talk/memo/send";
-		return httpCallService.CallwithToken(Const.POST, uri, httpSession.getAttribute("token").toString(), "template_id=63882&template_args="+Trans.template_args);
+		httpCallService.CallwithToken(Const.POST, uri, kakao.getAccess_token(),
+				"template_id="+ kakao.getTemplate_id() +
+						"&template_args="+utilService.template_args(kakao.getUserId()));
 	}
 
-	public String messageTemplates2() {
-		String uri = KAKAO_API_HOST + "/v2/api/talk/memo/send";
-		String userId = "zxcv9455";
-		String subscribeName = "스탠다드";
-		Integer subscribeQty = 3;
-		String template_args = Trans.template_args2(userId, subscribeName, subscribeQty);
-		return httpCallService.CallwithToken(Const.POST, uri, httpSession.getAttribute("token").toString(), "template_id=63885&template_args="+template_args);
-	}
 }

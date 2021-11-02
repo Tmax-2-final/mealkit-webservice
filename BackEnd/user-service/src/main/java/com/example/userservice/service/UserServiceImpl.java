@@ -311,4 +311,10 @@ public class UserServiceImpl implements UserService{
         return userRepository.findEmailByUserId(userId);
     }
 
+    @Override
+    public String getUserOauthByUserId(String userId) {
+        return userRepository.findOauthByUserId(userId);
+    }
+
+
 }

@@ -3,6 +3,7 @@ package com.example.userservice.dto;
 import com.example.userservice.entity.OrderEntity;
 import com.example.userservice.vo.ResponseCart;
 import com.example.userservice.vo.ResponseOrder;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
@@ -21,6 +22,7 @@ public class UserDto {
     private Date birth;
 
     private String role;
+    private String oauth;
 
     private Date createdAt;
     private Date modifiedAt;
@@ -29,4 +31,5 @@ public class UserDto {
     private String encryptedPwd;
 
     private Iterable<OrderEntity> orders;
+
 }
