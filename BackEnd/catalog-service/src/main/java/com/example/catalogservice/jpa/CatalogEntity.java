@@ -13,22 +13,31 @@ import java.util.Date;
 public class CatalogEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    private Long catalogId;
 
     @Column(nullable = false)
     private String name;
 
+    @Column
+    private String image1;
+
+    @Column
+    private String image2;
+
+    @Column
+    private String image3;
+
+    @Column
+    private String image4;
+
+    @Column
+    private String summaryImg;
+
     @Column(nullable = false)
-    private String image;
+    private String detailImg;
 
     @Column(nullable = true)
     private String details;
-
-    @Column(nullable = false)
-    private String publisher;
-
-    @Column(nullable = false)
-    private String author;
 
     @Column(nullable = false)
     private Integer unitPrice;

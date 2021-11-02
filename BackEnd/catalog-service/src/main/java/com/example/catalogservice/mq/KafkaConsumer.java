@@ -37,7 +37,7 @@ public class KafkaConsumer {
         }
 
         // 재고 수량 업데이트
-        CatalogEntity entity = repository.findByProductId(((Number) map.get("productId")).longValue());
+        CatalogEntity entity = repository.findByCatalogId(((Number) map.get("catalogId")).longValue());
         if (entity != null) {
             entity.setStock(entity.getStock() - (Integer) map.get("qty"));
             repository.save(entity);

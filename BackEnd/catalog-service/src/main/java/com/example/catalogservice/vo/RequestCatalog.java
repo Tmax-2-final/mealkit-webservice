@@ -10,15 +10,31 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RequestCatalog {
 
+    private Long catalogId;
+
     private String name;
-    private String image;
+
+    private String image1;
+
+    private String image2;
+
+    private String image3;
+
+    private String image4;
+
+    private String summaryImg;
+
+    private String detailImg;
+
     private String details;
-    private String publisher;
-    private String author;
+
     private Integer unitPrice;
-    private String category;
+
     private Double rating;
-    private int stock;
+
+    private String category;
+
+    private Integer stock;
 
 
 }

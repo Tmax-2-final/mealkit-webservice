@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
@@ -78,6 +80,15 @@ public class CatalogController {
         return ResponseEntity.status(HttpStatus.OK).body(myPackageList);
     }
 
+    @ApiOperation(value = "회원의 마이패키지 조회", notes = "회원의 마이 패키지를 조회한다")
+    @GetMapping("/{userId}/mypackage")
+    public ResponseEntity<Iterable<MyPackageEntity>> getUserMyPackage(@PathVariable("userId") String userId) {
+        log.info("berfore mypackage");
+        Iterable<MyPackageEntity> myPackageList = catalogService.getUserMyPackage(userId);
+        log.info("after mypackage");
+        return ResponseEntity.status(HttpStatus.OK).body(myPackageList);
+    }
+
     @ApiOperation(value = "메뉴 자식창 조회", notes = "각 메뉴에 대한 자식창을 조회한다")
     @GetMapping("/children")
     public ResponseEntity<Iterable<ChildrenEntity>> getChildren() {
@@ -98,32 +109,27 @@ public class CatalogController {
 
     @ApiOperation(value = "마이패키지 등록", notes="마이패키지 등록")
     @PostMapping("/{userId}/mypackage")
-    public ResponseEntity<ResponseMyPackage> createMyPackage(@RequestBody @Valid RequestMyPackage requestMyPackage, @PathVariable("userId") String userId) {
+    public ResponseEntity<List<ResponseMyPackage>> createMyPackage(@RequestBody @Valid Iterable<RequestMyPackage> requestMyPackageList, @PathVariable("userId") String userId) {
         System.out.println(userId);
         // 1. requestCart + userId => cartDto
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
-        MyPackageDto myPackageDto = mapper.map(requestMyPackage, MyPackageDto.class); // userDto -> userEntity 로 매핑
-        myPackageDto.setUserId(userId);
 
-//        // 등록된 카트가 있는지 조회하기
-//        MyPackageDto existMyPackageDto = catalogService.getMyPackageByPatalogId(myPackageDto);
-//
-//        // 있으면 수량만 변경한다.
-//        if(existMyPackageDto.getFind() == 1) { // 0은 없음 1은 있음
-//            // 기존 수량 + 새로 들어오는 수량
-//            existMyPackageDto.setQty(myPackageDto.getQty() + existMyPackageDto.getQty());
-//            catalogService.updateMyPackage(existMyPackageDto);
-//
-//            return ResponseEntity.status(HttpStatus.OK).body(null);
-//        }
+        List<MyPackageDto> myPackageDtoList = new ArrayList<>();
+
+        for (RequestMyPackage requestMyPackage: requestMyPackageList) {
+            MyPackageDto myPackageDto = mapper.map(requestMyPackage, MyPackageDto.class); // userDto -> userEntity 로 매핑
+            myPackageDto.setUserId(userId);
+
+            myPackageDtoList.add(myPackageDto);
+        }
 
         // 2. service -> jpa -> mariadb 저장 = 카트 등록 서비스
-        catalogService.createMyPackage(myPackageDto);
+        List<ResponseMyPackage> responseMyPackageList = catalogService.createMyPackage(myPackageDtoList);
         // 3. responseCart 로 지정
-        ResponseMyPackage responseMyPackage = mapper.map(myPackageDto, ResponseMyPackage.class);
+        //ResponseMyPackage responseMyPackage = mapper.map(myPackageDto, ResponseMyPackage.class);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseMyPackage);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseMyPackageList);
     }
 
     @ApiOperation(value = "상품 등록", notes = "상품을 등록한다")
@@ -184,10 +190,10 @@ public class CatalogController {
 
 
     @ApiOperation(value = "상품 조회", notes = "해당하는 상품번호의 상품을 조회한다")
-    @GetMapping("/catalogs/{productId}")
-    public ResponseEntity<CatalogEntity> getCatalog(@PathVariable Long productId) {
+    @GetMapping("/catalogs/{catalogId}")
+    public ResponseEntity<CatalogEntity> getCatalog(@PathVariable Long catalogId) {
         log.info("before retrieve catalogs data");
-        CatalogEntity catalogEntity = catalogService.getCatalog(productId);
+        CatalogEntity catalogEntity = catalogService.getCatalog(catalogId);
         log.info("after retrieve catalogs data");
         if (catalogEntity != null) {
             return ResponseEntity.status(HttpStatus.OK).body(catalogEntity);
@@ -195,6 +201,17 @@ public class CatalogController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
+
+    @ApiOperation(value = "패키지관리 조회", notes = "패키지관리를 조회한다")
+    @GetMapping("/pkgmgt/{patalogId}")
+    public ResponseEntity<Iterable<PkgMgtEntity>> getPkgMgt(@PathVariable Long patalogId) {
+        log.info("before retrieve catalogs data");
+        Iterable<PkgMgtEntity> pkgMgtEntity = catalogService.getPkgMgt(patalogId);
+        log.info("after retrieve catalogs data");
+            return ResponseEntity.status(HttpStatus.OK).body(pkgMgtEntity);
+
+    }
+
 
     @ApiOperation(value = "패키지 조회", notes = "해당하는 패키지번호의 패키지번호를 조회한다")
     @GetMapping("/patalogs/{patalogId}")
@@ -210,9 +227,9 @@ public class CatalogController {
     }
 
     @ApiOperation(value = "상품 수정", notes = "해당하는 상품번호의 상품을 수정한다")
-    @PutMapping("/catalogs/{productId}")
-    public ResponseEntity<String> updateCatalog(@RequestBody CatalogDto catalog,  @PathVariable Long productId ){
-        catalog.setProductId(productId);
+    @PutMapping("/catalogs/{catalogId}")
+    public ResponseEntity<String> updateCatalog(@RequestBody CatalogDto catalog,  @PathVariable Long catalogId ){
+        catalog.setCatalogId(catalogId);
         catalogService.updateCatalog(catalog);
 
         return ResponseEntity.status(HttpStatus.OK).body("상품 정보 수정이 완료되었습니다.");

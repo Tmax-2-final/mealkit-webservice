@@ -3,16 +3,17 @@ package com.example.catalogservice.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RequestMyPackage {
+public class ResponsePkgMgt {
 
-    private Long myPkgId;
-
-    private String userId;
-
+    private Long pkgMgtId;
+    private Long patalogId;
     private Long catalogId;
+    private String userId;
+    private Date createdAt;
+    private Date modifiedAt;
 
 }

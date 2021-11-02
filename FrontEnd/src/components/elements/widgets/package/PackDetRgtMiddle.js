@@ -4,12 +4,6 @@ import AddBuyAndCart from '../product/productTop/AddBuyAndCart';
 import AddPackage from "./AddPackage";
 
 export default function PackDetRgtMiddle({props, packageData}) {
-    const { id } = useParams();
-
-    useEffect(()=>{
-        
-    },[packageData]);
-    
     return (
         <Fragment>
             {/* <ColorAndSize 

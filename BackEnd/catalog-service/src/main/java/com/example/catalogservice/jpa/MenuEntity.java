@@ -24,11 +24,5 @@ public class MenuEntity implements Serializable {
     @Column(nullable = false, length= 150)
     private String url;
 
-    @OneToMany(targetEntity = ChildrenEntity.class)
-    @JoinColumn(name = "menuId")
-    private List<Children> children = new ArrayList<>();
-
-
-
 
 }
