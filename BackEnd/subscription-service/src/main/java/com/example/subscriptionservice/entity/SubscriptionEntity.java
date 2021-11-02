@@ -20,8 +20,10 @@ public class SubscriptionEntity implements Serializable {
 
     @Column(nullable = false, length = 50)
     private String userId;
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     private Integer subGradeId;
+    @Column
+    private Long subPkgId;
     @Column(nullable = false, insertable = false)
     private Character status;
     @Column(insertable = false)
@@ -40,9 +42,6 @@ public class SubscriptionEntity implements Serializable {
     @Column
     private Integer changeSubGradeId;
 
-    // optional false = inner join
-//    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "sub_grade_id", nullable = false, updatable = false, insertable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "subGradeId", insertable = false, updatable = false)
     private SubscriptionGradeEntity subscriptionGradeEntity;

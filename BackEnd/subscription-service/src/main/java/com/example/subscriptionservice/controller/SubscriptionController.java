@@ -1,5 +1,6 @@
 package com.example.subscriptionservice.controller;
 
+import com.example.subscriptionservice.dto.SubShipDto;
 import com.example.subscriptionservice.dto.SubscriptionDto;
 import com.example.subscriptionservice.entity.SubscriptionEntity;
 import com.example.subscriptionservice.entity.SubscriptionGradeEntity;
@@ -16,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -103,6 +107,18 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseSubscription);
     }
 
+    @ApiOperation(value = "구독 재시작", notes = "기존에 구독했던 회원의 구독취소 상태를 1:구독(구독패키지확정전)상태 및 신청한 구독등급으로 변경한다.")
+    @PutMapping(value = "/subscription/restart")
+    public ResponseEntity<String> restartSubscription(@RequestBody RequestUpdateSubscription requestUpdateSubscription){
+        log.info("구독 재시작 API START");
+
+        subscriptionService.restartSubscription(requestUpdateSubscription);
+
+        log.info("구독 재시작 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body("구독 재시작 완료");
+    }
+
     @ApiOperation(value = "구독 변경", notes = "회원의 구독을 변경한다.")
     @PutMapping(value = "/subscription")
     public ResponseEntity<String> updateSubscription(@RequestBody RequestUpdateSubscription requestUpdateSubscription){
@@ -127,14 +143,7 @@ public class SubscriptionController {
     public ResponseEntity<String> cancelSubscription(@RequestBody RequestCancelSubscription requestCancelSubscription){
         log.info("구독 취소 API START");
 
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
-
-        // 요청 userId 로 구독정보 조회 , 구독취소 사유 설정
-        SubscriptionDto subscriptionDto = subscriptionService.getSubscription(requestCancelSubscription.getUserId());
-        subscriptionDto.setCancelContent(requestCancelSubscription.getCancelContent());
-
-        subscriptionService.cancelSubscription(subscriptionDto);
+        subscriptionService.cancelSubscription(requestCancelSubscription);
 
         log.info("구독 변경 API END");
 
@@ -175,7 +184,6 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.OK).body("구독 결제 완료");
     }
 
-
     @ApiOperation(value = "구독여부 확인", notes = "구독여부를 확인한다.")
     @GetMapping(value = "/subscription/exist/{userId}")
     public ResponseEntity<Long> existSubscription(@PathVariable("userId") String userId){
@@ -189,5 +197,39 @@ public class SubscriptionController {
         log.info("구독여부 확인 API END");
 
         return ResponseEntity.status(HttpStatus.OK).body(existSubscription);
+    }
+
+    @ApiOperation(value = "구독배송 등록", notes = "구독확정한 회원의 구독 배송을 등록한다.")
+    @PostMapping(value = "/subscription/ships")
+    public ResponseEntity<ResponseSubShip> createSubscriptionShips(@RequestBody RequestSubShip subships){
+        log.info("구독배송 등록 API START");
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+        // request -> dto
+        SubShipDto subShipDto = mapper.map(subships, SubShipDto.class); // userDto -> userEntity 로 매핑
+
+        subShipDto = subscriptionService.createSubShips(subShipDto);
+        // dto -> response
+        ResponseSubShip responseSubShip = mapper.map(subShipDto, ResponseSubShip.class);
+
+        log.info("구독배송 등록 API END");
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseSubShip);
+    }
+
+    @ApiOperation(value = "특정회원 환불금액 조회", notes = "구독취소하려는 회원의 환불금액을 조회한다.")
+    @GetMapping(value = "/subscription/refundamount/{userId}")
+    public ResponseEntity<Long> geRefundAmount(@PathVariable("userId") String userId){
+        log.info("특정회원 환불금액 조회 API START");
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+
+        Long refundAmount = subscriptionService.getRefundAmount(userId);
+
+        log.info("특정회원 환불금액 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(refundAmount);
     }
 }

@@ -13,6 +13,7 @@ import java.util.Date;
 public class SubscriptionDto implements Serializable {
     private Long subId;
     private Integer subGradeId;
+    private Long subPkgId;
     private String userId;
     private Character status;
     private LocalDateTime lastPaymentDate;

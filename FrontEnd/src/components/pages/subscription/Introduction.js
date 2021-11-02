@@ -5,8 +5,6 @@ import Bread from '../../elements/ui/Bread';
 import IntroductionDetail from './IntroductionDetail';
 
 export default function Introduction(props) {
-    console.log("프롭스1");
-    console.log(props);
     return (
         <Fragment>
             <Header/>
