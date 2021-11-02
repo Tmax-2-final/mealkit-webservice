@@ -17,7 +17,7 @@ export default function ProDetRgtMiddle({props, productData}) {
                 setColor = {setColor}
                 setSize = {setSize}
             /> */}
-            <AddPackage
+            <AddBuyAndCart
                 props = {props}
                 productData = {productData}
             /> 

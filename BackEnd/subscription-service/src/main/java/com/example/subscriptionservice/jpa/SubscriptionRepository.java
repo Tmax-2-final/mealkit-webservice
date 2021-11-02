@@ -15,5 +15,5 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity
 
     Iterable<SubscriptionEntity> findByNextPaymentDateBetween(LocalDateTime start, LocalDateTime end);
 
-    Long countByuserId(String userId);
+    Long countByUserId(String userId);
 }

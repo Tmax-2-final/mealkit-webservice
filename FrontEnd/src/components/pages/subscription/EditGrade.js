@@ -3,6 +3,7 @@ import Header from '../../layout/Header';
 import Footer from '../../layout/Footer';
 import Bread from '../../elements/ui/Bread';
 import EditGradeDetail2 from './EditGradeDetail2';
+import axios from "axios";
 
 export default function EditGrade(props) {
 

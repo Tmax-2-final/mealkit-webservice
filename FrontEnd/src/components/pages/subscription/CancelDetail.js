@@ -10,6 +10,10 @@ function CancelDetail(props) {
     const userId = localStorage.getItem('userid');
     const token = localStorage.getItem('token');
 
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
+
     const textareaRef = useRef();
 
 	//textarea 바이트 수 체크하는 함수
@@ -45,6 +49,8 @@ function CancelDetail(props) {
 
     const cancelOnclickHandler = () => {
         if (window.confirm(`밀키트 정기구독을 취소하시겠습니까?`)) {
+            const apiName = "구독 취소"
+
             const body = {
                 cancelContent: textareaRef.current.value,
                 userId: userId,
@@ -54,9 +60,9 @@ function CancelDetail(props) {
                 Authorization: `Bearer ${token}`
             }
 
-            console.log("====== 구독 취소 API BODY ======");
+            console.log(`====== ${apiName} API BODY ======`);
             console.log(body);
-            console.log("====== 구독 취소 API BODY ======");
+            console.log("==============================");
 
             axios.delete(`/subscription-service/subscription`, {
                 data : body,
@@ -65,38 +71,21 @@ function CancelDetail(props) {
             .then(res => {
                 console.log(res);
                 if(res.status === 200){
-                    alert("구독 취소가 완료되었습니다.")
+                    //alert("구독 취소가 완료되었습니다.")
 
                     props.history.push({
-                        pathname: '/',
+                        pathname: '/subscription/cancelcomplete',
                         state: {
                         }
                     })
                 } else {
-                    alert(`구독취소 응답상태코드 에러 (응답 상태코드 : ${res.status})`)
+                    alert(`${apiName} 응답상태코드 에러 (응답 상태코드 : ${res.status})`)
                 }
             })
             .catch(error => {
-                alert(`구독 취소에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
-                console.log(`====== ${props.location.pathname} ERROR INFO ======`);
-                if (error.response) {
-                    console.log(error.response);
-                    // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
-                    console.log(error.response.data);
-                    console.log(error.response.headers);
-                }
-                else if (error.request) {
-                    // 요청이 이루어 졌으나 응답을 받지 못했습니다.
-                    // `error.request`는 브라우저의 XMLHttpRequest 인스턴스 또는
-                    // Node.js의 http.ClientRequest 인스턴스입니다.
-                    console.log(error.request);
-                }
-                else {
-                    // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다.
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);
-                console.log(`====== ${props.location.pathname} ERROR INFO ======`);
+                alert(`${apiName}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+                console.log(`====== ${apiName} ERROR INFO ======`);
+                console.log(error.response);
             })
         }
     }

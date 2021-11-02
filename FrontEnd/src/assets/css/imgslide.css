@@ -1,0 +1,86 @@
+.imageSlide {
+  position: relative;
+  width: 500px;
+  margin: auto;
+  padding-bottom: 30px;
+}
+.imageSlide .navBox {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 14px;
+  z-index: 2;
+}
+.imageSlide .navBox span {
+  padding: 0 5px;
+}
+.imageSlide .slideBox {
+  position: relative;
+  width: 100%;
+  margin: auto;
+  overflow-x: hidden;
+}
+.imageSlide .slideBox .slideList {
+  width: 2800px;
+  transition: all 300ms ease 0s;
+  overflow: hidden;
+}
+.imageSlide .slideBox .slideList .slideContent {
+  display: table;
+  float: left;
+  width: 500px;
+  height: 500px;
+}
+.imageSlide .slideBox .slideList .slideContent picture {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+.imageSlide .slideBox .slideList .slideContent picture img {
+  width: 100%;
+  height: auto;
+}
+.imageSlide .slideBox:hover .buttonPrev {
+  left: 0;
+  transition: left 0.5s;
+  background-color: transparent;
+  text-align: center;
+}
+.imageSlide .slideBox:hover .buttonNext {
+  right: 0;
+  transition: right 0.5s;
+  background-color: transparent;
+  text-align: center;
+}
+.imageSlide .slideBox .buttonPrev, .imageSlide .slideBox .buttonNext {
+  position: absolute;
+  top: 225px;
+  width: 50px;
+  height: 50px;
+  padding-top: 5px;
+  background-color: #333;
+  font-size: 40px;
+  font-weight: 100;
+  vertical-align: middle;
+  color: #eee;
+}
+.imageSlide .slideBox .buttonPrev {
+  left: -50px;
+}
+.imageSlide .slideBox .buttonNext {
+  right: -50px;
+}
+.imageSlide .paginationBox {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  width: 100%;
+  grid-column-gap: 3px;
+}
+.imageSlide .paginationBox picture {
+  width: 100%;
+}
+.imageSlide .paginationBox picture img {
+  width: 100%;
+  cursor: pointer;
+}

@@ -18,6 +18,7 @@ import "./assets/css/googlefont.css";
 import "./assets/icons8/css/line-awesome.min.css";
 import './assets/css/pagination.css'
 import './assets/css/routers.css'
+import './assets/css/imgslide.css'
 // import ToTop from "./utilities/ToTop";
 import Login from './components/pages/user/Login';
 import Register from './components/pages/user/Register';
@@ -46,6 +47,9 @@ import Introduction from './components/pages/subscription/Introduction';
 import Grade from './components/pages/subscription/Grade';
 import SubRegister from './components/pages/subscription/Register';
 import ConfirmSubPkg from './components/pages/subscription/ConfirmSubPkg';
+import SubscriptionComplete from './components/pages/subscription/SubscriptionComplete';
+import CancelComplete from './components/pages/subscription/CancelComplete';
+import UpdateComplete from './components/pages/subscription/UpdateComplete';
 import KakaoLoginCallback from './components/oauth/KakaoLoginCallback';
 
 
@@ -75,7 +79,7 @@ function App() {
           <Route exact path="/register"><Register /></Route>
           <Route exact path="/preference"><Preference /></Route>
           <Route exact path="/find/pw"><FindPw/></Route>
-          <Route exact path="/mypage"><MyPage /></Route>
+          <Route exact path="/mypage" component={MyPage}></Route>
           <Route exact path="/mypage/myInfo"><MyInfoEdit /></Route>
           <Route exact path="/mypage/myOrder"><MyOrder /></Route>
           <Route exact path="/mypage/myReview"><MyReview /></Route>
@@ -94,10 +98,12 @@ function App() {
           <Route exact path="/subscription/editgrade" component={EditGrade} />
           <Route exact path="/subscription/cancel" component={Cancel} />
           <Route exact path="/subscription/introduce" component={Introduction} />
-          <Route exact path="/subscription/grade" component={Grade} />
+          <Route  exact path="/subscription/grade" component={Grade} />
           <Route exact path="/subscription/register" component={SubRegister} />
           <Route exact path="/subscription/confirmusubpkg" component={ConfirmSubPkg} />
-          
+          <Route exact path="/subscription/subscriptioncomplete" component={SubscriptionComplete} />
+          <Route exact path="/subscription/cancelcomplete" component={CancelComplete} />
+          <Route exact path="/subscription/updatecomplete" component={UpdateComplete} />
         </Switch>
       {/* </ToTop> */}
     </BrowserRouter>
@@ -105,3 +111,4 @@ function App() {
 }
 
 export default App;
+

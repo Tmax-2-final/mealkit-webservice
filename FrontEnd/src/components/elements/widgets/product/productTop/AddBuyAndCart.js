@@ -102,31 +102,6 @@ export default function AddBuyAndCart({props, productData}) {
 
     return(
         <>
-            <div className="pro-details-quality">
-                <div className="cart-plus-minus">
-                    <button className="dec qtybutton" onClick={()=>handleCountDec()}>-</button>
-                    <input className="cart-plus-minus-box" type="text" value={count} onChange={handleCount}  maxlength="3"/>
-                    
-                    <button className="inc qtybutton" onClick={()=>handleCountAdd()}>+</button>
-                </div>
-                <div className="pro-details-cart btn-hover" style={{display:isDisply}}>
-                    <button onClick={()=> handlePutCartList()}>마이패키지에 담기</button>
-                </div>
-                
-                {/*<div className="pro-details-cart btn-hover ml-30"> */}
-                {/*    <Link to={{*/}
-                {/*                pathname: "/payment",*/}
-                {/*                state: {*/}
-                {/*                    data:[productData],*/}
-                {/*                    totalPriceData:count*productData.unitPrice*/}
-                {/*                },*/}
-                {/*    }} */}
-                {/*    onClick={addQty}*/}
-                {/*    style={{backgroundColor:buyBtnColor}}>*/}
-                {/*        {productData.stock !== 0 ? "구매하기" : "품절"}*/}
-                {/*    </Link>*/}
-                {/*</div>                */}
-            </div>
             <div class="pro-details-meta">
                 <span>재고 :</span>
                 <ul>
@@ -136,13 +111,19 @@ export default function AddBuyAndCart({props, productData}) {
             <div class="pro-details-meta">
             <span>카테고리 :</span>
             <ul>
-                <li><a href="/shop-grid-standard">{productData.category}</a></li>
+                <li><a href="/shop-grid-standard">양식</a></li>
             </ul>
             </div>
             <div class="pro-details-meta">
-                <span>ISBN :</span>
+                <span>조리시간 :</span>
                 <ul>
-                    <li><a href="/shop-grid-standard">{productData.productId}</a></li>
+                    <li><a href="/shop-grid-standard">35분</a></li>
+                </ul>
+            </div>
+            <div class="pro-details-meta">
+                <span>용량 : </span>
+                <ul>
+                    <li><a href="/shop-grid-standard">3인분</a></li>
                 </ul>
             </div>
         </>

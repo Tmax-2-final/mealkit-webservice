@@ -36,17 +36,55 @@ function IntroductionDetail(props) {
         })
         .then(res => {
             console.log(`====== ${apiName} DATA INFO ======`);
-            
             console.log(res.data); 
-
-            console.log(`====== ${apiName} DATA INFO ======`);
+            console.log(`==================================`);
 
             // 구독여부 체크
             // 0: 구독안함, 1: 구독함
             const existSubscription = res.data;
             if(existSubscription === 1){
-                alert("이미 구독중입니다. 구독 변경을 원하시면 마이페이지에서 구독 변경을 진행해주세요.");
-                return;
+                const apiName2 = "회원 구독정보 조회";
+
+                axios.get(`/subscription-service/subscription/${userId}`, {
+                    headers : headers
+                })
+                .then(res2 => {
+                    console.log(`====== ${apiName2} DATA INFO ======`);
+                    console.log(res2.data); 
+                    console.log(`==================================`);
+                    
+                    const cancelStatus = '3';
+
+                    // 구독 취소 상태가 아니면
+                    if(res2.data.status !== cancelStatus){
+                        alert("이미 구독중입니다. \r\n구독 변경을 원하시면 마이페이지에서 구독 변경을 진행해주세요.");
+                        return;
+                    }
+                    else {
+                        alert(`${userId}님 다시 구독신청 해주셔서 감사합니다. \r\n구독내용이 새롭게 바뀐부분이 있는지 꼭 확인하시고 진행해주세요.`);
+                        // 버튼 로딩 생성 및 클릭 방지
+                        setLoading(true);
+                        setIsActive(true);
+        
+                        // 페이지 전환이 빠른 편이라 임의적으로 딜레이를 설정
+                        // 1초 후 페이지 이동
+                        setTimeout(() => {
+                            props.history.push({
+                                pathname: '/subscription/grade',
+                                state: {
+                                }
+                            })
+                        }, 1000) 
+                    }
+                })
+                .catch(error => {
+            
+                    alert(`${apiName2} 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+                    
+                    console.log(`====== ${apiName2} 실패 data ======`);
+                    console.log(error.response);
+                    console.log(`==================================`);
+                })
             }
             else {
                 // 버튼 로딩 생성 및 클릭 방지
