@@ -1,9 +1,11 @@
 package com.example.catalogservice.jpa;
 
 import lombok.Data;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /*
@@ -21,34 +23,24 @@ create table carts (
 @Data
 @Entity
 @Table(name="mypackage")
-public class MyPackageEntity {
+public class MyPackageEntity implements Serializable {
 
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+
     @Id
-    @Column
-    private Long patalogId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long myPkgId;
 
     @Column
     private String userId;
 
     @Column
-    private String name;
+    private Long catalogId;
 
-    @Column
-    private String image;
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "catalogId", insertable = false, updatable = false)
+    @JsonIgnore
+    private CatalogEntity catalogEntity;
 
-    @Column
-    @ColumnDefault(value = "1")
-    private Integer qty;
-
-    @Column
-    private Long unitPrice;
-
-    @Column(nullable = false, updatable = false, insertable = false)
-    @ColumnDefault(value = "CURRENT_TIMESTAMP")
-    private Date createdAt;
-
-    @Column(nullable = false, insertable = false, updatable = false)
-    @ColumnDefault(value = "CURRENT_TIMESTAMP")
-    private Date modifiedAt;
 }

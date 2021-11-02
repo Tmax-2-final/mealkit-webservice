@@ -7,12 +7,35 @@ export default function AddPackage({props, packageData}) {
     const [isDisply, setIsDisplay] = useState("");
     const [stockTextColor, setStockTextColor] = useState("#676767");
     const [buyBtnColor, setBuyBtnColor] = useState("#343538");
+    const [ pkgMgtData, setPkgMgtData ] = useState([]);
+    const [ catalogData, setCatalogData] = useState();
+    const [ myPackageData, setMyPackageData] = useState();
 
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('userid');
 
-    console.log(packageData);
-    
+
+    useEffect(() => {
+        console.log("=======패키지 데이터======");
+        console.log(packageData);
+        
+        axios.get(`/catalog-service/pkgmgt/${packageData.patalogId}`)
+            .then(res => {
+                console.log("=======상품관리 데이터======");
+                setPkgMgtData(res.data);
+                console.log(res.data);
+            })
+    },[packageData]);
+
+
+    useEffect(() => {
+        // axios.get(`/catalog-service/catalogs/`)
+        //     .then(res => {
+        //         setCatalogData(res.data);
+        //         console.log(res.data);
+        //     })
+    },[]);
+
 
     useEffect(()=>{
         if(packageData.stock === 0) {
@@ -26,6 +49,12 @@ export default function AddPackage({props, packageData}) {
         }
     },[packageData]
     );
+
+
+
+    // const mypkgData = catalogData.filter(item => item.catalogId === pkgMgtData.filter(item => item.catalogId));
+
+    // console.log(mypkgData);
 
     const addQty = (e) => {
         // if(!token){
@@ -67,16 +96,30 @@ export default function AddPackage({props, packageData}) {
         //     props.history.push("/login");
         // }
         // else {
-            let body = {
-                patalogId: packageData.patalogId,
-                name: packageData.name,
-                image: packageData.image,
-                unitPrice: packageData.unitPrice,
-                qty: count
-            }
 
 
-        axios.post(`/catalog-service/hello1/mypackage`, body)
+            // let body = {
+            //     patalogId: packageData.patalogId,
+            //     name: packageData.name,
+            //     image: packageData.image,
+            //     unitPrice: packageData.unitPrice,
+            //     qty: count
+            // }
+
+
+            // pkgMgtData.map((item) => {
+            //     catalogData.map((subItem) => {
+            //         if(item.catalogId === subItem.catalogId){
+            //             setMyPackageData(subItem);
+            //             console.log(myPackageData);
+            //
+            //
+            //         }
+            //     })
+            //
+            // })
+
+        axios.post(`/catalog-service/hello1/mypackage`, pkgMgtData )
             .then(res => {
                 console.log(res)
                 if (res.status == 201) {
@@ -95,7 +138,7 @@ export default function AddPackage({props, packageData}) {
             })
             .catch(err => {
                 alert("다시 다시 입력해주세요.");
-                console.log(body);
+                console.log(pkgMgtData);
             });
     
             // axios.post(`/user-service/hello1/mypackage`, body, {

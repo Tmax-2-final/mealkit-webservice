@@ -1,11 +1,15 @@
 package com.example.catalogservice.jpa;
 
+import com.example.catalogservice.vo.Children;
+import com.example.catalogservice.vo.PkgMgt;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -49,4 +53,8 @@ public class PatalogEntity implements Serializable {
 
     @Column
     private Integer stock;
+
+    @OneToMany(targetEntity = PkgMgtEntity.class)
+    @JoinColumn(name = "patalogId")
+    private List<PkgMgt> pkgMgt = new ArrayList<>();
 }

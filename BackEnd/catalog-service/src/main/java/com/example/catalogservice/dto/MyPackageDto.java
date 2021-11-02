@@ -2,19 +2,19 @@ package com.example.catalogservice.dto;
 
 import lombok.Data;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
 import java.util.Date;
 
 @Data
 public class MyPackageDto {
 
-    private Long patalogId;
+
+    private Long myPkgId;
+
     private String userId;
-    private Integer qty;
-    private String image;
-    private String name;
-    private Long unitPrice;
-    private Date createdAt;
-    private Date modifiedAt;
+
+    private Long catalogId;
 
     private Integer find;
 

@@ -14,17 +14,30 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseCatalog {
 
-    private Long productId;
+    private Long catalogId;
+
     private String name;
-    private String image;
+
+    private String image1;
+
+    private String image2;
+
+    private String image3;
+
+    private String image4;
+
+    private String summaryImg;
+
+    private String detailImg;
+
     private String details;
-    private String publisher;
-    private String author;
+
     private Integer unitPrice;
+
     private Double rating;
+
     private String category;
-    private int stock;
-    private Date createdAt;
-    private Date modifiedAt;
+
+    private Integer stock;
 
 }

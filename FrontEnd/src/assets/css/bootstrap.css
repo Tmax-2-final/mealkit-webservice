@@ -30150,6 +30150,11 @@ h3.cart-page-title {
   border: none;
   padding: 0;
 }
+.compare-remove button {
+  background: none;
+  border: none;
+  padding: 0;
+}
 .compare-table .table tbody tr td.product-image-title .compare-remove button i {
   font-size: 25px;
 }

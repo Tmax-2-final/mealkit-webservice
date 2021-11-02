@@ -7,11 +7,10 @@ import java.util.Date;
 @Data
 public class ResponseMyPackage {
 
-    private Long patalogId;
-    private String image;
-    private String name;
-    private Integer qty;
-    private Long unitPrice;
-    private Date createdAt;
-    private Date modifiedAt;
+    private Long myPkgId;
+
+    private String userId;
+
+    private Long catalogId;
+
 }
