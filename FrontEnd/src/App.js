@@ -19,7 +19,7 @@ import "./assets/icons8/css/line-awesome.min.css";
 import './assets/css/pagination.css'
 import './assets/css/routers.css'
 import './assets/css/imgslide.css'
-import ToTop from "./utilities/ToTop";
+// import ToTop from "./utilities/ToTop";
 import Login from './components/pages/user/Login';
 import Register from './components/pages/user/Register';
 import MyPage from './components/pages/user/MyPage';
@@ -34,7 +34,7 @@ import AdminOrder from './components/pages/admin/AdminOrder';
 import AdminCatalog from './components/pages/admin/AdminCatalog';
 import CatalogRegister from "./components/pages/productlist/CatalogRegister";
 import CatalogRegisterSub from "./components/pages/productlist/CatalogRegisterSub";
-import Routers from './utilities/Routers';
+// import Routers from './utilities/Routers';
 import Preference from "./components/pages/user/Preference";
 import ShippingTable from './components/pages/shipping/ShippingTable';
 import ReviewForm from './components/pages/review/ReviewForm';
@@ -50,6 +50,7 @@ import ConfirmSubPkg from './components/pages/subscription/ConfirmSubPkg';
 import SubscriptionComplete from './components/pages/subscription/SubscriptionComplete';
 import CancelComplete from './components/pages/subscription/CancelComplete';
 import UpdateComplete from './components/pages/subscription/UpdateComplete';
+import KakaoLoginCallback from './components/oauth/KakaoLoginCallback';
 
 
 function App() {
@@ -74,6 +75,7 @@ function App() {
           <Route exact path="/packagedetail/:id" component={PackageDetail}></Route>
           <Route exact path="/myaccount"><MyAccount /></Route>
           <Route exact path="/login"><Login /></Route>
+          <Route exact path="/oauth/callback/kakao" component={KakaoLoginCallback}></Route>
           <Route exact path="/register"><Register /></Route>
           <Route exact path="/preference"><Preference /></Route>
           <Route exact path="/find/pw"><FindPw/></Route>

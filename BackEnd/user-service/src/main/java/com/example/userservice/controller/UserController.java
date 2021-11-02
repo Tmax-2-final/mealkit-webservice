@@ -38,9 +38,11 @@ public class UserController {
 
         return String.format("It`s Working in User Service, " +
                         "Port(local.server.port)=%s,  Port(server.port)=%s, " +
-                        "token.secret=%s, token.expiration_time=%s, gateway.ip=%s",
+                        "token.secret=%s, token.expiration_time=%s, gateway.ip=%s" +
+                        "카카오 토큰=%s" ,
                 env.getProperty("local.server.port"), env.getProperty("server.port"),
-                env.getProperty("token.secret"), env.getProperty("token.expiration_time"), env.getProperty("gateway.ip"));
+                env.getProperty("token.secret"), env.getProperty("token.expiration_time"), env.getProperty("gateway.ip"),
+                env.getProperty("kakao.oauth.client-id"));
     }
 
     @GetMapping("/welcome")
@@ -264,4 +266,5 @@ public class UserController {
         String result = userService.getUserEmailByUserId(userId);
         return result;
     }
+
 }

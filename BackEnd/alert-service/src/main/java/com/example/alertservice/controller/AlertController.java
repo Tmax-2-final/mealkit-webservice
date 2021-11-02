@@ -2,6 +2,7 @@ package com.example.alertservice.controller;
 
 import com.example.alertservice.client.UserServiceClient;
 import com.example.alertservice.entity.AlertsEntity;
+import com.example.alertservice.entity.KakaoEntity;
 import com.example.alertservice.entity.MailEntity;
 import com.example.alertservice.querydsl.AlertsSearchParam;
 import com.example.alertservice.service.AlertService;
@@ -23,12 +24,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -138,12 +136,18 @@ public class AlertController {
 
     @ApiOperation(value="알림 발송", notes="알림 코드에 따른 알림 발송(메일&카카오)")
     @PostMapping("/alerts")
-    public Map<String, Integer> sendAndSaveAlerts(HttpSession httpSession, @RequestBody RequestAlert requestAlert) {
+    public Map<String, Integer> sendAndSaveAlerts(@RequestBody RequestAlert requestAlert) {
         Map<String, Integer> result = new HashMap<>();
         // 카카오 알림 발송 코드
-        if(httpSession.getAttribute("token") != null || httpSession.getAttribute("token") != "") {
-            // kakaoService.goKakaoOAuth();
-            // kakaoService.message();
+        if(requestAlert.getOauth() != null && requestAlert.getOauth().equals("kakao")) {
+            log.info("카카오 알림 발송 시작");
+            // 0. 토큰 만료 기간부터 파악, 만료되었다면 갱신이 먼저
+            // kakaoService.refreshKakaoToken();
+            // 1. 카카오 메세지 발송을 위한 카카오 알림 폼 제작
+            KakaoEntity kakaoEntity = kakaoService.createKakaoForm(requestAlert);
+            // 2. 카카오 메세지 발송
+            kakaoService.sendKakaoTalkToMe(kakaoEntity);
+            log.info("카카오 알림 발송 완료");
         }
         // 이메일 발송 코드
         log.info("이메일 알림 발송 시작");
@@ -155,9 +159,10 @@ public class AlertController {
             mailService.sendMail(mailEntity);
             // 4. 알림 전송 성공 코드
             result.put("result_code", 0);
+            log.info("이메일 알림 발송 성공, DB에 알림 내역 저장 시작");
             // 5. 알림 내역 db 저장
             alertService.saveAlerts(requestAlert.getType(), requestAlert.getUserId(), mailEntity);
-
+            log.info("알림 내역 저장 완료");
         }
         catch(Exception e) {
             log.error("이메일 발송 실패");
