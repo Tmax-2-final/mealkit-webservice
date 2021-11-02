@@ -10,6 +10,8 @@ public class RequestAlert {
     private Integer type;
     // 유저 아이디
     private String userId;
+    // oauth 유저인지 확인
+    private String oauth;
     // 주문 번호
     private Long orderId;
     // 구독 등급명

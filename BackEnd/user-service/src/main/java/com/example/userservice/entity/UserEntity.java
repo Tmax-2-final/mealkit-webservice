@@ -1,5 +1,6 @@
 package com.example.userservice.entity;
 
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -42,6 +43,9 @@ public class UserEntity {
     @Column(length = 20)
     private String role;
 
+    @Column
+    private String oauth;
+
     @Column(nullable = false, unique = true)
     private String encryptedPwd;
 
@@ -56,4 +60,5 @@ public class UserEntity {
     @OneToMany(targetEntity = CartEntity.class)
     @JoinColumn(name = "cartId")
     List<CartEntity> cartEntityList = new ArrayList<>();
+
 }

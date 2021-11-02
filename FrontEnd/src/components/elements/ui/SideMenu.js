@@ -61,8 +61,8 @@ export default function SideMenu() {
                 {
                     isLogin ?
                     (
-                            <div className=" sub-menu  ">
-                                <span style={{ color: "gray" }}>ooo회원님 안녕하세요.</span>
+                            <div className="second-main-menu" style={{ float: "center" }}>
+                                <p>{localStorage.getItem('userid')}<span style={{ color: "gray" }}> 회원님 안녕하세요.</span></p>
                                 <Link to="/mypkg"> <i type="button" class="fas fa-archive fa-2x" /></Link>
                             </div>
                     )

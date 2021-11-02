@@ -62,4 +62,7 @@ public interface UserService extends UserDetailsService {
     /* 유저 아이디로 유저 이메일 정보 획득하기 */
     String getUserEmailByUserId(String userId);
 
+    /* 유저 아이디로 카카오 로그인 유저인지 정보 획득하기 */
+    String getUserOauthByUserId(String userId);
+
 }

@@ -75,7 +75,7 @@ export default function FindPw(props) {
                                         <ul variant="pills" className="login-register-tab-list">
                                             <li>
                                                 <Link eventKey="login">
-                                                    <h4>Find Password</h4>
+                                                    <h4>비밀번호 찾기</h4>
                                                 </Link>
                                             </li>
                                         </ul>
@@ -102,7 +102,7 @@ export default function FindPw(props) {
                                                             
                                                             <div className="button-box">
                                                                 <button type="submit">
-                                                                    <span>비밀번호 찾기</span>
+                                                                    <span>임시 비밀번호 발급</span>
                                                                 </button>
                                                             </div>
                                                         </form>

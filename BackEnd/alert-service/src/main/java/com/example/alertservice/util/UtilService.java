@@ -52,4 +52,13 @@ public class UtilService {
 
         return alertsSearchParam;
     }
+    // 카카오 메세지 템플릿 만들기
+    public static String template_args(String userId) {
+        String s = ""
+                + "{"
+                + "\"userId\": \"" + userId +"\""
+                + "}"
+                + "";
+        return s;
+    }
 }

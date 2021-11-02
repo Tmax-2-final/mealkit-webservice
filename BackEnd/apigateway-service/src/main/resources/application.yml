@@ -48,6 +48,15 @@ spring:
           filters:
             # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        # user-kakao-login service
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/oauth/callback/kakao
+            - Method=GET
+          filters:
+            # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         # user-회원가입 service
         - id: user-service
           uri: lb://USER-SERVICE
