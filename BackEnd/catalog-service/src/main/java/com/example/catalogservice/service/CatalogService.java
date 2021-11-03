@@ -28,7 +28,7 @@ public interface CatalogService {
     Iterable<MyPackageEntity> getUserMyPackageByUserIdAll(String userId);
     void deleteMyPackage (MyPackageEntity myPackageEntity);
     void deleteCatalog(Long catalogId);
-    void deleteMyPackage(Long patalogId);
+    void deleteMyPackage(Long myPkgId);
     void updateCatalog(CatalogDto catalogDto);
     void updateStock(CatalogEntity catalogEntity);
     void updateMyPackage(MyPackageDto myPackageDto);

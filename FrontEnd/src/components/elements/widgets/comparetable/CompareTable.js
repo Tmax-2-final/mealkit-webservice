@@ -73,7 +73,7 @@ export default function ComareTable() {
                     </Link>
                 </div>
                 <div className="compare-remove">
-                    <button onClick={()=>handleDelete(item.catalogEntity.catalogId)}><i className="las la-trash"></i></button>
+                    <button onClick={()=>handleDelete(item.myPkgId)}><i className="las la-trash"></i></button>
                 </div>
                 <div className="product-content text-center">
                     <h3><Link to={`/packagedetail/${item.catalogEntity.catalogId}`}>{item.catalogEntity.name}</Link></h3>

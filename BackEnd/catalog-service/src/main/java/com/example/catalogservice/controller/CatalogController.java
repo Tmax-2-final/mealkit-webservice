@@ -164,9 +164,9 @@ public class CatalogController {
     }
 
     @ApiOperation(value = "마이패키지 삭제", notes = "해당 마이패키지를 삭제한다")
-    @DeleteMapping("/{userId}/mypackage/{patalogId}")
-    public ResponseEntity<String> deleteMyPackage(@PathVariable("patalogId") Long patalogId){
-        catalogService.deleteMyPackage(patalogId);
+    @DeleteMapping("/{userId}/mypackage/{myPkgId}")
+    public ResponseEntity<String> deleteMyPackage(@PathVariable("myPkgId") Long myPkgId){
+        catalogService.deleteMyPackage(myPkgId);
         return ResponseEntity.status(HttpStatus.OK).body("해당 상품을 삭제했습니다.");
     }
 
