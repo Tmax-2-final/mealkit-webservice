@@ -5,6 +5,9 @@ import LayoutOne from "../user/LayoutOne";
 import Bread from "../../elements/ui/Bread";
 import ReviewTable from './ReviewTable';
 import axios from "axios";
+import Header from "../../layout/Header";
+import Sidebar from '../../elements/ui/Sidebar';
+import Footer from "../../layout/Footer";
 
 
 export default function UserReviewList(props) {
@@ -29,39 +32,45 @@ export default function UserReviewList(props) {
     return (
         <Fragment>
 
-            <LayoutOne headerTop="visible">
-                <Bread productName="My Account" />
-                <div className="login-register-area pt-100 pb-100">
-                    <div className="container">
-                        <div className="row">
-                            {/* <div className="col-lg-7 col-md-12 ml-auto mr-auto"> */}
+            <Header />
+            <Bread
+                productId={`test`}
+                productName={`주문서`}
+                productUrl={`test3`}
+            />
+            <section id="mypage">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-3">
+                            <Sidebar />
+                        </div>
+                        <div className="col-9">
+                            <div className="row">
+                                {/* <div className="col-lg-7 col-md-12 ml-auto mr-auto"> */}
                                 <div className="login-register-wrapper">
                                     <div className="container" defaultActiveKey="login">
-                                        <ul variant="pills" className="login-register-tab-list">
 
-                                            <li>
-                                                <Link eventKey="register">
-                                                    <h4>리뷰 목록</h4>
-                                                </Link>
-                                            </li>
-                                        </ul>
                                         <div>
-                                            
-                                            
-                                        <ReviewTable
-                                            reviewDatas={reviewDatas}
-                                            setReviewDatas={setReviewDatas}
-                                            
-                                        />
-                                            
+
+
+                                            <ReviewTable
+                                                reviewDatas={reviewDatas}
+                                                setReviewDatas={setReviewDatas}
+
+                                            />
+
                                         </div>
                                     </div>
                                 </div>
-                            {/* </div> */}
+                                {/* </div> */}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </LayoutOne>
-        </Fragment>
+                <br /><br /><br />
+            </section>
+            {/*<ProductBottom/>*/}
+            <Footer />
+        </Fragment >
     );
 };

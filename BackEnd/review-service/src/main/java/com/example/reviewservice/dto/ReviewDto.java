@@ -16,6 +16,7 @@ public class ReviewDto implements Serializable {
     private String userId;
     private Long productId;
     private Long pkgId;
+    private String image;
     private Integer orderType;
     private String title;
     private String content;
