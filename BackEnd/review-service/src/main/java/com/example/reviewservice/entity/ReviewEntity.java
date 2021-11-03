@@ -27,6 +27,9 @@ public class ReviewEntity implements Serializable{
     private Long productId;
 
     @Column
+    private String image;
+
+    @Column
     private Long pkgId;
 
     @Column(nullable = false, length = 300)

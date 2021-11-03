@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import ProductDetailLeft from './ProductDetailLeft';
 import ProductDetailLeft2 from './ProductDetailLeft2';
 import ProductDetailRight from './ProductDetailRight';
-
 import ReviewTable from '../../../../pages/review/ReviewTable';
 import UserReviewList from '../../../../pages/review/UserReviewList';
 import axios from "axios";

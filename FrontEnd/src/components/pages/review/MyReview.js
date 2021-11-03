@@ -11,28 +11,7 @@ function MyReview(props) {
 
     const [data, setData] = useState([]);
 
-    // useEffect(() => {
-
-    //     let userId = localStorage.getItem('userid');
-    //     let token = localStorage.getItem('token');
-
-    //     if(!userId || userId === 'undefined') {
-    //         window.location.href="/login";
-    //     }
-    //     if(!token || token === 'undefined') {
-    //         window.location.href="/login";
-    //     }
-
-    //     axios.get(`/user-service/users/${userId}`, {
-    //         headers: {
-    //             Authorization: `Bearer ${token}`
-    //         }
-    //     })
-    //         .then(response => {
-    //             console.log(response);
-    //             setData(response.data);
-    //         })
-    // }, []);
+ 
 
     return (
         <Fragment>
@@ -52,23 +31,7 @@ function MyReview(props) {
                         <div className="col-9">
 
                             <div className="table-content table-responsive cart-table-content">
-                                <table className="usertable">
-
-                                    <thead>
-                                        <tr>
-                                            <th><strong>작성 가능한 후기  (0)</strong></th>
-                                            <th><strong> 내가 작성한 후기 (0)</strong> </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-
-                                </table>
-                                <br /><br /><br />
+                   
                             </div>
                         </div>
                     </div>
