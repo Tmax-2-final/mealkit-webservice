@@ -6,7 +6,6 @@ import Bread from "../../elements/ui/Bread";
 import axios from "axios";
 
 
-
 export default function Preference(props) {
 
     const [checkedThemeItems, setCheckedThemeItems] = useState(new Set());

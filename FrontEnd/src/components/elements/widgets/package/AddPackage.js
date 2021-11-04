@@ -124,6 +124,7 @@ export default function AddPackage({props, packageData}) {
                 console.log(res)
                 if (res.status == 201) {
                     alert("상품 등록이 완료 되었습니다.");
+                    console.log(res.data);
 
 
                 }

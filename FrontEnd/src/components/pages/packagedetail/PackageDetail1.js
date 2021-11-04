@@ -4,23 +4,19 @@ import Header from '../../layout/Header';
 import Footer from '../../layout/Footer';
 import Bread from '../../elements/ui/Bread';
 import ProductTop from '../../elements/widgets/product/productTop/ProductTop'
-import PackageTop from "../../elements/widgets/package/PackageTop";
-import PackageMiddle from "../../elements/widgets/package/PackageMiddle";
-import PackageBottom from "../../elements/widgets/package/PackageBottom";
-import PackageTop1 from "../../elements/widgets/package/PackageTop1";
 
-export default function PackageDetail(props) {
+export default function ProductDetail(props) {
 
     const { id } = useParams();
-    const [ packageData , setPackageData ] = useState([]);
+    const [ productData , setProductData ] = useState([]);
 
     useEffect(()=>{
-        fetch(`/catalog-service/patalogs/${id}`)
+        fetch(`/catalog-service/catalogs/${id}`)
         .then(res => {
             return res.json();
         })
         .then(data => {
-            setPackageData(data);
+            setProductData(data);
             console.log("==카탈로그 데이터==");
             console.log(data);
         });
@@ -30,15 +26,14 @@ export default function PackageDetail(props) {
         <Fragment>
             <Header/>
             <Bread
-                patalogId = {packageData.patalogId}
-                patalogName = {packageData.name}
-                patalogUrl = {`/pakagedetail/${packageData.patalogId}`}
+                productId = {productData.id}
+                productName = {productData.name}
+                productUrl = {`/productdetail/${productData.id}`}
             />
-            <PackageTop1
+            <ProductTop 
                 props = {props}
-                packageData = {packageData}
+                productData = {productData}
             />
-
             {/*<ProductBottom/>*/}
             <Footer/>
         </Fragment>

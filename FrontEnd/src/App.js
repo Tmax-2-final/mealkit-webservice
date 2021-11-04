@@ -76,8 +76,8 @@ function App() {
           <Route exact path="/myaccount"><MyAccount /></Route>
           <Route exact path="/login"><Login /></Route>
           <Route exact path="/oauth/callback/kakao" component={KakaoLoginCallback}></Route>
-          <Route exact path="/register"><Register /></Route>
-          <Route exact path="/preference"><Preference /></Route>
+          <Route exact path="/register" component={Register}></Route>
+          <Route exact path="/preference" component={Preference}></Route>
           <Route exact path="/find/pw"><FindPw/></Route>
           <Route exact path="/mypage" component={MyPage}></Route>
           <Route exact path="/mypage/myInfo"><MyInfoEdit /></Route>

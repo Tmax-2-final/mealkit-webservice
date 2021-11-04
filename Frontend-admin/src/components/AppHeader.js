@@ -22,6 +22,12 @@ const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
+  const logoutHandler = (e) => {
+    e.preventDefault();
+    window.localStorage.setItem('isLoggedIn', false);
+    window.location.href="/";
+  }
+
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
@@ -36,8 +42,8 @@ const AppHeader = () => {
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem>
-            <CNavLink to="/adminuser" component={NavLink} activeClassName="active">
-              Dashboard
+            <CNavLink to="/" component={NavLink} activeClassName="active">
+              대시보드
             </CNavLink>
           </CNavItem>
           {/* <CNavItem>
@@ -48,21 +54,12 @@ const AppHeader = () => {
           </CNavItem> */}
         </CHeaderNav>
         <CHeaderNav>
-          {/* <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilBell} size="lg" />
-            </CNavLink>
-          </CNavItem> */}
-          {/* <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilList} size="lg" />
+          <CNavItem>
+            <CNavLink onClick={logoutHandler}>
+              업무종료
             </CNavLink>
           </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilEnvelopeOpen} size="lg" />
-            </CNavLink>
-          </CNavItem> */}
+ 
         </CHeaderNav>
         <CHeaderNav className="ms-3">
           <AppHeaderDropdown />

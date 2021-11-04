@@ -11,6 +11,7 @@ export default function SideMenu() {
         localStorage.removeItem('userid');
         localStorage.removeItem('token');
         localStorage.removeItem('role');
+        localStorage.removeItem('oauth');
         setIsRole(null);
         setIsLogin(null);
         alert('로그아웃 되었습니다.');
