@@ -1,29 +1,9 @@
-
 import { CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
 import React from 'react';
 import { CPagination, CPaginationItem } from '@coreui/react';
 import { useHistory } from 'react-router';
 
-
-export default function UserTable({ userDatas, setUserDatas, loading}){
-
-    const history = useHistory();
-
-    const userDetailHandler = (params, e) => {
-        e.preventDefault();
-        alert(params.name);
-        history.push({
-            pathname: '/users/detail',
-            state: {
-                name: params.name,
-                userId: params.userId,
-                email: params.email,
-                birth: '1',
-                gender: '1',
-                createdAt: params.createdAt,
-            }
-        })
-    }
+export default function UserTable({ alertDatas, setAlertDatas, loading }) {
 
     return (
         <div className="cart-main-area pt-20 pb-30">
@@ -32,37 +12,35 @@ export default function UserTable({ userDatas, setUserDatas, loading}){
                 <div className="row">
                     <div className="col-lg-12 col-md-12">
                         <div className="table-content">
-                            <div className="card" style={{paddingBottom:"20px"}}>
+                            <div className="card" style={{ paddingBottom: "20px" }}>
                                 <CTable hover>
                                     <CTableHead>
                                         <CTableRow>
                                             <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">이름</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">아이디</CTableHeaderCell>
+                                            <CTableHeaderCell scope="col">타입</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">이메일</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">구독여부</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">가입일</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">탈퇴</CTableHeaderCell>
+                                            <CTableHeaderCell scope="col">제목</CTableHeaderCell>
+                                            <CTableHeaderCell scope="col">발송시간</CTableHeaderCell>
                                         </CTableRow>
                                     </CTableHead>
                                     <CTableBody>
                                         {
                                             loading === false ?
-                                            (
-                                            userDatas.map((item, index) => (
-                                                <CTableRow key={index} onClick={(e) => userDetailHandler(item, e)}>
-                                                    <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
-                                                    <CTableDataCell>{item.name}</CTableDataCell>
-                                                    <CTableDataCell>{item.userId}</CTableDataCell>
-                                                    <CTableDataCell>{item.email}</CTableDataCell>
-                                                    <CTableDataCell>N</CTableDataCell>
-                                                    <CTableDataCell>{new Date(Date.parse(item.createdAt)).toLocaleString().split("오")[0]}</CTableDataCell>
-                                                    <CTableDataCell>12<i className="fas fa-smile"></i></CTableDataCell>
-                                                </CTableRow>
-                                            ))
-                                            )
-                                            :
-                                            null
+                                                (
+                                                    alertDatas.map((item) => (
+                                                        <CTableRow key={item.id}>
+                                                            <CTableHeaderCell scope="row">{item.id}</CTableHeaderCell>
+                                                            <CTableDataCell>{item.userId}</CTableDataCell>
+                                                            <CTableDataCell>{item.type}</CTableDataCell>
+                                                            <CTableDataCell>{item.email}</CTableDataCell>
+                                                            <CTableDataCell>{item.title}</CTableDataCell>
+                                                            <CTableDataCell>{new Date(Date.parse(item.createdAt)).toLocaleString()}</CTableDataCell>
+                                                        </CTableRow>
+                                                    ))
+                                                )
+                                                :
+                                                null
                                         }
 
                                     </CTableBody>
@@ -79,7 +57,7 @@ export default function UserTable({ userDatas, setUserDatas, loading}){
                                     </CPaginationItem>
                                 </CPagination>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>

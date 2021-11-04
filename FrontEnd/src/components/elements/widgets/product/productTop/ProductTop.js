@@ -3,12 +3,7 @@ import { useEffect, useState } from 'react';
 import ProductDetailLeft from './ProductDetailLeft';
 import ProductDetailLeft2 from './ProductDetailLeft2';
 import ProductDetailRight from './ProductDetailRight';
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import Button from '@mui/material/Button';
+
 import ReviewTable from '../../../../pages/review/ReviewTable';
 import UserReviewList from '../../../../pages/review/UserReviewList';
 import axios from "axios";
