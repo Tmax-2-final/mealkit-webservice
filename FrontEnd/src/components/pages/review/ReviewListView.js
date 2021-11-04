@@ -11,49 +11,26 @@ export default function ReviewListView({ data, setReviewDatas }) {
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('userid');
 
-    const handleDelete = (userId, reviewId) => {
 
-        axios.delete(`/review-service/reviews/${userId}/${reviewId}`, {
+    const handleDelete = () => {
+
+        axios.delete(`/review-service/reviews/${userId}/${data.reviewId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
-            .then((res) => {
-                if (res.status === 200) {
-                    console.log(res);
-                    alert("해당 리뷰가 삭제 되었습니다!");
-                    axios.get(`/review-service/reviews/${userId}`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
+            .then(
+                alert("해당 상품이 삭제 되었습니다!"),
+                axios.get(`/review-service/reviews/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                    .then(data => {
+                        console.log(data);
+                        window.location.href = "/mypage/review/list";
                     })
-                        .then(data => {
-                            if (data.status === 200) {
-                                console.log(data);
-                                alert("페이지 리로딩 성공");
-                                setReviewDatas(data.data);
-                                window.location.href ="/mypage/review/list"
-                            }
-                            else {
-                                console.log(data);
-                                alert("페이지 리로딩 실패");
-                            }
-
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                            alert("페이지 리로딩 실패");
-                        })
-                }
-                else {
-                    console.log(res);
-                    alert("삭제 실패");
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-                alert("삭제 실패");
-            });
+            )
     }
 
 
@@ -92,7 +69,7 @@ export default function ReviewListView({ data, setReviewDatas }) {
             {/* <td className="product-createdat">
                 <span>{new Date(Date.parse(data.createdAt)).toLocaleString()}</span>
             </td> */}
-            <td className="product-remove"><button onClick={() => handleDelete(data.reviewId)}><i className="fa fa-times"></i></button></td>
+            <td className="product-remove"><button onClick={handleDelete}><i className="fa fa-times"></i></button></td>
         </tr>
     );
 }

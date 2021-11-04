@@ -10,6 +10,7 @@ public class ResponseReview {
     private String content;
     private Integer rating;
 
+    private Long reviewId;
     private Long pkgId;
     private Integer orderType;
     private Long productId;
