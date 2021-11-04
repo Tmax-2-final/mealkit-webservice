@@ -43,16 +43,16 @@ export default function Shop({search, categoryName, setSearch, props}) {
 
     const searchList = searchData.map((item, index) => (
 
-        <div className={`col-xl-${columNumber} col-md-6 col-lg-${columNumber} col-sm-6`} key={item.productId}>
+        <div className={`col-xl-${columNumber} col-md-6 col-lg-${columNumber} col-sm-6`} key={item.catalogId}>
             <div className="product-wrap mb-25">
                 <div className="product-img">
-                    <Link to={`/productdetail/${item.productId}`}>
-                        <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
-                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
+                    <Link to={`/productdetail/${item.catalogId}`}>
+                        <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
+                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
                     </Link>
                 </div>
                 <div className="product-content text-center">
-                    <h3><Link to={`/productdetail/${item.productId}`}>{item.name}</Link></h3>
+                    <h3><Link to={`/productdetail/${item.catalogId}`}>{item.name}</Link></h3>
                     <div className="product-rating">
                         {item.rating && item.rating > 0 ? (
                             <Rating ratingValue={item.rating} />
@@ -73,16 +73,16 @@ export default function Shop({search, categoryName, setSearch, props}) {
 
     const categoryList = categoryData.map((item, index) => (
 
-        <div className={`col-xl-${columNumber} col-md-6 col-lg-${columNumber} col-sm-6`} key={item.productId}>
+        <div className={`col-xl-${columNumber} col-md-6 col-lg-${columNumber} col-sm-6`} key={item.catalogId}>
             <div className="product-wrap mb-25">
                 <div className="product-img">
-                    <Link to={`/productdetail/${item.productId}`}>
-                        <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
-                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
+                    <Link to={`/productdetail/${item.catalogId}`}>
+                        <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
+                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
                     </Link>
                 </div>
                 <div className="product-content text-center">
-                    <h3><Link to={`/productdetail/${item.productId}`}>{item.name}</Link></h3>
+                    <h3><Link to={`/productdetail/${item.catalogId}`}>{item.name}</Link></h3>
                     <div className="product-rating">
                         {item.rating && item.rating > 0 ? (
                             <Rating ratingValue={item.rating} />

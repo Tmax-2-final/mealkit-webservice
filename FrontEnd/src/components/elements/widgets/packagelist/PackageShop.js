@@ -34,6 +34,8 @@ export default function Shop({search, categoryName, setSearch, props}) {
                 setLoading(false);
                 console.log(res.data);
             });
+
+
         fetchPosts();
     },[]);
 
