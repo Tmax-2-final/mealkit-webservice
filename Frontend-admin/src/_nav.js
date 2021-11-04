@@ -11,30 +11,102 @@ import {
   cilPuzzle,
   cilSpeedometer,
   cilStar,
+  cilUser,
+  cilCart,
+  cilCash,
+  cilStorage,
+  cilBusAlt,
+  cilPowerStandby
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
+const logoutHandler = (e) => {
+  e.preventDefault();
+  window.localStorage.setItem('isLoggedIn', false);
+  window.location.href = "/";
+}
+
 const _nav = [
   {
-    component: CNavItem,
-    name: '회원 관리',
-    to: '/adminuser',
-    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-    },
+    component: CNavGroup,
+    name: '고객 관리',
+    icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: '고객 전체 내역',
+        to: '/users/list',
+      },
+      {
+        component: CNavItem,
+        name: '알림 전체 내역',
+        to: '/users/alert',
+      }
+    ]
   },
   {
-    component: CNavItem,
+    component: CNavGroup,
     name: '상품 관리',
-    to: '/theme/colors',
-    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilStorage} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: '상품 전체 내역',
+        to: '/products/list',
+      },
+      {
+        component: CNavItem,
+        name: '상품 등록',
+        to: '/products/manage',
+      }
+    ]
+  },
+  {
+    component: CNavGroup,
+    name: '주문 관리',
+    icon: <CIcon icon={cilCash} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: '주문 전체 내역',
+        to: '/orders/orderlist',
+      },
+      {
+        component: CNavItem,
+        name: '전체 결제 내역',
+        to: '/orders/paylist',
+      }
+    ]
+  },
+  {
+    component: CNavGroup,
+    name: '구독 관리',
+    icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: '구독 전체 내역',
+        to: '/subscription/list',
+      },
+    ]
+  },
+  {
+    component: CNavGroup,
+    name: '배송 관리',
+    icon: <CIcon icon={cilBusAlt} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: '배송 전체 내역',
+        to: '/ships/list',
+      },
+    ]
   },
   {
     component: CNavItem,
-    name: '주문 관리',
-    to: '/theme/typography',
-    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+    name: '업무 종료',
+    to: {logoutHandler},
+    icon: <CIcon icon={cilPowerStandby} customClassName="nav-icon" />,
   },
   // {
   //   component: CNavTitle,
@@ -183,12 +255,6 @@ const _nav = [
   //     },
   //   ],
   // },
-  {
-    component: CNavItem,
-    name: '배송관리',
-    to: '/adminshipping',
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
-  },
   // {
   //   component: CNavGroup,
   //   name: 'Icons',
@@ -242,15 +308,7 @@ const _nav = [
   //     },
   //   ],
   // },
-  {
-    component: CNavItem,
-    name: '구독 관리',
-    to: '/widgets',
-    icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-    },
-  },
+
   // {
   //   component: CNavTitle,
   //   name: 'Extras',

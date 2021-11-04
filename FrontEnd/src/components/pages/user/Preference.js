@@ -9,6 +9,7 @@ import axios from "axios";
 
 export default function Preference(props) {
 
+    console.log(props.location.state);
 
     const chkAgreeChangeHandler = (e) => {
         if (!error) {

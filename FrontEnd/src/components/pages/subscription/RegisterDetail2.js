@@ -153,6 +153,19 @@ function RegisterDetail2(props) {
                         .then(res => {
                             console.log(res);
                             if (res.status === 200) {
+                                let now = new Date();
+                                let next = new Date();
+                                let body = {
+                                    type: 202,
+                                    userId: userId,
+                                    oauth: localStorage.getItem('oauth'),
+                                    subGradeName: gradeText,
+                                    payPrice: numberToCommasNumber(props.chkedGradeData.monthlyFee),
+                                    payDate: now,
+                                    nextPayDate: new Date(next.setMonth(now.getMonth() + 1))
+                                }
+                                axios.post(`/alert-service/alerts`, body)
+                                
                                 props.history.push({
                                     pathname: '/subscription/subscriptionComplete',
                                     state: {
@@ -188,6 +201,19 @@ function RegisterDetail2(props) {
                         .then(res => {
                             console.log(res)
                             if (res.status === 201) {
+                                let now = new Date();
+                                let next = new Date();
+                                let body = {
+                                    type: 202,
+                                    userId: userId,
+                                    oauth: localStorage.getItem('oauth'),
+                                    subGradeName: gradeText,
+                                    payPrice: numberToCommasNumber(props.chkedGradeData.monthlyFee),
+                                    payDate: now,
+                                    nextPayDate: new Date(next.setMonth(now.getMonth() + 1))
+                                }
+                                axios.post(`/alert-service/alerts`, body)
+
                                 props.history.push({
                                     pathname: '/subscription/subscriptioncomplete',
                                     state: {
