@@ -17,7 +17,7 @@ public interface CatalogService {
     Iterable<PatalogEntity> getAllPatalogs();
     Iterable<MyPackageEntity> getAllMyPackage();
     Iterable<MyPackageEntity> getUserMyPackage(String userId);
-    Iterable<PkgMgtEntity> getPkgMgt(Long patalogId);
+    Iterable<PkgMgtEntity> getPkgMgt(Long patalogId );
     CatalogEntity getCatalog(Long catalogId);
     PatalogEntity getPatalog(Long patalogId);
     PatalogEntity getPatalog();

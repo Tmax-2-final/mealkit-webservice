@@ -9,10 +9,20 @@ function ComareTable(props) {
     const [patalogData, setPatalogData] = useState();
     const [pkgMgtData, setPkgMgtData] = useState([]);
 
+    let token = localStorage.getItem('token');
+    let userId = localStorage.getItem('userid');
+
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
+
+
     let process = require('../../../../myProcess.json');
 
     useEffect(() => {
-        axios.get("/catalog-service/hello1/mypackage")
+        axios.get("/catalog-service/hello1/mypackage", {
+            headers : headers
+        })
             .then(res => {
                 setMyPackageDatas(res.data);
                 console.log(res.data);
@@ -56,13 +66,18 @@ function ComareTable(props) {
 
         console.log(body);
 
-        axios.post(`/catalog-service/patalogs`, body )
+        axios.post(`/catalog-service/${userId}/patalogs`,{
+            headers: headers,
+            body: body
+        } )
             .then(res => {
                 console.log(res)
                 if (res.status == 201) {
                     alert("상품 등록이 완료 되었습니다.");
                     console.log(res.data);
-                    axios.get(`/catalog-service/firstpatalogs`, )
+                    axios.get(`/catalog-service/${userId}/firstpatalogs`, {
+                        headers : headers
+                    } )
                         .then(res => {
                             setPatalogData(res.data);
                             console.log(res.data);
@@ -77,7 +92,10 @@ function ComareTable(props) {
                             setPkgMgtData(jsonArray);
                             console.log(jsonArray);
                             console.log(pkgMgtData);
-                            axios.post(`/catalog-service/hello1/pkgmgt`, jsonArray)
+                            axios.post(`/catalog-service/${userId}/pkgmgt`, {
+                                headers : headers,
+                                body : jsonArray
+                            })
                                 .then(res => {
                                     console.log(res)
                                     if(res.status == 201){
@@ -111,10 +129,14 @@ function ComareTable(props) {
 
     const handleDelete = (id) => {
 
-        axios.delete(`/catalog-service/hello1/mypackage/${id}`)
+        axios.delete(`/catalog-service/${userId}/mypackage/${id}`, {
+            headers : headers
+        })
             .then(res => {
                 alert("삭제 되었습니다.")
-                axios.get(`/catalog-service/mypackage`)
+                axios.get(`/catalog-service/${userId}/mypackage`,{
+                    headers : headers
+                })
                     .then(data => {
                         console.log(data.data);
                         setMyPackageDatas(data.data);

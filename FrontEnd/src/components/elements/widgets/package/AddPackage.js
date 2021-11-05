@@ -2,39 +2,42 @@ import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 
-export default function AddPackage({props, packageData}) {
+export default function AddPackage({props, packageData, pkgMgtData}) {
+
+
+    console.log(pkgMgtData);
+
     const [count, setCount] = useState(1);
     const [isDisply, setIsDisplay] = useState("");
     const [stockTextColor, setStockTextColor] = useState("#676767");
     const [buyBtnColor, setBuyBtnColor] = useState("#343538");
-    const [ pkgMgtData, setPkgMgtData ] = useState([]);
+
     const [ catalogData, setCatalogData] = useState();
     const [ myPackageData, setMyPackageData] = useState();
 
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('userid');
 
-
-    useEffect(() => {
-        console.log("=======패키지 데이터======");
-        console.log(packageData);
-        
-        axios.get(`/catalog-service/pkgmgt/${packageData.patalogId}`)
-            .then(res => {
-                console.log("=======상품관리 데이터======");
-                setPkgMgtData(res.data);
-                console.log(res.data);
-            })
-    },[packageData]);
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
 
 
-    useEffect(() => {
-        // axios.get(`/catalog-service/catalogs/`)
-        //     .then(res => {
-        //         setCatalogData(res.data);
-        //         console.log(res.data);
-        //     })
-    },[]);
+    // useEffect(() => {
+    //     console.log("=======패키지 데이터======");
+    //     console.log(packageData);
+    //
+    //     axios.get(`/catalog-service/${userId}/pkgmgt/${packageData.patalogId}`,{
+    //         headers : headers
+    //     })
+    //         .then(res => {
+    //             console.log("=======상품관리 데이터======");
+    //             setPkgMgtData(res.data);
+    //             console.log(res.data);
+    //         })
+    // },[packageData]);
+
+
 
 
     useEffect(()=>{
@@ -119,12 +122,13 @@ export default function AddPackage({props, packageData}) {
             //
             // })
 
-        axios.post(`/catalog-service/hello1/mypackage`, pkgMgtData )
+        axios.post(`/catalog-service/${userId}/mypackage`, pkgMgtData )
             .then(res => {
                 console.log(res)
                 if (res.status == 201) {
                     alert("상품 등록이 완료 되었습니다.");
                     console.log(res.data);
+                    console.log(pkgMgtData);
 
 
                 }
