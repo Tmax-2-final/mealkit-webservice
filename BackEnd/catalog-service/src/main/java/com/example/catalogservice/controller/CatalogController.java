@@ -3,6 +3,7 @@ package com.example.catalogservice.controller;
 import com.example.catalogservice.dto.CatalogDto;
 import com.example.catalogservice.dto.MyPackageDto;
 import com.example.catalogservice.dto.PatalogDto;
+import com.example.catalogservice.dto.PkgMgtDto;
 import com.example.catalogservice.jpa.*;
 import com.example.catalogservice.service.CatalogService;
 import com.example.catalogservice.vo.*;
@@ -132,6 +133,31 @@ public class CatalogController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseMyPackageList);
     }
 
+    @ApiOperation(value = "마이패키지 등록", notes="마이패키지 등록")
+    @PostMapping("/{userId}/pkgmgt")
+    public ResponseEntity<List<ResponsePkgMgt>> createPkgMgt(@RequestBody @Valid Iterable<RequestPkgMgt> requestPkgMgtList, @PathVariable("userId") String userId) {
+        System.out.println(userId);
+        // 1. requestCart + userId => cartDto
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+
+        List<PkgMgtDto> pkgMgtDtoList = new ArrayList<>();
+
+        for (RequestPkgMgt requestPkgMgt: requestPkgMgtList) {
+            PkgMgtDto pkgMgtDto = mapper.map(requestPkgMgt, PkgMgtDto.class); // userDto -> userEntity 로 매핑
+            pkgMgtDto.setUserId(userId);
+
+            pkgMgtDtoList.add(pkgMgtDto);
+        }
+
+        // 2. service -> jpa -> mariadb 저장 = 카트 등록 서비스
+        List<ResponsePkgMgt> responsePkgMgtList = catalogService.createPkgMgt(pkgMgtDtoList);
+        // 3. responseCart 로 지정
+        //ResponseMyPackage responseMyPackage = mapper.map(myPackageDto, ResponseMyPackage.class);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responsePkgMgtList);
+    }
+
     @ApiOperation(value = "상품 등록", notes = "상품을 등록한다")
     @PostMapping( "/catalogs")
     public ResponseEntity<ResponseCatalog> createCatalogs(@RequestBody @Valid RequestCatalog catalog) throws IOException {
@@ -144,17 +170,25 @@ public class CatalogController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseCatalog);
     }
 
-//    @ApiOperation(value = "패키지 등록", notes = "패키지를 등록한다")
-//    @PostMapping( "/patalogs")
-//    public ResponseEntity<ResponsePatalog> createPatalogs(@RequestBody @Valid RequestPatalog patalog) throws IOException {
-//
-//        ModelMapper mapper = new ModelMapper();
-//        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-//        PatalogDto patalogDto = mapper.map(patalog, PatalogDto.class);
+    @ApiOperation(value = "패키지 등록", notes = "패키지를 등록한다")
+    @PostMapping( "/patalogs")
+    public ResponseEntity<ResponsePatalog> createPatalogs(@RequestBody @Valid RequestPatalog requestPatalog) throws IOException {
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        PatalogDto patalogDto = mapper.map(requestPatalog, PatalogDto.class);
+        catalogService.createPatalog(patalogDto);
+        ResponsePatalog responsePatalog = mapper.map(patalogDto, ResponsePatalog.class);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responsePatalog);
+
+
+//        mapper.map(patalog, PatalogDto.class);
 //        catalogService.createPatalog(patalogDto);
 //        ResponsePatalog responsePatalog = mapper.map(patalogDto, ResponsePatalog.class);
 //        return ResponseEntity.status(HttpStatus.CREATED).body(responsePatalog);
-//    }
+    }
+
+
 
     @ApiOperation(value = "상품 삭제", notes = "해당하는 상품번호의 상품을 삭제한다")
     @DeleteMapping("/catalogs/{productId}")
@@ -225,6 +259,20 @@ public class CatalogController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
+
+    @ApiOperation(value = "패키지 조회", notes = "해당하는 패키지번호의 패키지번호를 조회한다")
+    @GetMapping("/firstpatalogs")
+    public ResponseEntity<PatalogEntity> getPatalog() {
+        log.info("before retrieve patalogs data");
+        PatalogEntity patalogEntity = catalogService.getPatalog();
+        log.info("after retrieve patalogs data");
+        if (patalogEntity != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(patalogEntity);
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @ApiOperation(value = "상품 수정", notes = "해당하는 상품번호의 상품을 수정한다")
     @PutMapping("/catalogs/{catalogId}")

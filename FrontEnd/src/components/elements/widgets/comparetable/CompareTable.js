@@ -5,8 +5,12 @@ import axios from "axios";
 
 export default function ComareTable() {
 
+
+
     const [myPackageDatas, setMyPackageDatas] = useState([]);
     const [columNumber, setColumNumber] = useState(4);
+    const [patalogData, setPatalogData] = useState();
+    const [pkgMgtData, setPkgMgtData] = useState([]);
 
     let process = require('../../../../myProcess.json');
 
@@ -20,6 +24,93 @@ export default function ComareTable() {
 
     console.log(myPackageDatas);
 
+
+
+
+
+    const createPatalog = () => {
+        // let body = {
+        //     patalogId: packageData.patalogId,
+        //     name: packageData.name,
+        //     image: packageData.image,
+        //     unitPrice: packageData.unitPrice,
+        //     qty: count
+        // }
+
+        // let jsonArray = new Array();
+        // myPackageDatas.map( item=> {
+        //     let jsonObj = new Object();
+        //     jsonObj.name = item.catalogEntity.name;
+        //     jsonObj.image = item.catalogEntity.image1;
+        //     jsonObj = JSON.stringify(jsonObj);
+        //     jsonArray.push(JSON.parse(jsonObj));
+        // })
+
+        // console.log(jsonArray);
+        //
+        // setPatalogData(jsonArray);
+
+        let body = {
+            name: "hello1님의 패키지",
+            category: "유저 패키지",
+            rating: "3",
+            image: "01.jpg"
+        }
+
+        console.log(body);
+
+        axios.post(`/catalog-service/patalogs`, body )
+            .then(res => {
+                console.log(res)
+                if (res.status == 201) {
+                    alert("상품 등록이 완료 되었습니다.");
+                    console.log(res.data);
+                    axios.get(`/catalog-service/firstpatalogs`, )
+                        .then(res => {
+                            setPatalogData(res.data);
+                            console.log(res.data);
+                            let jsonArray = new Array();
+                            myPackageDatas.map( item=> {
+                                 let jsonObj = new Object();
+                                 jsonObj.catalogId = item.catalogEntity.catalogId;
+                                 jsonObj.patalogId = res.data.patalogId;
+                                 jsonObj = JSON.stringify(jsonObj);
+                                 jsonArray.push(JSON.parse(jsonObj));
+                             })
+                            setPkgMgtData(jsonArray);
+                            console.log(jsonArray);
+                            console.log(pkgMgtData);
+                            axios.post(`/catalog-service/hello1/pkgmgt`, jsonArray)
+                                .then(res => {
+                                    console.log(res)
+                                    if(res.status == 201){
+                                        console.log(res.data);
+                                    }
+                                    else{
+                                        console.log(res);
+                                        alert("오류 발생")
+                                    }
+                                })
+                        })
+
+
+                }
+                else if(res.status === 200) {
+                    alert("장바구니에 동일한 상품이 있어 수량을 변경했습니다.");
+
+                }
+                else {
+                    console.log(res);
+                    alert("오류 발생. 장바구니에 상품이 담기지 않았습니다.")
+                }
+            })
+            .catch(err => {
+                alert("다시 다시 입력해주세요.");
+                console.log(body);
+            });
+
+
+    }
 
     const handleDelete = (id) => {
 
@@ -60,6 +151,9 @@ export default function ComareTable() {
                     })
             })
     }
+
+
+
 
 
     const comparelist01 = myPackageDatas.map((item, index) => (
@@ -149,7 +243,7 @@ export default function ComareTable() {
                     <div className="col-lg-12">
                         <div className="cart-shiping-update-wrapper">
                             <div className="cart-shiping-update">
-                                <a href="/packagelist">구독하기</a>
+                                <button onClick={createPatalog}>구독하기</button>
                             </div>
                             <div className="cart-clear">
                                 <button onClick={()=>handleAllDelete("hello1")}>패키지 비우기</button>

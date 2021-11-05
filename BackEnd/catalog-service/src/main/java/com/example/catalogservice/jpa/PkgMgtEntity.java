@@ -23,7 +23,7 @@ public class PkgMgtEntity implements Serializable {
     @Column(nullable = false)
     private String userId;
 
-    @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long patalogId;
 
     @Column(nullable = true)
