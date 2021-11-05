@@ -133,7 +133,7 @@ public class CatalogController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseMyPackageList);
     }
 
-    @ApiOperation(value = "마이패키지 등록", notes="마이패키지 등록")
+    @ApiOperation(value = "패키지관리 등록", notes="패키지관리 등록")
     @PostMapping("/{userId}/pkgmgt")
     public ResponseEntity<List<ResponsePkgMgt>> createPkgMgt(@RequestBody @Valid Iterable<RequestPkgMgt> requestPkgMgtList, @PathVariable("userId") String userId) {
         System.out.println(userId);
@@ -171,7 +171,7 @@ public class CatalogController {
     }
 
     @ApiOperation(value = "패키지 등록", notes = "패키지를 등록한다")
-    @PostMapping( "/patalogs")
+    @PostMapping( "/{userId}/patalogs")
     public ResponseEntity<ResponsePatalog> createPatalogs(@RequestBody @Valid RequestPatalog requestPatalog) throws IOException {
 
         ModelMapper mapper = new ModelMapper();
@@ -237,10 +237,11 @@ public class CatalogController {
     }
 
     @ApiOperation(value = "패키지관리 조회", notes = "패키지관리를 조회한다")
-    @GetMapping("/pkgmgt/{patalogId}")
+    @GetMapping("/{userId}/pkgmgt/{patalogId}")
     public ResponseEntity<Iterable<PkgMgtEntity>> getPkgMgt(@PathVariable Long patalogId) {
         log.info("before retrieve catalogs data");
         Iterable<PkgMgtEntity> pkgMgtEntity = catalogService.getPkgMgt(patalogId);
+
         log.info("after retrieve catalogs data");
             return ResponseEntity.status(HttpStatus.OK).body(pkgMgtEntity);
 

@@ -1,9 +1,35 @@
-import { Fragment, useEffect } from "react";
+import {Fragment, useEffect, useState} from "react";
 import {useParams} from 'react-router-dom';
 import AddBuyAndCart from '../product/productTop/AddBuyAndCart';
 import AddPackage from "./AddPackage";
+import axios from "axios";
 
 export default function PackDetRgtMiddle({props, packageData}) {
+
+    const [ pkgMgtData, setPkgMgtData ] = useState([]);
+
+    let token = localStorage.getItem('token');
+    let userId = localStorage.getItem('userid');
+
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
+
+    useEffect(() => {
+        console.log("=======패키지 데이터======");
+        console.log(packageData);
+
+        axios.get(`/catalog-service/${userId}/pkgmgt/${packageData.patalogId}`,{
+            headers : headers
+        })
+            .then(res => {
+                console.log("=======상품관리 데이터======");
+                setPkgMgtData(res.data);
+                console.log(res.data);
+                console.log(pkgMgtData);
+            })
+    },[packageData]);
+
     return (
         <Fragment>
             {/* <ColorAndSize 
@@ -14,6 +40,7 @@ export default function PackDetRgtMiddle({props, packageData}) {
             <AddPackage
                 props = {props}
                 packageData = {packageData}
+                pkgMgtData = {pkgMgtData}
             /> 
         </Fragment>
     

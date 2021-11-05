@@ -10,6 +10,8 @@ export default function PackageDetailRight({props, packageData}) {
     useEffect(()=>{
         
     },[packageData])
+
+    console.log(packageData);
     
     return (
         <div className="col-lg-6 col-md-6">
