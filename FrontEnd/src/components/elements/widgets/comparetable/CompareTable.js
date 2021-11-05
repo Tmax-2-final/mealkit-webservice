@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import Rating from '../../ui/Rating';
 import axios from "axios";
 
-export default function ComareTable() {
-
+function ComareTable(props) {
     const [myPackageDatas, setMyPackageDatas] = useState([]);
     const [columNumber, setColumNumber] = useState(4);
 
@@ -140,7 +139,16 @@ export default function ComareTable() {
     //     </td>
     // )).slice(0,7);
 
-    
+    const confirmSubPkgHandler = (e) => {
+        e.preventDefault();
+
+        props.history.push({        
+            pathname: "/subscription/confirmusubpkg",
+            state: {
+                myPkgData : myPackageDatas
+            }
+        })
+    }
 
     return(
         <div className="compare-main-area pt-90 pb-100">
@@ -149,7 +157,7 @@ export default function ComareTable() {
                     <div className="col-lg-12">
                         <div className="cart-shiping-update-wrapper">
                             <div className="cart-shiping-update">
-                                <a href="/packagelist">구독하기</a>
+                                <Link to="#" onClick={confirmSubPkgHandler}>패키지 확정</Link>
                             </div>
                             <div className="cart-clear">
                                 <button onClick={()=>handleAllDelete("hello1")}>패키지 비우기</button>
@@ -200,3 +208,5 @@ export default function ComareTable() {
         </div>
     );
 }
+
+export default withRouter(ComareTable);

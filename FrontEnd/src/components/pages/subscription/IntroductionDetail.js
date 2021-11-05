@@ -130,7 +130,7 @@ function IntroductionDetail(props) {
                     <div className="product-details-content h-100">
                             <div className="pro-details-quality mt-0 h-100">
                             <div className="pro-details-cart btn-hover mx-auto w-75 h-100">
-                                <Link onClick={subscriptionHandler}
+                                <Link to="/#" onClick={subscriptionHandler}
                                 className={"w-100 h-100 display-6 text-center " + (isActive ? "disabled-link" : "")}>
                                     <span className="align-middle">{
                                         loading ? 
