@@ -9,7 +9,7 @@ export default function UserTable({ userDatas, setUserDatas }) {
 
     // // const [totalPrice, setTotalPrice] = useState(0);
     // let userId = localStorage.getItem('userid');
-
+    
     return (
         <div className="cart-main-area pt-20 pb-30">
             <div className="container">

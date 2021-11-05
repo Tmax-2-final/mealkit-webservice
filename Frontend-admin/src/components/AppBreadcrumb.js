@@ -10,6 +10,11 @@ const AppBreadcrumb = () => {
 
   const getRouteName = (pathname, routes) => {
     const currentRoute = routes.find((route) => route.path === pathname)
+    if(!currentRoute){
+      window.location.href="/#/404"
+      return ;
+    }
+    console.log(currentRoute.name)
     return currentRoute.name
   }
 

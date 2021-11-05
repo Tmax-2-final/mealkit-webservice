@@ -19,7 +19,7 @@ public class RequestAlert {
     // 구독 주문 번호
     private Long subOrderId;
     // 결제금액
-    private Integer payPrice;
+    private String payPrice;
     // 배송 번호
     private Long deliveryId;
     // 결제일

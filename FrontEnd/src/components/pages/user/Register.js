@@ -243,7 +243,15 @@ export default function Register(props) {
                         console.log(res)
                         if (res.status === 201) {
                             alert("회원가입이 완료되었습니다.")
-                            window.location.href = "/login";
+                            props.history.push({
+                                pathname: "/preference",
+                                state: {
+                                    userId: id,
+                                    name: name,
+                                    gender: gender,
+                                    birth: birth
+                                }
+                            })
                             
                         }
                         else {

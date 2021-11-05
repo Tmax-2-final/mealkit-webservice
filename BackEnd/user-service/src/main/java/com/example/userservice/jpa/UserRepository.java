@@ -1,5 +1,6 @@
 package com.example.userservice.jpa;
 
+import com.example.userservice.entity.PrfrEntity;
 import com.example.userservice.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,5 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 
     @Query(value = "select u.oauth from UserEntity u where u.userId = ?1")
     String findOauthByUserId(String userId);
+
 }

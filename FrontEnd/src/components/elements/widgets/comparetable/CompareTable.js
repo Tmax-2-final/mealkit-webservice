@@ -6,6 +6,8 @@ import axios from "axios";
 function ComareTable(props) {
     const [myPackageDatas, setMyPackageDatas] = useState([]);
     const [columNumber, setColumNumber] = useState(4);
+    const [patalogData, setPatalogData] = useState();
+    const [pkgMgtData, setPkgMgtData] = useState([]);
 
     let process = require('../../../../myProcess.json');
 
@@ -19,6 +21,93 @@ function ComareTable(props) {
 
     console.log(myPackageDatas);
 
+
+
+
+
+    const createPatalog = () => {
+        // let body = {
+        //     patalogId: packageData.patalogId,
+        //     name: packageData.name,
+        //     image: packageData.image,
+        //     unitPrice: packageData.unitPrice,
+        //     qty: count
+        // }
+
+        // let jsonArray = new Array();
+        // myPackageDatas.map( item=> {
+        //     let jsonObj = new Object();
+        //     jsonObj.name = item.catalogEntity.name;
+        //     jsonObj.image = item.catalogEntity.image1;
+        //     jsonObj = JSON.stringify(jsonObj);
+        //     jsonArray.push(JSON.parse(jsonObj));
+        // })
+
+        // console.log(jsonArray);
+        //
+        // setPatalogData(jsonArray);
+
+        let body = {
+            name: "hello1님의 패키지",
+            category: "유저 패키지",
+            rating: "3",
+            image: "01.jpg"
+        }
+
+        console.log(body);
+
+        axios.post(`/catalog-service/patalogs`, body )
+            .then(res => {
+                console.log(res)
+                if (res.status == 201) {
+                    alert("상품 등록이 완료 되었습니다.");
+                    console.log(res.data);
+                    axios.get(`/catalog-service/firstpatalogs`, )
+                        .then(res => {
+                            setPatalogData(res.data);
+                            console.log(res.data);
+                            let jsonArray = new Array();
+                            myPackageDatas.map( item=> {
+                                 let jsonObj = new Object();
+                                 jsonObj.catalogId = item.catalogEntity.catalogId;
+                                 jsonObj.patalogId = res.data.patalogId;
+                                 jsonObj = JSON.stringify(jsonObj);
+                                 jsonArray.push(JSON.parse(jsonObj));
+                             })
+                            setPkgMgtData(jsonArray);
+                            console.log(jsonArray);
+                            console.log(pkgMgtData);
+                            axios.post(`/catalog-service/hello1/pkgmgt`, jsonArray)
+                                .then(res => {
+                                    console.log(res)
+                                    if(res.status == 201){
+                                        console.log(res.data);
+                                    }
+                                    else{
+                                        console.log(res);
+                                        alert("오류 발생")
+                                    }
+                                })
+                        })
+
+
+                }
+                else if(res.status === 200) {
+                    alert("장바구니에 동일한 상품이 있어 수량을 변경했습니다.");
+
+                }
+                else {
+                    console.log(res);
+                    alert("오류 발생. 장바구니에 상품이 담기지 않았습니다.")
+                }
+            })
+            .catch(err => {
+                alert("다시 다시 입력해주세요.");
+                console.log(body);
+            });
+
+
+    }
 
     const handleDelete = (id) => {
 
@@ -61,6 +150,9 @@ function ComareTable(props) {
     }
 
 
+
+
+
     const comparelist01 = myPackageDatas.map((item, index) => (
 
         <div className={`col-xl-${columNumber} col-md-6 col-lg-${columNumber} col-sm-6`} key={item.catalogEntity.catalogId}>
@@ -72,7 +164,7 @@ function ComareTable(props) {
                     </Link>
                 </div>
                 <div className="compare-remove">
-                    <button onClick={()=>handleDelete(item.catalogEntity.catalogId)}><i className="las la-trash"></i></button>
+                    <button onClick={()=>handleDelete(item.myPkgId)}><i className="las la-trash"></i></button>
                 </div>
                 <div className="product-content text-center">
                     <h3><Link to={`/packagedetail/${item.catalogEntity.catalogId}`}>{item.catalogEntity.name}</Link></h3>

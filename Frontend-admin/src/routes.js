@@ -1,9 +1,16 @@
 import React from 'react'
 // import AdminUser from './views/admin/AdminUser'
 
+// main
+const Home = React.lazy(() => import('./views/Home'))
+
+// 관리자 페이지
 const AdminShipping = React.lazy(() => import('./views/shipping/AdminShipping'))
 const UserDetail = React.lazy(() => import('./views/user/UserDetail'))
 const AdminUser = React.lazy(() => import('./views/user/AdminUser'))
+const AdminAlert = React.lazy(() => import('./views/user/alert/Alert'))
+
+// theme
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -53,10 +60,27 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 const routes = [
-  { path: '/', exact: true, name: 'Home' },
-  { path: '/userdetail', name: '회원 상세', component: UserDetail },
-  { path: '/adminuser', name: '회원 관리', component: AdminUser },
-  { path: '/adminshipping', name: '배송 관리', component: AdminShipping },
+  { path: '/', name: '대시보드', exact: true, component: Home},
+
+  { path: '/users', name: '고객 관리'},
+  { path: '/users/list', name: '고객 전체 내역', component: AdminUser },
+  { path: '/users/alert', name: '알림 전체 내역', component: AdminAlert },
+  { path: '/users/detail', name: '회원 상세', component: UserDetail },
+
+  { path: '/products', name: '상품 관리' },
+  { path: '/products/list', name: '상품 전체 내역', component: Home},
+  { path: '/products/manage', name: '상품 전체 내역', component: Home},
+
+  { path: '/orders', name: '주문 관리' },
+  { path: '/orders/orderlist', name: '주문 전체 내역', component: Home},
+  { path: '/orders/paylist', name: '결제 전체 내역', component: Home},
+
+  { path: '/subscription', name: '구독 관리' },
+  { path: '/subscription/list', name: '구독 전체 내역', component: Home},
+
+  { path: '/ships', name: '배송 관리'},
+  { path: '/ships/list', name: '배송 전체 내역', component: AdminShipping },
+
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },
   { path: '/theme/typography', name: 'Typography', component: Typography },

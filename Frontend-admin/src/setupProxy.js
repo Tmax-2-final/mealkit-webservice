@@ -37,10 +37,4 @@ module.exports = function (app) {
             changeOrigin: true,
         })
     );
-    app.use(
-        createProxyMiddleware('/config-service', {
-            target: 'http://localhost:8888',
-            changeOrigin: true,
-        })
-    );
 }

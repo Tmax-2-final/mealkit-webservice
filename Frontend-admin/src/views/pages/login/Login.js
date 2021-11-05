@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useHistory } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -9,6 +9,7 @@ import {
   CContainer,
   CForm,
   CFormInput,
+  CFormLabel,
   CInputGroup,
   CInputGroupText,
   CRow,
@@ -16,65 +17,102 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 
-const Login = () => {
+const Login = (props) => {
+
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+  const [isRight, setIsRight] = useState('');
+
+  const history = useHistory();
+
+  const idChangeHandler = (e) => {
+    e.preventDefault();
+    setId(e.target.value);
+  }
+
+  const passwordChangeHandler = (e) => {
+    e.preventDefault();
+    setPassword(e.target.value);
+  }
+
+  const loginHandler = (e) => {
+    e.preventDefault();
+
+    if (id === "") {
+      alert("아이디를 입력해 주세요")
+      return;
+    }
+    if (password === "") {
+      alert("비밀번호를 입력해 주세요")
+      return;
+    }
+
+    
+      if(id === "mailkit.admin" && password === "mailkit") {
+        
+        window.localStorage.setItem('isLoggedIn', 'true')
+        history.push({
+          pathname: '/',
+          state: {}
+        });
+      }
+      else {
+        setIsRight("아이디 또는 비밀번호가 틀렸습니다.");
+      }
+
+  }
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
+            <div className="service-logo" style={{ textAlign: "center" , marginBottom: "50px"}}>
+              <h1>Mail Kit</h1>
+            </div>
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
                   <CForm>
-                    <h1>Login</h1>
-                    <p className="text-medium-emphasis">Sign In to your account</p>
-                    <CInputGroup className="mb-3">
-                      <CInputGroupText>
-                        <CIcon icon={cilUser} />
-                      </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                    <div className="login-title" style={{ textAlign: "center", marginBottom: "20px" }}>
+                      <h1>로그인</h1>
+                      <p style={{color:'red'}}>{isRight}</p>
+                    </div>
+                    <CInputGroup className="mb-4 row">
+                      <CFormLabel>아이디</CFormLabel>
+                      <CFormInput 
+                      placeholder="" 
+                      autoComplete="username" 
+                      onChange={idChangeHandler}
+                      value={id}
+                      />
                     </CInputGroup>
-                    <CInputGroup className="mb-4">
-                      <CInputGroupText>
-                        <CIcon icon={cilLockLocked} />
-                      </CInputGroupText>
+                    <CInputGroup className="mb-4 row">
+                      <CFormLabel>비밀번호</CFormLabel>
                       <CFormInput
                         type="password"
-                        placeholder="Password"
+                        placeholder=""
                         autoComplete="current-password"
+                        onChange={passwordChangeHandler}
+                        value={password}
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <CButton color="primary" type="submit" className="px-6" onClick={loginHandler}>
                           Login
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
-                          Forgot password?
+                          비밀번호 임시 코드 요청
                         </CButton>
                       </CCol>
                     </CRow>
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
-                <CCardBody className="text-center">
-                  <div>
-                    <h2>Sign up</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
-                    </p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        Register Now!
-                      </CButton>
-                    </Link>
-                  </div>
-                </CCardBody>
-              </CCard>
+              
             </CCardGroup>
           </CCol>
         </CRow>

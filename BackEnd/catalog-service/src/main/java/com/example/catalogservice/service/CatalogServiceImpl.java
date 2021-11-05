@@ -3,13 +3,17 @@ package com.example.catalogservice.service;
 import com.example.catalogservice.dto.CatalogDto;
 import com.example.catalogservice.dto.MyPackageDto;
 import com.example.catalogservice.dto.PatalogDto;
+import com.example.catalogservice.dto.PkgMgtDto;
 import com.example.catalogservice.jpa.*;
 import com.example.catalogservice.vo.ResponseMyPackage;
+import com.example.catalogservice.vo.ResponsePatalog;
+import com.example.catalogservice.vo.ResponsePkgMgt;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -70,6 +74,9 @@ public class CatalogServiceImpl implements CatalogService{
     @Override
     public PatalogEntity getPatalog(Long patalogId) { return patalogRepository.findByPatalogId(patalogId);}
 
+    @Override
+    public PatalogEntity getPatalog() { return patalogRepository.findFirstByOrderByPatalogIdDesc();}
+
 
     @Override
     public Iterable<MenuEntity> getAllMenus() {return menuRepository.findAll();}
@@ -115,6 +122,22 @@ public class CatalogServiceImpl implements CatalogService{
         return responseMyPackageList;
     }
 
+    @Override
+    public List<ResponsePkgMgt> createPkgMgt(List<PkgMgtDto> pkgMgtDtoList) {
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+
+        List<PkgMgtEntity> pkgMgtEntityList = pkgMgtDtoList.stream().map(v -> mapper.map(v, PkgMgtEntity.class)).collect(Collectors.toList());
+
+        // 2. repository save
+        pkgMgtRepository.saveAll(pkgMgtEntityList);
+        // 3. result entity -> dto
+
+        List<ResponsePkgMgt> responsePkgMgtList = pkgMgtDtoList.stream().map(v -> mapper.map(v, ResponsePkgMgt.class)).collect(Collectors.toList());
+
+        return responsePkgMgtList;
+    }
 
     @Override
     public PatalogDto createPatalog(PatalogDto patalog) {
@@ -168,7 +191,7 @@ public class CatalogServiceImpl implements CatalogService{
     }
 
     @Override
-    public void deleteMyPackage(Long patalogId) { myPackageRepository.deleteById(patalogId);}
+    public void deleteMyPackage(Long myPkgId) { myPackageRepository.deleteById(myPkgId);}
 
     @Override
     public void updateCatalog(CatalogDto catalogDto) {

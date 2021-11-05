@@ -3,12 +3,11 @@ package com.example.userservice.service;
 import com.example.userservice.client.CatalogServiceClient;
 import com.example.userservice.client.OrderServiceClient;
 import com.example.userservice.dto.CartDto;
+import com.example.userservice.dto.PrfrDto;
 import com.example.userservice.dto.UserDto;
-import com.example.userservice.entity.CartEntity;
-import com.example.userservice.entity.CatalogEntity;
-import com.example.userservice.entity.OrderEntity;
-import com.example.userservice.entity.UserEntity;
+import com.example.userservice.entity.*;
 import com.example.userservice.jpa.CartRepository;
+import com.example.userservice.jpa.PrfrRepository;
 import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.vo.RequestDate;
 import com.example.userservice.vo.ResponseOrder;
@@ -40,9 +39,11 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final CartRepository cartRepository;
+    private final PrfrRepository prfrRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final Environment env;
     private final RestTemplate restTemplate;
+
 
     // openFeign
     private final OrderServiceClient orderServiceClient;
@@ -52,6 +53,7 @@ public class UserServiceImpl implements UserService{
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            CartRepository cartRepository,
+                           PrfrRepository prfrRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
                            Environment env,
                            RestTemplate restTemplate,
@@ -60,12 +62,14 @@ public class UserServiceImpl implements UserService{
                            CircuitBreakerFactory circuitBreakerFactory) {
         this.userRepository = userRepository;
         this.cartRepository = cartRepository;
+        this.prfrRepository = prfrRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.env = env;
         this.restTemplate = restTemplate;
         this.orderServiceClient = orderServiceClient;
         this.catalogServiceClient = catalogServiceClient;
         this.circuitBreakerFactory = circuitBreakerFactory;
+
     }
 
     @Override
@@ -317,4 +321,44 @@ public class UserServiceImpl implements UserService{
     }
 
 
+    @Override
+    public PrfrDto createPrfr(PrfrDto prfrDto) {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        PrfrEntity prfrEntity = mapper.map(prfrDto, PrfrEntity.class);
+
+        prfrRepository.save(prfrEntity);
+
+        return prfrDto;
+    }
+
+    @Override
+    public Iterable<PrfrEntity> getAllPrfrs(){
+        return prfrRepository.findAll();
+    }
+
+    @Override
+    public Iterable<PrfrEntity> getPrfrsByUserId(String userId) {
+        return prfrRepository.findAllByUserId(userId);
+    }
+
+    @Override
+    public void deletePrfr(String userId ,Long prfrId) {
+        prfrRepository.deleteByUserIdAndPrfrId(userId, prfrId);
+    }
+
+    @Override
+    public void updatePrfr(PrfrDto prfrDto, String userId, Long prfrId) {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+
+        PrfrEntity prfrEntity = prfrRepository.findByUserIdAndPrfrId(userId, prfrId);
+
+        prfrEntity.setTheme(prfrDto.getTheme());
+        prfrEntity.setFlavor(prfrDto.getFlavor());
+        prfrEntity.setCookingtime(prfrDto.getCookingtime());
+
+        prfrRepository.save(prfrEntity);
+    }
 }

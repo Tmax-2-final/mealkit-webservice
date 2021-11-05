@@ -3,6 +3,7 @@ package com.example.catalogservice.jpa;
 import com.example.catalogservice.vo.Catalog;
 import com.example.catalogservice.vo.PkgMgt;
 import lombok.Data;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -22,7 +23,7 @@ public class PkgMgtEntity implements Serializable {
     @Column(nullable = false)
     private String userId;
 
-    @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long patalogId;
 
     @Column(nullable = true)
@@ -36,8 +37,9 @@ public class PkgMgtEntity implements Serializable {
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     private Date modifiedAt;
 
-    @OneToMany(targetEntity = CatalogEntity.class)
-    @JoinColumn(name = "catalogId")
-    private List<Catalog> catalog = new ArrayList<>();
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "catalogId", insertable = false, updatable = false)
+    @JsonIgnore
+    private CatalogEntity catalogEntity;
 
 }
