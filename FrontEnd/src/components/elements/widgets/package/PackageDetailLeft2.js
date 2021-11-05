@@ -12,8 +12,9 @@ export default function PackageDetailLeft2({packageData}) {
             .then(res => {
                 setPkgMgtDatas(res.data);
                 console.log(res.data);
-            }, [])
-    })
+
+            })
+    },[packageData])
 
 
         const images = [
