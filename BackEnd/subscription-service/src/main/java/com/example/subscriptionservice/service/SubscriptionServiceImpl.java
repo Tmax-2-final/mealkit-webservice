@@ -11,6 +11,7 @@ import com.example.subscriptionservice.jpa.SubscriptionRepository;
 import com.example.subscriptionservice.jpa.SubscriptionShipsRepository;
 import com.example.subscriptionservice.vo.RequestCancelSubscription;
 import com.example.subscriptionservice.vo.RequestUpdateSubscription;
+import com.example.subscriptionservice.vo.ResponseSubscription;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -24,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -50,8 +52,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public SubscriptionGradeEntity getSubscriptionGrade(int subGradeId) {
-        return subscriptionGradeRepository.findBySubGradeId(subGradeId);
+    public SubscriptionGradeDto getSubscriptionGrade(Integer subGradeId) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        SubscriptionGradeEntity subscriptionGradeEntity = subscriptionGradeRepository.findBySubGradeId(subGradeId);
+
+        SubscriptionGradeDto subscriptionGradeDto = modelMapper.map(subscriptionGradeEntity, SubscriptionGradeDto.class);
+
+        return subscriptionGradeDto;
     }
 
     @Transactional
@@ -130,6 +139,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         SubscriptionEntity deleteSubscriptionEntity = modelMapper.map(subscriptionDto, SubscriptionEntity.class);
 
         subscriptionRepository.save(deleteSubscriptionEntity);
+
+        Iterable<SubscriptionShipsEntity> subscriptionShipsEntities = getSubShips(requestCancelSubscription.getUserId());
+
+        for (SubscriptionShipsEntity subscriptionShipsEntity : subscriptionShipsEntities) {
+            // 환불 가능한 상품준비중(1)인 배송건에 대해서만 배송취소(4) 처리
+            if(subscriptionShipsEntity.getStatus() == '1') subscriptionShipsEntity.setStatus('4');
+        }
+
+        subscriptionShipsRepository.saveAll(subscriptionShipsEntities);
     }
 
     @Override
@@ -149,26 +167,40 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void paymentSubscription() {
+    public Iterable<SubscriptionDto> paymentSubscription() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
         LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
         LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
 
-        Iterable<SubscriptionEntity> subscriptionEntityList = subscriptionRepository.findByNextPaymentDateBetween(startDatetime, endDatetime);
+        Iterable<SubscriptionEntity> subscriptionEntityList = subscriptionRepository.findByStatusAndNextPaymentDateLessThanEqual('2', endDatetime);
 
         // 구독 등급 변경 체크 (change_sub_grade_id)
         subscriptionEntityList.forEach(v -> {
-            if(v.getChangeSubGradeId() != null){
+            if(v.getChangeSubGradeId() != null) {
                 //responseSubscriptionGradeList.add(new ModelMapper().map(v, ResponseSubscriptionGrade.class));
                 v.setSubGradeId(v.getChangeSubGradeId());
                 v.setChangeSubGradeId(null);
-
-                // 다음 결제일 계산 및 설정
-                LocalDateTime nextMonthDate = LocalDateTime.of(LocalDate.now().plusMonths(1), LocalTime.now());
-                v.setLastPaymentDate(LocalDateTime.now());
-                v.setNextPaymentDate(nextMonthDate);
             }
+
+            v.setSubPkgId(null);
+            // 결제 후 구독중(패키지확정전) 상태로 변경
+            v.setStatus('1');
+
+            // 다음 결제일 계산 및 설정
+            LocalDateTime nextMonthDate = LocalDateTime.of(LocalDate.now().plusMonths(1), LocalTime.now());
+            v.setLastPaymentDate(LocalDateTime.now());
+            v.setNextPaymentDate(nextMonthDate);
         });
-        subscriptionRepository.saveAll(subscriptionEntityList);
+
+        List<SubscriptionEntity> subscriptionEntityList2 = subscriptionRepository.saveAll(subscriptionEntityList);
+
+        List<SubscriptionDto> subscriptionDtoList = subscriptionEntityList2.stream().map(v -> modelMapper.map(v, SubscriptionDto.class)).collect(Collectors.toList());
+
+        //SubscriptionDto returnValue = modelMapper.map(responseSubscriptionsList, SubscriptionDto.class);
+
+        return subscriptionDtoList;
     }
 
     @Override
@@ -206,6 +238,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         SubShipDto returnValue = modelMapper.map(obj, SubShipDto.class);
 
         return returnValue;
+    }
+
+    @Override
+    public Iterable<SubscriptionShipsEntity> getAllSubShips() {
+        return subscriptionShipsRepository.findAll();
     }
 
     @Override
@@ -251,6 +288,35 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         SubscriptionEntity subscriptionEntity = modelMapper.map(subscriptionDto, SubscriptionEntity.class);
 
         subscriptionRepository.save(subscriptionEntity);
+    }
+
+    @Override
+    public Long getRevenueMonthAgo() {
+        // 오늘로부터 2달전~1달전 매출액 기간 설정
+        LocalDate startDatetime = LocalDate.now().minusMonths(2);
+        LocalDate endDatetime = LocalDate.now().minusMonths(1);
+
+        Long revenueMonthAgo = subscriptionShipsRepository.getRevenueBetween(startDatetime, endDatetime);
+
+        return revenueMonthAgo;
+    }
+
+    @Override
+    public Long getRevenueMonth() {
+        // 오늘로부터 1달전~오늘 매출액 기간 설정
+        LocalDate startDatetime = LocalDate.now().minusMonths(1);
+        LocalDate endDatetime = LocalDate.now();
+
+        Long revenueMonth = subscriptionShipsRepository.getRevenueBetween(startDatetime, endDatetime);
+
+        return revenueMonth;
+    }
+
+    @Override
+    public Long getTotalRevenue() {
+        Long totalRevenue = subscriptionShipsRepository.getTotalRevenue();
+
+        return totalRevenue;
     }
 
     private Sort sortByAscSubGradeId() {

@@ -21,6 +21,9 @@ public class SubscriptionShipsEntity {
     @Column(nullable = false)
     private Long pkgId;
 
+    @Column(nullable = false, length = 40)
+    private String pkgName;
+
     @Column(nullable = false, length = 10)
     private String postcode;
 

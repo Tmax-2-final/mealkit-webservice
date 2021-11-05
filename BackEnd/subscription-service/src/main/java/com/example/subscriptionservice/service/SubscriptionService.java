@@ -17,7 +17,7 @@ public interface SubscriptionService {
     Iterable<SubscriptionGradeEntity>  getAllSubscriptionGrade();
 
     /*특정 구독 등급 조회*/
-    SubscriptionGradeEntity getSubscriptionGrade(int subGradeId);
+    SubscriptionGradeDto getSubscriptionGrade(Integer subGradeId);
 
     /*구독 등록*/
     SubscriptionDto createSubscription(SubscriptionDto subscriptionDto);
@@ -35,13 +35,16 @@ public interface SubscriptionService {
     SubscriptionDto getSubscription(String userId);
 
     /*구독 결제*/
-    void paymentSubscription();
+    Iterable<SubscriptionDto>  paymentSubscription();
 
     /*구독 여부확인*/
     long existSubscription(String userId);
 
     /*구독 배송 등록*/
     SubShipDto createSubShips(SubShipDto subShipDto);
+
+    /*전체 구독 배송 조회*/
+    Iterable<SubscriptionShipsEntity>  getAllSubShips();
 
     /*구독 배송 조회*/
     Iterable<SubscriptionShipsEntity>  getSubShips(String userId);
@@ -57,4 +60,13 @@ public interface SubscriptionService {
 
     /*구독패키지 확정*/
     void confirmSubPkg(String userId, Long pkgId);
+
+    /*한달전 매출액 조회*/
+    Long getRevenueMonthAgo();
+
+    /*한달간 매출액 조회*/
+    Long getRevenueMonth();
+
+    /*총 매출액 조회*/
+    Long getTotalRevenue();
 }
