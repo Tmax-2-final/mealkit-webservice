@@ -23,10 +23,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -191,14 +188,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-
-
         List<SubscriptionShipsEntity> subscriptionShipsEntityList = new ArrayList<>();
+
+
+        subShipDto.setDueDate(subShipDto.getDueDate());
 
         for(int i = 0; i < 4; i++){
             SubscriptionShipsEntity subscriptionShipsEntity = modelMapper.map(subShipDto, SubscriptionShipsEntity.class);
             // 7일씩 더해서 배송예정일자를 수정
-            LocalDateTime dueDate = subscriptionShipsEntity.getDueDate().plusDays(7*i);
+            LocalDate dueDate = subscriptionShipsEntity.getDueDate().plusDays(7*i);
             subscriptionShipsEntity.setDueDate(dueDate);
             subscriptionShipsEntityList.add(subscriptionShipsEntity);
         }
@@ -211,6 +209,23 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    public Iterable<SubscriptionShipsEntity> getSubShips(String userId) {
+        return subscriptionShipsRepository.findByUserId(userId);
+    }
+
+    @Override
+    public void updateSubShip(Long shipId, String postcode, String address, String addressDetail, LocalDate dueDate, Character type) {
+        Optional<SubscriptionShipsEntity> subscriptionEntity = subscriptionShipsRepository.findById(shipId);
+        subscriptionEntity.get().setAddress(address);
+        subscriptionEntity.get().setAddressDetail(addressDetail);
+        subscriptionEntity.get().setPostcode(postcode);
+        subscriptionEntity.get().setDueDate(dueDate);
+        subscriptionEntity.get().setType(type);
+
+        subscriptionShipsRepository.save(subscriptionEntity.get());
+    }
+
+    @Override
     public Long getRefundAmount(String userId) {
         return subscriptionShipsRepository.getRefundAmountByUserId(userId);
     }
@@ -220,6 +235,23 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         
     }
 
+    @Override
+    public void confirmSubPkg(String userId, Long pkgId) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        SubscriptionDto subscriptionDto = getSubscription(userId);
+
+        // 구독중 - 구독패키지 확정완료
+        Character subscribingAndAfterConfirmedPkgStatus = '2';
+
+        subscriptionDto.setStatus(subscribingAndAfterConfirmedPkgStatus);
+        subscriptionDto.setSubPkgId(pkgId);
+
+        SubscriptionEntity subscriptionEntity = modelMapper.map(subscriptionDto, SubscriptionEntity.class);
+
+        subscriptionRepository.save(subscriptionEntity);
+    }
 
     private Sort sortByAscSubGradeId() {
         return Sort.by(Sort.Direction.ASC, "subGradeId");

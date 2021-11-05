@@ -4,6 +4,7 @@ import com.example.subscriptionservice.dto.SubShipDto;
 import com.example.subscriptionservice.dto.SubscriptionDto;
 import com.example.subscriptionservice.entity.SubscriptionEntity;
 import com.example.subscriptionservice.entity.SubscriptionGradeEntity;
+import com.example.subscriptionservice.entity.SubscriptionShipsEntity;
 import com.example.subscriptionservice.service.SubscriptionService;
 import com.example.subscriptionservice.vo.*;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -231,5 +233,56 @@ public class SubscriptionController {
         log.info("특정회원 환불금액 조회 API END");
 
         return ResponseEntity.status(HttpStatus.OK).body(refundAmount);
+    }
+
+    @ApiOperation(value = "구독패키지 확정", notes = "회원의 구독패키지를 확정한다.")
+    @PutMapping(value = "/subscription/confirmsubpkg")
+    public ResponseEntity<String> confirmSubPkg(@RequestParam(value="userId") String userId,
+                                                @RequestParam(value="pkgId") Long pkgId){
+        log.info("구독패키지 확정 API START");
+
+        subscriptionService.confirmSubPkg(userId, pkgId);
+
+        log.info("구독패키지 확정 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body("구독패키지 확정 완료");
+    }
+
+    @ApiOperation(value = "구독배송 조회", notes = "특정 회원의 구독 정보를 조회한다.")
+    @GetMapping(value = "/subscription/ships/{userId}")
+    public ResponseEntity<List<ResponseSubShip>> getSubscriptionShips(@PathVariable("userId") String userId){
+        log.info("구독배송 조회 API START");
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+
+        Iterable<SubscriptionShipsEntity> subscriptionShipsList = subscriptionService.getSubShips(userId);
+
+        List<ResponseSubShip> responseSubShipList = new ArrayList<>();
+
+        subscriptionShipsList.forEach(v -> {
+            responseSubShipList.add(new ModelMapper().map(v, ResponseSubShip.class));
+        });
+
+        log.info("구독배송 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseSubShipList);
+    }
+
+    @ApiOperation(value = "구독배송 배송정보 변경", notes = "특정 구독배송의 배송정보를 변경한다.")
+    @PutMapping(value = "/subscription/ships/{shipId}")
+    public ResponseEntity<String> updateSubShip(@PathVariable("shipId") Long shipId,
+                                                @RequestParam(value="address") String address,
+                                                @RequestParam(value="addressDetail") String addressDetail,
+                                                @RequestParam(value="postcode") String postcode,
+                                                @RequestParam(value="type") Character type,
+                                                @RequestParam(value="dueDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueDate){
+        log.info("구독배송 배송정보 변경 API START");
+
+        subscriptionService.updateSubShip(shipId, postcode, address, addressDetail, dueDate, type);
+
+        log.info("구독배송 배송정보 변경 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body("구독배송 배송정보 변경 완료");
     }
 }
