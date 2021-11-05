@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import Bread from '../../elements/ui/Bread';
-import Title from '../../elements/ui/Title';
+import Title2 from '../../elements/ui/Title2';
 import SubTitle from '../../elements/ui/SubTitle';
 import Footer from '../../layout/Footer';
 import Header from '../../layout/Header';
@@ -9,27 +9,125 @@ import axios from 'axios';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ko from "date-fns/locale/ko"; // the locale you want
 import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom';
 
 function ConfirmSubPkg(props) {
-    // 상품, 총 결제 금액 props 데이터
-    //const data = props.location.state.data;
+    const {myPkgData} = props.location.state;
 
-    let userId = localStorage.getItem('userid');
-    let token = localStorage.getItem('token');
-
-    //const [ orderMgtData, setOrderMgtData ] = useState(data);
+    const userId = localStorage.getItem('userid');
+    const token = localStorage.getItem('token');
+    const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
+    const [phoneNum, setPhoneNum] = useState('010-0000-0000');
     const [ modalOpen, setModalOpen ] = useState(false);
     const [ address, setAddress] = useState('');
     const [ postcode, setPostcode ] = useState('');
     const [ addressDetail, setAddressDetail ] = useState('');
+    const [ fullAddress, setFullAddress ] = useState('');
     const [ payment, setPayment] = useState(1)
+    const [subGradeText, setSubGradeText] = useState('');
+    const [monthlyFee, setMonthlyFee] = useState(0);
+    const [shipType, setShipType] = useState(0);
 
-    const [ email, setEmail] = useState('')
-    const [ name, setName] = useState('')
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
+
+    console.log("=== 마이패키지 데이터 ===");
+    console.log(myPkgData)
+    console.log("========================");
+
+    useEffect(() => {
+        if(address.split(" ")[0] === '서울' || address.split(" ")[0] === '경기'|| address.split(" ")[0] === '인천'){
+            setShipType(1);
+        }
+        else {
+            setShipType(2);
+        }
+    }, [address])
+
+    useEffect(() => {
+        const apiName = "회원상세정보 조회";
+
+        axios.get(`/user-service/users/${userId}`, {
+            headers : headers
+        })
+        .then(res => {
+            console.log(`=== ${apiName} 데이터 ===`);
+            console.log(res.data);
+            console.log("=========================");
+
+            setEmail(res.data.email);
+            setName(res.data.name);
+        })
+        .catch(error => {
+            alert(`${apiName}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+            
+            console.log(`====== ${apiName} 실패 data ======`);
+            console.log(error.response);
+            console.log(`==================================`);
+        })
+
+        const apiName2 = "특정회원 구독 조회";
+
+        axios.get(`/subscription-service/subscription/${userId}`, {
+            headers : headers
+        })
+        .then(res => {
+            console.log(`=== ${apiName2} 데이터 ===`);
+            console.log(res.data);
+            console.log("=========================");
+
+            // 구독중 (패키지확정전)
+            const subscribingAndBeforeConfirmedPkgStatus = '1';
+            // 구독중 (패키지확정후)
+            const subscribingAndAfterConfirmedPkgStatus = '2';
+            // 구독취소
+            const cancelStatus = '3';
+
+            if(res.data.status === cancelStatus)
+            {
+                alert("구독패키지 확정전인 회원만 가능합니다.\r\n(현재구독상태 : 구독취소)");
+
+                props.history.push({
+                    pathname: "/",
+                    state: {
+
+                    }
+                })
+
+                return;
+            }
+
+            if(res.data.status === subscribingAndAfterConfirmedPkgStatus)
+            {
+                alert("구독패키지 확정전인 회원만 가능합니다.\r\n(현재구독상태 : 구독중(패키지확정 완료))");
+
+                props.history.push({
+                    pathname: "/",
+                    state: {
+
+                    }
+                })
+
+                return;
+            }
+
+            setSubGradeText(res.data.subscriptionGradeDto.name);
+            setMonthlyFee(res.data.subscriptionGradeDto.monthlyFee);
+            
+        })
+        .catch(error => {
+            alert(`${apiName2}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+            
+            console.log(`====== ${apiName2} 실패 data ======`);
+            console.log(error.response);
+            console.log(`==================================`);
+        })
+    }, []);
 
     
     const [startDate, setStartDate] = useState(() => {
-        // 일주일전을 검색 기본 시작일자, 시분초를 시작으로 설정 (검색)
         let date = new Date();
         let weekago = new Date(date.setDate(date.getDate() + 2));
         weekago = weekago.setHours(0,0,0,0);
@@ -43,13 +141,16 @@ function ConfirmSubPkg(props) {
     });
     
     const [selDate, setSelDate] = useState(null);
+    const [selDate2, setSelDate2] = useState(null);
+    const [selDate3, setSelDate3] = useState(null);
+    const [selDate4, setSelDate4] = useState(null);
 
     registerLocale("ko", ko);
 
     const isWeekday = (date) => {
         const day = date.getDay();
         return day !== 0 && day !== 1;
-      };
+    };
 
     const ExampleCustomInput = ({ value, onClick }) => (
         <button className="example-custom-input" onClick={onClick}>
@@ -57,25 +158,7 @@ function ConfirmSubPkg(props) {
         </button>
     );
 
-    useEffect(() => {
-        // axios.get(`/user-service/users/${userId}`, {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // })
-        //     .then(response => {
-        //         console.log("주문자 정보");
-        //         console.log(response);
-        //         setEmail(response.data.email);
-        //         setName(response.data.name);
-        //     })
-        //     .catch(err => {
-        //         alert("주문자 정보 에러");
-        //         console.log(err.response);
-        //     })
-    }, []);
-
-    const handlePutCartList = () => {
+    const seacrhPostHandler = () => {
         openModal(true);
     }
 
@@ -97,116 +180,142 @@ function ConfirmSubPkg(props) {
         setModalOpen(false);
     }
 
-    const axiosConfig = {
-        headers:{
-            'Accept': 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8'
-        }
+
+    const myPkgList = myPkgData.map((item) => {
+        return(
+            <tr key={item.myPkgId}>
+                <td style={{width:"15%"}}>
+                    <img className="img-fluid" width="100px" height="auto" 
+                        src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.catalogEntity.image1}`} alt=""
+                    />
+                </td>
+                <td className="text-center align-middle" style={{fontSize:"1.2rem"}}>{item.catalogEntity.name}</td>
+                <td className="text-center align-middle" style={{fontSize:"1.2rem"}}>{item.catalogEntity.category}</td>
+                <td className="text-center align-middle" style={{fontSize:"1.2rem"}}>1개</td>
+            </tr>
+        );
+    })
+
+    function dateFormat(date) {
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        let hour = date.getHours();
+        let minute = date.getMinutes();
+        let second = date.getSeconds();
+
+        month = month >= 10 ? month : '0' + month;
+        day = day >= 10 ? day : '0' + day;
+        hour = hour >= 10 ? hour : '0' + hour;
+        minute = minute >= 10 ? minute : '0' + minute;
+        second = second >= 10 ? second : '0' + second;
+
+        return date.getFullYear() + '-' + month + '-' + day;
+
+        //return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
     }
 
-    const handleOrder = (e) => {
+    const secondWeek = (date) => {
+        var d = new Date(date);
+        var dayOfMonth = d.getDate();
+        d.setDate(dayOfMonth + 7);
+        return d;
+    }
+
+    const thirdWeek = (date) => {
+        var d = new Date(date);
+        var dayOfMonth = d.getDate();
+        d.setDate(dayOfMonth + 14);
+        return d;
+    }
+
+    const fourthWeek = (date) => {
+        var d = new Date(date);
+        var dayOfMonth = d.getDate();
+        d.setDate(dayOfMonth + 21);
+        return d;
+    }
+
+    const cofirmSubPkgHandler = (e) => {
         e.preventDefault();
 
         if(postcode === "" || address === "" || addressDetail === ""){
             alert("배송 정보를 입력해주세요!");
+            return;
         }
-        else {
-            if (window.confirm(`해당 주문내역으로 결제 하시겠습니까?`)) {
-                const orderData = new Object();
-                orderData.postcode=postcode;
-                orderData.address=address;
-                orderData.addressDetail=addressDetail;
-                orderData.payment=payment;
-    
-                let payload = JSON.stringify({
-                    // order_mgt: orderMgtData,
-                    // orders: orderData
-                });
-    
-                // console.log("===페이로드===");
-                // console.log(payload);
+        
+        if(selDate === null){
+            alert("배송받을 날짜를 선택해주세요.");
+            return;
+        }
 
-                axios.post(`/order-service/${userId}/orders`, payload, axiosConfig)
-                .then(function (response) {
-                    
-                        console.log("========응답 데이터=======");
-                        console.log(response.data)
-                    if(response.status === 201){
-                        // 페이먼트 이후 장바구니 비우기
-                        axios.delete(`/user-service/${userId}/carts`, {
-                            headers: {
-                                Authorization: `Bearer ${token}`
-                            }
-                        })
-                        .then((data) => {
-                            console.log(data);
-                            // 페이지 이동하기
-                            if(data.status === 200) {
-                                props.history.push({
-                                    pathname: '/paymentcomplete',
-                                    state: {
-                                        name: name
-                                    }
-                                })
-                            }
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                            alert("장바구니가 정상적으로 비워지지 않았습니다")
-                        })
-                        
-                    }
-                    else if (response.status === 400){
-                        alert("주문하려는 상품 재고가 부족합니다.1");
-                    }
-                    
-                    else if (response.status === 500){
-                        alert("시스템 에러[500]\r\n[관리자에게 문의바랍니다]1");
-                    }
-                    else if (response.status === 503){
-                        alert("서비스 연결 에러[503]\r\n[관리자에게 문의바랍니다]2");
-                    }
-                    
-                })
-                .catch((err)=>{
-                    console.log(err.response.data);
-                    if (err.response.status === 400){
-                        alert("주문하려는 상품 재고가 부족합니다.2");
-                    }
-                    else if (err.response.status === 500){
-                        alert("시스템 에러[500]\r\n[관리자에게 문의바랍니다]2");
-                    }
-                    else if (err.response.status === 503){
-                        alert("서비스 연결 에러[503]\r\n[관리자에게 문의바랍니다]2");
-                    }
-                })
+        if (window.confirm(`해당 패키지구성 및 배송지 정보로 구독패키지 확정 및 배송 시작을 하시겠습니까?`)) {
+            const pkgId = 1;
+
+            const params = {
+                userId : userId,
+                pkgId : pkgId
             }
+
+            const apiName = "구독패키지 확정"
+
+            console.log(`====== ${apiName} API PARAMS ======`);
+            console.log(params);
+            console.log("==================================");
+
+            axios.put(`/subscription-service/subscription/confirmsubpkg`,null , {
+                params : params
+            })
+            .then(res => {
+                console.log(`====== ${apiName} 응답 데이터 ======`);
+                console.log(res.data);
+                console.log("===================================");
+
+                const body = {
+                    userId : userId,
+                    pkgId: pkgId,
+                    address: address,
+                    addressDetail: addressDetail,
+                    postcode: postcode,
+                    type: shipType,
+                    dueDate: selDate,
+                    price: monthlyFee / 4,
+                }
+    
+                const apiName2 = "구독배송 등록"
+    
+                console.log(`====== ${apiName2} API BODY ======`);
+                console.log(body);
+                console.log("=================================");
+
+                axios.post(`/subscription-service/subscription/ships`, body)
+                .then(res => {
+                    
+                    if(res.status === 201){
+                        console.log(`====== ${apiName2} 응답 데이터 ======`);
+                        console.log(res.data);
+                        console.log("===================================");
+                        
+                        props.history.push({
+                            pathname: "/subscription/confirmSubPkgcomplete",
+                            state: {
+
+                            }
+                        })
+                    } else {
+                        alert(`${apiName2} 응답상태코드 에러 (응답 상태코드 : ${res.status})`)
+                    }
+                })
+                .catch(error => {
+                    alert(`${apiName2}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+                    console.log(error.response);
+                })
+            })
+            .catch(error => {
+                alert(`${apiName}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+                console.log(error.response);
+            })
         }
     }
-
-    // const orderList = orderMgtData.map(item => {
-    //     return(
-    //                 <tbody>
-    //                     <tr>
-    //                         <td className="product-thumbnail">
-    //                             <img className="img-fluid" src={`https://bookstore-image.s3.us-east-2.amazonaws.com/${item.image}`} alt=""/>
-    //                         </td>
-    //                         <td className="product-name text-center">
-    //                             <span className="text-center">{item.name}</span>
-    //                         </td>
-    //                         <td className="product-price-cart">
-    //                             <span className="amount">{item.unitPrice} 원</span>
-    //                         </td>
-    //                         <td className="product-quantity">
-    //                             <div className="cart-plus-minus">
-    //                             <span className="amount">{item.qty}</span>
-    //                             </div>
-    //                         </td>
-    //                         <td className="product-subtotal"><span>{item.unitPrice * item.qty} 원</span></td>
-    //                     </tr>
-    //                 </tbody>
-    //     );
-    // })
 
     return (
         <Fragment>
@@ -215,152 +324,196 @@ function ConfirmSubPkg(props) {
                     setModalOpen = {setModalOpen} 
                     setAddress = {setAddress} 
                     setPostcode = {setPostcode} 
+                    setFullAddress = {setFullAddress}
             />
             <Header/>
             <Bread
                 productId = ""
-                productName = "배송지 입력 및 배송날짜 선택"
+                productName = "구독패키지 확정 및 배송시작"
                 productUrl = ""
             />
-            <section id="payment">
+            <section id="confirmSubPkg">
             <div className="container">
                 <div className="row">
                     <div className="col-12">
-                        <Title title = "구독패키지 확정내역"/>
-                        <SubTitle title = "패키지 상품 내역"/>
+                        <Title2 title = "구독패키지 확정내역"/>
+                        <SubTitle title = "패키지 상품구성"/>
                         <hr></hr>
-                        <div className="table-content table-responsive cart-table-content">
-                            
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>이미지</th>
-                                        <th>상품명</th>
-                                        <th>단가</th>
-                                        <th>수량</th>
-                                        <th>총 가격</th>
-                                    </tr>
-                                </thead>
-                            {/* {orderList} */}
-                            </table>
-                        </div>
+                        <table className="table table-borderless">
+                            <tbody>
+                                {myPkgList}
+                            </tbody>
+                        </table>
+                        <hr/>
                         <br/><br/><br/>
                         <SubTitle title = "구독자 정보"/>
                         <hr></hr>
-                        <div className="product-details-content">
-                            <div class="pro-details-meta">
-                                <span>구독자&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                <ul>
-                                    <li>{name}</li>
-                                </ul>
+                        <div className="row">
+                            <div className="col-1"><span style={{fontSize:"1rem", fontWeight:"bold"}}>이름</span></div>
+                            <div className="col-9 mb-3"><span style={{fontSize:"1rem"}}>{name}</span> </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-1"><span style={{fontSize:"1rem", fontWeight:"bold"}}>휴대폰</span></div>
+                            <div className="col-9 mb-3"><span style={{fontSize:"1rem"}}>{phoneNum}</span></div>
+                        </div>
+                        <div className="row">
+                            <div className="col-1"><span style={{fontSize:"1rem", fontWeight:"bold"}}>이메일</span></div>
+                            <div className="col-9 mb-3"><span style={{fontSize:"1rem"}}>{email}</span></div>
+                        </div>
+                        <div className="row">
+                            <div className="col-1"><span style={{fontSize:"1rem", fontWeight:"bold"}}>구독등급</span></div>
+                            <div className="col-9"><span style={{fontSize:"1rem"}}>{subGradeText}</span></div>
+                        </div>
+                        <br/><br/><br/>
+                        <div className="row">
+                            <div className="col-6">
+                            <SubTitle title = "배송지 정보"/>
+                            <hr></hr>
+                                <div className="form-group m-form__group row">
+                                    <label className="col-md-2 col-form-label">
+                                        <span className="m--font-orange vertical-middle" style={{fontSize:"1rem", fontWeight:"bold"}}>주&nbsp;&nbsp;소&nbsp;&nbsp;</span>
+                                    </label>
+                                    <div className="col-md-4">
+                                        <input 
+                                            type="text" 
+                                            className="form-control m-input" 
+                                            name="postcode" 
+                                            id="postcode" 
+                                            placeholder="우편번호" 
+                                            readOnly 
+                                            value = {postcode}
+                                        />
+                                    </div>
+                                    <br/><br/>
+                                    <div className="col-md-6 postcode-btn">
+                                        <button type="button" className="btn btn-info m-btn--air mr-30" onClick={seacrhPostHandler}>우편번호 찾기</button>
+                                    </div>
+                                    <div className="col-md-8 offset-md-2">
+                                        <input
+                                        type="text"
+                                        className="form-control m-input m--margin-top-10"
+                                        name="address"
+                                        id="address"
+                                        placeholder="도로명 주소"
+                                        value={address}
+                                        readOnly
+                                        />
+                                    </div>
+                                    <br/><br/>
+                                    <div className="col-md-8 offset-md-2">
+                                        <input
+                                        type="text"
+                                        className="form-control m-input m--margin-top-10"
+                                        name="detailAddress"
+                                        placeholder="상세 주소"
+                                        onChange={handleKeyDown}
+                                        required
+                                        />
+                                    </div>
+                                </div>
+                            <br/>
+                            <div className="row">
+                                <div className="col-md-2 my-auto" style={{fontSize:"1rem", fontWeight:"bold"}}>배송구분</div>
+                                <div className="col-md-2 pr-0">
+                                    {address.split(" ")[0] === '서울' 
+                                    || address.split(" ")[0] === '경기'
+                                    || address.split(" ")[0] === '인천'
+                                    ? "새벽배송" : "일반배송"}
+                                </div>
+                                <div className="col-md-5 pl-0">
+                                    <span className="ml-1" style={{fontSize:"1.4rem", color:"gray"}} title={`현재 서울,인천,경기만 새벽배송이 가능하며, 나머지 지역의 경우 일반택배로 배송됩니다.`}>
+                                        <i className="far fa-question-circle"></i>
+                                    </span>
+                                </div>
                             </div>
-                            <div class="pro-details-meta">
-                                <span>휴대폰&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                <ul>
-                                    <li>01012341234</li>
-                                </ul>
+                            <br/>
+                            <div className="row">
+                                <div className="col-md-2 my-auto" style={{fontSize:"1rem", fontWeight:"bold"}}>배송날짜</div>
+                                
+                                <div className="col-md-4" style={{fontSize:"1rem"}}>
+                                    <DatePicker
+                                        selected={selDate}
+                                        onChange={(date) => {
+                                            setSelDate(date);
+                                            setSelDate2(secondWeek(date));
+                                            setSelDate3(thirdWeek(date));
+                                            setSelDate4(fourthWeek(date));
+                                        }}
+                                        minDate={startDate}
+                                        maxDate={endDate}
+                                        locale="ko"
+                                        placeholderText="배송받을 날짜를 선택"
+                                        dateFormat="yyyy.MM.dd(eee)"
+                                        filterDate={isWeekday}
+                                    />
+                                </div>
+                                <div className="col-md-2 p-0 mt-2">
+                                    <span className="" style={{fontSize:"1.4rem", color:"gray"}} title={`첫 배송일을 선택합니다. \r\n첫 배송일 기준 일주일마다 배송되며,\r\n배송일 변경은 각 배송건마다 마이페이지-구독배송관리 페이지에서 가능합니다.`}>
+                                        <i className="far fa-question-circle"></i>
+                                    </span>
+                                </div>
+                                
                             </div>
-                            <div class="pro-details-meta">
-                                <span>이메일&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                <ul>
-                                    <li>{email}</li>
-                                </ul>
-                            </div>
-                            <div class="pro-details-meta">
-                                <span>구독등급&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                <ul>
-                                    <li>{name}</li>
-                                </ul>
+                        </div>
+                            <div className="col-md-6">
+                                <SubTitle title = "주차별 배송예정일"/>
+                                <hr></hr>
+                                        {
+                                            selDate === null ? 
+                                            (<div style={{fontSize:"1.2rem", fontWeight:"bold"}}>배송날짜를 선택해주세요.</div>) 
+                                            : 
+                                            (
+                                                <>
+                                                    <div className="row">
+                                                        <div className="col-4">
+                                                        <div style={{fontSize:"1.2rem", fontWeight:"bold"}}>1 주차 배송예정일 </div>
+                                                    </div>
+                                                    <div className="col-6">
+                                                        <div style={{fontSize:"1.2rem"}}>{selDate && dateFormat(selDate)}</div>
+                                                    </div> 
+                                                    <div className="row mt-4">
+                                                        <div className="col-4">
+                                                            <div style={{fontSize:"1.2rem", fontWeight:"bold"}}>2 주차 배송예정일 </div>
+                                                        </div>
+                                                        <div className="col-6">
+                                                            <div style={{fontSize:"1.2rem"}}>{selDate && dateFormat(selDate2)}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row mt-4">
+                                                        <div className="col-4">
+                                                            <div style={{fontSize:"1.2rem", fontWeight:"bold"}}>3 주차 배송예정일 </div>
+                                                        </div>
+                                                        <div className="col-6">
+                                                            <div style={{fontSize:"1.2rem"}}>{selDate && dateFormat(selDate3)}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row mt-4">
+                                                        <div className="col-4">
+                                                            <div style={{fontSize:"1.2rem", fontWeight:"bold"}}>4 주차 배송예정일 </div>
+                                                        </div>
+                                                        <div className="col-6">
+                                                            <div style={{fontSize:"1.2rem"}}>{selDate && dateFormat(selDate4)}</div>
+                                                        </div>
+                                                    </div>
+                                                    </div> 
+                                                </>
+                                            )
+                                        }
                             </div>
                         </div>
                         <br/><br/><br/>
-                        <SubTitle title = "배송지 정보"/>
-                        <hr></hr>
-                        <div class="form-group m-form__group row">
-                            <label class="col-md-1 col-form-label">
-                                주&nbsp;&nbsp;소&nbsp;&nbsp;<span class="m--font-orange vertical-middle"></span>
-                            </label>
-                            <div class="col-md-2">
-                                <input 
-                                    type="text" 
-                                    class="form-control m-input" 
-                                    name="postcode" 
-                                    id="postcode" 
-                                    placeholder="우편번호" 
-                                    readOnly 
-                                    value = {postcode}
-                                />
-                            </div>
-                            <br/><br/>
-                            <div class="col-md-9 postcode-btn">
-                                <button type="button" class="btn btn-info m-btn--air mr-30" onClick={()=> handlePutCartList()}>우편번호 찾기</button>
-                                {/* <button type="button" class="btn btn-info m-btn--air" onClick={()=> handlePutCartList()}>배송지 목록</button> */}
-                            </div>
-                            <div class="col-md-5 offset-md-1">
-                                <input
-                                type="text"
-                                class="form-control m-input m--margin-top-10"
-                                name="address"
-                                id="address"
-                                placeholder="도로명 주소"
-                                value={address}
-                                readOnly
-                                />
-                            </div>
-                            <br/><br/>
-                            <div class="col-md-8"></div>
-                            <div class="col-md-5 offset-md-1">
-                                <input
-                                type="text"
-                                class="form-control m-input m--margin-top-10"
-                                name="detailAddress"
-                                placeholder="상세 주소"
-                                onChange={handleKeyDown}
-                                required
-                                />
+                        <div className="row mt-10 mb-30">
+                            <div className="col-lg-8 offset-lg-2 text-center">
+                                <Button 
+                                    sx={{width:"20rem", height:"4rem"}}
+                                    variant="contained"
+                                    size="large"
+                                    onClick={cofirmSubPkgHandler}
+                                >
+                                    구독패키지 확정 및 배송 시작
+                                </Button>
                             </div>
                         </div>
-                        <br/>
-                        <div className="row">
-                            <div className="col-md-1 my-auto">배송구분</div>
-                            <div className="col-md-5">
-                                {address.split(" ")[0] === '서울' 
-                                || address.split(" ")[0] === '경기'
-                                || address.split(" ")[0] === '인천'
-                                ? "새벅배송" : "일반배송"}
-                            </div>
-                            <div className="col-md-5">
-                            </div>
-                        </div>
-                        <br/>
-                        <div className="row">
-                            <div className="col-md-1 my-auto">배송날짜</div>
-                            <div className="col-md-5">
-                            <DatePicker
-                                selected={selDate}
-                                onChange={(date) => setSelDate(date)}
-                                minDate={startDate}
-                                maxDate={endDate}
-                                locale="ko"
-                                placeholderText="배송받을 날짜를 선택"
-                                dateFormat="yyyy.MM.dd(eee)"
-                                filterDate={isWeekday}
-                            />
-                            </div>
-                            <div className="col-md-5">
-                            </div>
-                        </div>
-                        <br/><br/><br/>
-                        <div className="row mb-30">
-                        <div className="col-lg-8 offset-lg-2 text-center">
-                            <Button 
-                                variant="contained"
-                                size="large"
-                            >
-                                구독패키지 확정하기
-                            </Button>
-                        </div>
-                    </div>
                     </div> 
                 </div>
             </div>

@@ -61,8 +61,8 @@ const Sidebar = () => {
                     <div className="single-sidebar-blog">
                         <div className="sidebar-blog-content">
                             <h4>
-                                <Link to={process.env.PUBLIC_URL + "/mypage/myOrder"}>
-                                    주문 정보 조회
+                                <Link to={process.env.PUBLIC_URL + "/mypage/myShip"}>
+                                    구독 배송 조회
                                 </Link>
                             </h4>
                         </div>

@@ -11,6 +11,14 @@ import axios from 'axios';
 
 function MyPage(props) {
 
+    const userId = localStorage.getItem('userid');
+    const token = localStorage.getItem('token');
+
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
+
+
     const [data, setData] = useState([]);
     const [userDatas, setUserDatas] = useState([]);
 
@@ -38,6 +46,42 @@ function MyPage(props) {
             })
     }, []);
 
+    const subCancelHandler = (e) => {
+        if(!userId){
+            alert("로그인 후 진행해주세요.");
+            props.history.push({
+                pathname: '/login',
+                state: {
+                }
+            })
+        }
+        else {
+            props.history.push({
+                pathname: '/subscription/cancel',
+                state: {
+                }
+            })
+        }
+    }
+
+    const subChangeHandler = () => {
+        if(!userId){
+            alert("로그인 후 진행해주세요.");
+            props.history.push({
+                pathname: '/login',
+                state: {
+                }
+            })
+        }
+        else {
+            props.history.push({
+                pathname: '/subscription/editgrade',
+                state: {
+                }
+            })
+        }
+    }
+
     return (
         <Fragment>
 
@@ -57,6 +101,7 @@ function MyPage(props) {
                     </div>
                     <div className="col-8 offset-1">
                         <Title title="회원 정보 조회" />
+                        
                         <br /><br />
 
                         {/* <SubTitle title="회원 정보" /> */}
@@ -116,6 +161,12 @@ function MyPage(props) {
                                             </div>
                                         </div>
                                     </div>
+                                    <button className="btn btn-outline-primary btn-sm" type="submit" onClick={subChangeHandler} >
+                                        <span>구독변경</span>
+                                    </button>
+                                    <button className="btn btn-outline-primary btn-sm" type="submit" onClick={subCancelHandler}>
+                                        <span>구독취소</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>

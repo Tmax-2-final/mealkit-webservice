@@ -1,9 +1,7 @@
 import DaumPostCode from 'react-daum-postcode';
 
 const DaumPost = (props) => {
-    const setAddress = props.setAddress;
-    const setPostcode = props.setPostcode;
-    const setModalOpen = props.setModalOpen;
+    const {setAddress, setPostcode, setModalOpen, setFullAddress} = props;
 
     const handleComplete = (data) => {
         
@@ -22,7 +20,7 @@ const DaumPost = (props) => {
         setAddress(data.address);
         setPostcode(data.zonecode);
         setModalOpen(false);
-        //fullAddress -> 전체 주소반환
+        setFullAddress(fullAddress)
     }
     return (
                 <>
