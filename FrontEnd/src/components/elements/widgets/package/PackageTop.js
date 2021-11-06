@@ -13,6 +13,8 @@ export default function PackageTop({props, packageData}) {
     useEffect(()=>{
     },[packageData])
 
+    console.log(packageData)
+
     return (
         
         <div className="shop-area pt-100 pb-100">

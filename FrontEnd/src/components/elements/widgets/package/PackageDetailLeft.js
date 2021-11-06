@@ -7,6 +7,8 @@ import Box from '@mui/material/Box';
 export default function PackageDetailLeft({packageData}) {
     useEffect(()=>{
     },[packageData])
+
+    console.log(packageData);
     
     return(
         <div className="col-lg-6 col-md-6">

@@ -20,7 +20,7 @@ function ComareTable(props) {
     let process = require('../../../../myProcess.json');
 
     useEffect(() => {
-        axios.get("/catalog-service/hello1/mypackage", {
+        axios.get(`/catalog-service/${userId}/mypackage`, {
             headers : headers
         })
             .then(res => {
@@ -36,93 +36,8 @@ function ComareTable(props) {
 
 
     const createPatalog = () => {
-        // let body = {
-        //     patalogId: packageData.patalogId,
-        //     name: packageData.name,
-        //     image: packageData.image,
-        //     unitPrice: packageData.unitPrice,
-        //     qty: count
-        // }
-
-        // let jsonArray = new Array();
-        // myPackageDatas.map( item=> {
-        //     let jsonObj = new Object();
-        //     jsonObj.name = item.catalogEntity.name;
-        //     jsonObj.image = item.catalogEntity.image1;
-        //     jsonObj = JSON.stringify(jsonObj);
-        //     jsonArray.push(JSON.parse(jsonObj));
-        // })
-
-        // console.log(jsonArray);
-        //
-        // setPatalogData(jsonArray);
-
-        let body = {
-            name: "hello1님의 패키지",
-            category: "유저 패키지",
-            rating: "3",
-            image: "01.jpg"
-        }
-
-        console.log(body);
-
-        axios.post(`/catalog-service/${userId}/patalogs`,{
-            headers: headers,
-            body: body
-        } )
-            .then(res => {
-                console.log(res)
-                if (res.status == 201) {
-                    alert("상품 등록이 완료 되었습니다.");
-                    console.log(res.data);
-                    axios.get(`/catalog-service/${userId}/firstpatalogs`, {
-                        headers : headers
-                    } )
-                        .then(res => {
-                            setPatalogData(res.data);
-                            console.log(res.data);
-                            let jsonArray = new Array();
-                            myPackageDatas.map( item=> {
-                                 let jsonObj = new Object();
-                                 jsonObj.catalogId = item.catalogEntity.catalogId;
-                                 jsonObj.patalogId = res.data.patalogId;
-                                 jsonObj = JSON.stringify(jsonObj);
-                                 jsonArray.push(JSON.parse(jsonObj));
-                             })
-                            setPkgMgtData(jsonArray);
-                            console.log(jsonArray);
-                            console.log(pkgMgtData);
-                            axios.post(`/catalog-service/${userId}/pkgmgt`, {
-                                headers : headers,
-                                body : jsonArray
-                            })
-                                .then(res => {
-                                    console.log(res)
-                                    if(res.status == 201){
-                                        console.log(res.data);
-                                    }
-                                    else{
-                                        console.log(res);
-                                        alert("오류 발생")
-                                    }
-                                })
-                        })
 
 
-                }
-                else if(res.status === 200) {
-                    alert("장바구니에 동일한 상품이 있어 수량을 변경했습니다.");
-
-                }
-                else {
-                    console.log(res);
-                    alert("오류 발생. 장바구니에 상품이 담기지 않았습니다.")
-                }
-            })
-            .catch(err => {
-                alert("다시 다시 입력해주세요.");
-                console.log(body);
-            });
 
 
     }
@@ -143,24 +58,11 @@ function ComareTable(props) {
                         // setCatalogDatas(data.data);
                     })
             })
-        
-        // fetch(`http://${process.IP}:${process.PORT}/compare/${id}`,{
-        //     method: "DELETE"
-        // }).then(
-        //     alert("삭제되었습니다."),
-        //     fetch(`http://${process.IP}:${process.PORT}/compare`)
-        //     .then(res => {
-        //         return res.json();
-        //     })
-        //     .then(data => {
-        //         setMyPackageDatas(data);
-        //         console.log(data);
-        //     })
-        // )
+
     }
 
     const handleAllDelete = (id) => {
-        axios.delete(`/catalog-service/hello1/mypackage`)
+        axios.delete(`/catalog-service/${userId}/mypackage`)
             .then(res => {
                 alert("삭제 되었습니다.")
                 axios.get(`catalog-service/mypackage`)
@@ -208,7 +110,7 @@ function ComareTable(props) {
             </div>
         </div>
 
-    )).slice(0, 7);
+    )).slice(0, 30);
 
 
 
@@ -254,6 +156,75 @@ function ComareTable(props) {
     // )).slice(0,7);
 
     const confirmSubPkgHandler = (e) => {
+
+        let body = {
+            name: "hello1님의 패키지",
+            category: userId + "님의 패키지",
+            rating: "3",
+            image: "01.jpg"
+        }
+
+        console.log(body);
+
+        axios.post(`/catalog-service/${userId}/patalogs`,{
+            headers: headers,
+            body: body
+        } )
+            .then(res => {
+                console.log(res)
+                if (res.status == 201) {
+                    alert("상품 등록이 완료 되었습니다.");
+                    console.log(res.data);
+                    axios.get(`/catalog-service/${userId}/firstpatalogs`, {
+                        headers : headers
+                    } )
+                        .then(res => {
+                            setPatalogData(res.data);
+                            console.log(res.data);
+                            let jsonArray = new Array();
+                            myPackageDatas.map( item=> {
+                                let jsonObj = new Object();
+                                jsonObj.catalogId = item.catalogEntity.catalogId;
+                                jsonObj.patalogId = res.data.patalogId;
+                                jsonObj = JSON.stringify(jsonObj);
+                                jsonArray.push(JSON.parse(jsonObj));
+                            })
+                            setPkgMgtData(jsonArray);
+                            console.log(jsonArray);
+                            console.log(pkgMgtData);
+                            axios.post(`/catalog-service/${userId}/pkgmgt`, {
+                                headers : headers,
+                                body : jsonArray
+                            })
+                                .then(res => {
+                                    console.log(res)
+                                    if(res.status == 201){
+                                        console.log(res.data);
+                                    }
+                                    else{
+                                        console.log(res);
+                                        alert("오류 발생")
+                                    }
+                                })
+                        })
+
+
+                }
+                else if(res.status === 200) {
+                    alert("장바구니에 동일한 상품이 있어 수량을 변경했습니다.");
+
+                }
+                else {
+                    console.log(res);
+                    alert("오류 발생. 장바구니에 상품이 담기지 않았습니다.")
+                }
+            })
+            .catch(err => {
+                alert("다시 다시 입력해주세요.");
+                console.log(body);
+            });
+
+
         e.preventDefault();
 
         props.history.push({        

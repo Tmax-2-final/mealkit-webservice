@@ -32,16 +32,17 @@ export default function PackageDetailBottom({packageData}) {
     let userId = localStorage.getItem('userid');
 
 
+    console.log(packageData);
+
+
     useEffect(() => {
-        axios.get(`/catalog-service/pkgmgt/${packageData.patalogId}`)
+        axios.get(`/catalog-service/${userId}/pkgmgt/${packageData.patalogId}`)
             .then(res => {
                 setPkgMgtDatas(res.data);
                 console.log(res.data);
 
             })
-            .catch(error => {
 
-            })
 
 
         axios.get(`/review-service/reviews/${userId}`, {
