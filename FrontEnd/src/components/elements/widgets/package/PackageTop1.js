@@ -17,6 +17,10 @@ export default function PackageTop1({props, packageData}) {
     useEffect(()=>{
     },[])
 
+    console.log(packageData);
+
+
+
     const [value, setValue] = useState('1');
 
     const [reviewCnt, setReviewCnt] = useState('1324')
