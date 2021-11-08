@@ -1,6 +1,6 @@
 package com.example.userservice.jpa;
 
-import com.example.userservice.entity.PrfrEntity;
+
 import com.example.userservice.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

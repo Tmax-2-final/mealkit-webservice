@@ -7,19 +7,19 @@ import axios from 'axios';
 import S3 from 'react-aws-s3';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
-    
-export default function ReviewForm(props) {
+
+export default function ReviewEditForm(props) {
 
     // const pkgId = props.location.state.pkgId;
     // const productId = props.location.state.productId;
     // const orderType = props.location.state.orderType;
-    
+
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [rating, setRating] = useState(0);
     const [image, setImage] = useState();
-    
+
     let userId = localStorage.getItem('userid');
     let token = localStorage.getItem('token');
     const fileInput = useRef();
@@ -63,7 +63,7 @@ export default function ReviewForm(props) {
             accessKeyId: ACCESS_KEY,
             secretAccessKey: SECRET_ACCESS_KEY
         };
-        
+
         const ReactS3Client = new S3(config);
         ReactS3Client.uploadFile(file, newFileName).then(data => {
             console.log(data);
@@ -90,7 +90,7 @@ export default function ReviewForm(props) {
         console.log(body);
 
         let response =
-            axios.post("/review-service/reviews", body)
+            axios.put("/review-service/reviews", body)
                 .then((res) => {
                     console.log(res)
                     if (res.status === 201) {
@@ -133,15 +133,6 @@ export default function ReviewForm(props) {
                                                     <div className="login-register-form">
                                                         <form onSubmit={submitHandler}>
 
-                                                            {/* <label>상품명</label>
-                                                            <input
-                                                                type="text"
-                                                                name="productName"
-                                                                value={productName}
-                                                                onChange={productHandler}
-                                                                readOnly
-                                                            /> */}
-
                                                             <label>제목</label>
 
                                                             <input
@@ -153,24 +144,12 @@ export default function ReviewForm(props) {
                                                                 onChange={titleHandler}
                                                             />
 
-                                                            <label>상품은 만족하셨나요?</label><br/>
-                                                            {/* <select
-                                                                name="rating"
-                                                                onChange={ratingHandler}
-                                                                value={rating}
-                                                            >
-                                                                <option value="5" >★★★★★</option>
-                                                                <option value="4" >★★★★</option>
-                                                                <option value="3" >★★★</option>
-                                                                <option value="2" >★★</option>
-                                                                <option value="1" >★</option>
-
-                                                            </select> */}
+                                                            <label>상품은 만족하셨나요?</label><br />
                                                             <Rating
                                                                 name="rating"
                                                                 value={rating}
-                                                                onChange= {
-                                                                 ratingHandler
+                                                                onChange={
+                                                                    ratingHandler
                                                                 }
                                                             />
                                                             <br />
@@ -203,7 +182,7 @@ export default function ReviewForm(props) {
 
                                                             <div className="button-box" style={{ float: "right" }}>
                                                                 <button type="submit">
-                                                                    <span>등록하기</span>
+                                                                    <span>수정하기</span>
                                                                 </button>
                                                             </div>
                                                         </form>

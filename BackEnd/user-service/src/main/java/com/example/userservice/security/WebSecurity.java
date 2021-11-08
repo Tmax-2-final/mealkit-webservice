@@ -52,7 +52,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .access("hasIpAddress('10.10.20.31') or hasIpAddress('127.0.0.1') " +
                         "or hasIpAddress('192.168.201.144') or hasIpAddress('172.30.1.55') " +
                         "or hasIpAddress('10.10.20.77') or hasIpAddress('192.168.0.100')" +
-                        "or hasIpAddress('192.168.219.100')")                                   // ip addr
+                        "or hasIpAddress('192.168.219.100') or hasIpAddress('172.30.1.32')" +
+                        "or hasIpAddress('192.168.95.44')")                                   // ip addr
 //                .hasIpAddress(env.getProperty("gateway.ip")) // 172.18.0.5
                 .and()
                 .addFilter(getAuthenticationFilter());

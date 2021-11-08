@@ -10,6 +10,7 @@ import PackageDetail from './components/pages/packagedetail/PackageDetail';
 import PackageList from './components/pages/packagelist/PackageList';
 import Features from './components/pages/Features/Features';
 import MyAccount from './components/pages/myaccount/MyAccount';
+import UserDetailEdit from './components/pages/user/UserDetailEdit';
 import "./assets/css/mystyle.css";
 import "./assets/css/style.css";
 import "./assets/css/animate.css";
@@ -80,7 +81,8 @@ function App() {
           <Route exact path="/preference" component={Preference}></Route>
           <Route exact path="/find/pw"><FindPw/></Route>
           <Route exact path="/mypage" component={MyPage}></Route>
-          <Route exact path="/mypage/myInfo"><MyInfoEdit /></Route>
+        <Route exact path="/mypage/myInfo" ><MyInfoEdit /></Route>
+        <Route exact path="/mypage/myInfoEdit" component={UserDetailEdit}></Route>
           <Route exact path="/mypage/myOrder"><MyOrder /></Route>
           {/* <Route exact path="/mypage/myReview"><MyReview /></Route> */}
           <Route exact path="/mypage/shipping"><ShippingTable /></Route>
