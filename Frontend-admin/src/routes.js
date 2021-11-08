@@ -10,6 +10,8 @@ const UserDetail = React.lazy(() => import('./views/user/UserDetail'))
 const AdminUser = React.lazy(() => import('./views/user/AdminUser'))
 const AdminAlert = React.lazy(() => import('./views/user/alert/Alert'))
 
+const Subscrption = React.lazy(() => import('./views/subscription/Subscrption'))
+
 // theme
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
@@ -76,7 +78,7 @@ const routes = [
   { path: '/orders/paylist', name: '결제 전체 내역', component: Home},
 
   { path: '/subscription', name: '구독 관리' },
-  { path: '/subscription/list', name: '구독 전체 내역', component: Home},
+  { path: '/subscription/list', name: '구독 전체 내역', component: Subscrption},
 
   { path: '/ships', name: '배송 관리'},
   { path: '/ships/list', name: '배송 전체 내역', component: AdminShipping },
