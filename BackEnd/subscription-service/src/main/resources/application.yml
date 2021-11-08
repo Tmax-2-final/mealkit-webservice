@@ -22,6 +22,17 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true  # 페이징 처리 후 page=0이 아닌 1로 처리
+        default-page-size: 10         # 페이징 처리 시 한 페이지 당 10개의 데이터를 가져오는걸 기본으로 한다
+        max-page-size: 2000           # 페이징 처리 시 페이지가 2000개 이상 넘어가지 않도록 한다. (너무 큰 페이징이 나왔을 때를 방지)
+        # 기본으로 설정되어 있으나, 직접 설정으로 바꿔줄 수 있는 것들
+        page-parameter: page          # 페이징 처리 시 페이지라는 인자 명은 page
+        size-parameter: size          # 페이징 처리 시 자르려는 데이터의 사이즈 명은 size
+      sort:
+        sort-parameter: sort          # 페이징 처리로 나온 데이터들을 정렬하는 인자 명은 sort
   datasource:
     driver-class-name:
     url:

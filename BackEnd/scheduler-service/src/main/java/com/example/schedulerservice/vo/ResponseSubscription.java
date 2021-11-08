@@ -3,6 +3,7 @@ package com.example.schedulerservice.vo;
 import com.example.schedulerservice.dto.SubscriptionGradeDto;
 import lombok.Data;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -17,6 +18,8 @@ public class ResponseSubscription implements Serializable {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String cancelContent;
+
+    private Integer changeSubGradeId;
 
     private SubscriptionGradeDto subscriptionGradeDto;
 }
