@@ -20,6 +20,7 @@ const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
 // Pages
 const Login = React.lazy(() => import('./views/pages/login/Login'))
+const Logout = React.lazy(() => import('./views/pages/login/Logout'))
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 
@@ -30,6 +31,7 @@ class App extends Component {
         <React.Suspense fallback={loading}>
           <Switch>
             <Route exact path="/login" name="Login Page" component={Login} />
+            <Route exact path="/logout" name="Logout" component={Logout} />
             <Route exact path="/500" name="Page 500" render={(props) => <Page500 {...props} />} />
             <Route path="/404" component={Page404} />
             <Route path="/" name="Home" render={(props) => <DefaultLayout {...props} />} />

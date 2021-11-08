@@ -1,9 +1,7 @@
 package com.example.userservice.controller;
 
-import com.example.userservice.dto.CartDto;
 import com.example.userservice.dto.PrfrDto;
 import com.example.userservice.dto.UserDto;
-import com.example.userservice.entity.CartEntity;
 import com.example.userservice.entity.PrfrEntity;
 import com.example.userservice.entity.UserEntity;
 import com.example.userservice.service.UserService;
@@ -13,6 +11,10 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -67,26 +69,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
     }
 
-    /* 전체 사용자 목록 조회 */
-    @ApiOperation(value = "사용자 목록 조회", notes="관리자의 사용자 전체 목록 조회")
-    @GetMapping("/users")
-    public ResponseEntity<List<ResponseUser>> getUsers(HttpServletRequest request) {
-        // 헤더에 어떤 정보가 있는지
-        Enumeration<String> em = request.getHeaderNames();
-        request.getHeader("token"); // 헤더에 포함된 토큰을 가져옴
-
-        Iterable<UserEntity> usersList = userService.getUserByAll();
-        List<ResponseUser> responseUsersList = new ArrayList<>();
-
-        // 람다 표현식; list 내에 있는 데이터를 v라고 두고, 이 v에 대한 어떤 액션을 하겠다는 '->'
-        // list 안의 데이터 요소를 mapper 를 활용해 responseUser 형태로 바꿔서 결과값을 반환할 list 에 저장
-        usersList.forEach(v -> {
-            responseUsersList.add(new ModelMapper().map(v, ResponseUser.class));
-        });
-
-        return ResponseEntity.status(HttpStatus.OK).body(responseUsersList);
-    }
-
     @ApiOperation(value = "아이디 중복검사", notes="아이디 중복검사")
     @GetMapping("/users/id/{userId}")
     public ResponseEntity<Map<String, Integer>> getUserIdForCreateUser(@PathVariable("userId") String userId) {
@@ -100,33 +82,6 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
-
-    /* 사용자 상세 보기 (with 주문 목록) */
-    @ApiOperation(value = "사용자 상세 조회", notes="사용자 상세 조회")
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<ResponseUser> getUser(@PathVariable("userId") String userId) {
-        UserDto userDto = userService.getUserByUserId(userId);
-
-        ResponseUser responseUser = new ModelMapper().map(userDto, ResponseUser.class);
-
-        return ResponseEntity.status(HttpStatus.OK).body(responseUser);
-    }
-
-    /* 사용자 삭제 하기 : 관리자 페이지에서 해당 회원 삭제한다. */
-    @ApiOperation(value = "사용자 삭제", notes="관리자 페이지에서의 회원 삭제")
-    @DeleteMapping("/{userId}/users")
-    public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId) {
-        // 회원을 가져온다.
-        UserDto user = userService.getUserByUserId(userId);
-        // Dto -> entity로 바꾼다.
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
-        UserEntity userEntity = mapper.map(user, UserEntity.class); // userDto -> userEntity 로 매핑
-
-        userService.deleteUser(userEntity);
-        return ResponseEntity.status(HttpStatus.OK).body("해당 회원을 삭제했습니다.");
-    }
-
 
     /* 사용자 비밀번호 찾기 */
     @ApiOperation(value = "비밀번호 찾기", notes="사용자의 비밀번호 찾기")
@@ -142,96 +97,50 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(resultSet);
     }
 
-    /* 카트 등록하기 */
-    @ApiOperation(value = "카트 등록", notes="카트 등록")
-    @PostMapping("/{userId}/carts")
-    public ResponseEntity<ResponseCart> createCart(@RequestBody @Valid RequestCart requestCart, @PathVariable("userId") String userId) {
-        // 1. requestCart + userId => cartDto
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
-        CartDto cartDto = mapper.map(requestCart, CartDto.class); // userDto -> userEntity 로 매핑
-        cartDto.setUserId(userId);
+    /* 전체 사용자 목록 조회 */
+    @ApiOperation(value = "사용자 목록 조회", notes="관리자의 사용자 전체 목록 조회")
+    @GetMapping("/users")
+    public ResponseEntity<Page<ResponseUser>> getAllUsers(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
 
-        // 등록된 카트가 있는지 조회하기
-        CartDto existCartDto = userService.getCartByProductId(cartDto);
-
-        // 있으면 수량만 변경한다.
-        if(existCartDto.getFind() == 1) { // 0은 없음 1은 있음
-            // 기존 수량 + 새로 들어오는 수량
-            existCartDto.setQty(cartDto.getQty() + existCartDto.getQty());
-            userService.updateUserCarts(existCartDto);
-
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-        }
-
-        // 2. service -> jpa -> mariadb 저장 = 카트 등록 서비스
-        userService.createCart(cartDto);
-        // 3. responseCart 로 지정
-        ResponseCart responseCart = mapper.map(cartDto, ResponseCart.class);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseCart);
-    }
-
-    /* 유저가 담은 카트 조회하기 */
-    @ApiOperation(value = "카트 조회", notes="유저가 카드에 담은 상품 조회")
-    @GetMapping("/{userId}/carts")
-    public ResponseEntity<List<ResponseCart>> getUserCarts(@PathVariable("userId") String userId) {
-        Iterable<CartEntity> cartsList = userService.getUserCartsByUserIdAll(userId);
-        List<ResponseCart> responseUserCartsList = new ArrayList<>();
-
+        Page<UserEntity> usersList = userService.getUserByAll(pageRequest);
         // 람다 표현식; list 내에 있는 데이터를 v라고 두고, 이 v에 대한 어떤 액션을 하겠다는 '->'
         // list 안의 데이터 요소를 mapper 를 활용해 responseUser 형태로 바꿔서 결과값을 반환할 list 에 저장
-        cartsList.forEach(v -> {
-            System.out.println(v.getCartId());
-            responseUserCartsList.add(new ModelMapper().map(v, ResponseCart.class));
-        });
-        return ResponseEntity.status(HttpStatus.OK).body(responseUserCartsList);
+        Page<ResponseUser> responseUsersList = usersList.map(
+                v -> new ModelMapper().map(v, ResponseUser.class)
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseUsersList);
     }
 
-    /* 유저가 담은 카트 삭제하기 : 주문-결제 과정을 지나 카트에 담긴 상품이 삭제된다. */
-    @ApiOperation(value = "카트 삭제", notes="결제 이후 카트 속 상품 삭제")
-    @DeleteMapping("/{userId}/carts")
-    public ResponseEntity<String> deleteUserCarts(@PathVariable("userId") String userId) {
-        // 1. 회원이 담은 상품 리스트 조회
-        Iterable<CartEntity> cartsList = userService.getUserCartsByUserIdAll(userId);
-        // 2. 하나씩 삭제
-        cartsList.forEach(v -> {
-            try {
-                userService.deleteCart(v);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
+    /* 사용자 상세 보기 (with 주문 목록) */
+    @ApiOperation(value = "사용자 상세 조회", notes="사용자 상세 조회")
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ResponseUser> getUser(@PathVariable("userId") String userId) {
+        UserDto userDto = userService.getUserByUserId(userId);
 
-        return ResponseEntity.status(HttpStatus.OK).body("장바구니가 비었습니다.");
+        ResponseUser responseUser = new ModelMapper().map(userDto, ResponseUser.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseUser);
     }
 
-    /* 유저가 담은 카트 삭제하기 : 유저가 자신이 담은 상품을 삭제한다. */
-    @ApiOperation(value = "카트 삭제", notes="유저가 카트에 담은 상품 삭제")
-    @DeleteMapping("/carts/{cartId}")
-    public ResponseEntity<String> deleteCart(@PathVariable("cartId") Long cartId) {
-        Optional<CartEntity> cart = userService.getCartByCartId(cartId);
-        userService.deleteCart(cart.get());
-        return ResponseEntity.status(HttpStatus.OK).body("해당 상품을 삭제했습니다.");
-    }
+    /* 사용자 삭제 하기 : 관리자 페이지에서 해당 회원 삭제한다. */
+    @ApiOperation(value = "사용자 삭제", notes="관리자 페이지에서의 회원 삭제")
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId) {
+        // 회원을 가져온다.
+        UserDto user = userService.getUserByUserId(userId);
+        // Dto -> entity로 바꾼다.
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+        UserEntity userEntity = mapper.map(user, UserEntity.class); // userDto -> userEntity 로 매핑
 
-
-
-    /* 유저의 장바구니 일괄 수정: 주문하기 클릭 시 수량에 대한 체크 */
-    @ApiOperation(value = "장바구니 일괄 수정", notes="장바구니 일괄 수정")
-    @PutMapping("{userId}/carts")
-    public ResponseEntity<String> updateCart(@RequestBody List<CartDto> cartDtoList, @PathVariable String userId) {
-        cartDtoList.forEach(cartDto -> {
-            cartDto.setUserId(userId);
-            userService.updateUserCarts(cartDto);
-        });
-
-        return ResponseEntity.status(HttpStatus.OK).body("장바구니를 수정했습니다.");
+        userService.deleteUser(userEntity);
+        return ResponseEntity.status(HttpStatus.OK).body("해당 회원을 삭제했습니다.");
     }
 
     /* 유저의 정보 수정 */
     @ApiOperation(value = "유저 정보 수정", notes="유저 정보 수정")
-    @PutMapping("{userId}/users")
+    @PutMapping("/users/{userId}")
     public ResponseEntity<String> updateUser(@RequestBody RequestUpdateUser requestUpdateUser, @PathVariable String userId) {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
@@ -248,15 +157,12 @@ public class UserController {
     /* 특정 기간과 검색어가 포함된 모든 유저 검색 */
     @ApiOperation(value = "특정 기간동안 검색어가 포함된 모든 유저 검색", notes="날짜별 유저 검색")
     @PostMapping("/users/date")
-    public ResponseEntity<List<ResponseUser>> getUsersByDate(@RequestBody RequestDate requestDate) {
-        Iterable<UserEntity> usersList = userService.getUserAllBetween(requestDate);
-        List<ResponseUser> responseUsersList = new ArrayList<>();
-
-        // 람다 표현식; list 내에 있는 데이터를 v라고 두고, 이 v에 대한 어떤 액션을 하겠다는 '->'
-        // list 안의 데이터 요소를 mapper 를 활용해 responseUser 형태로 바꿔서 결과값을 반환할 list 에 저장
-        usersList.forEach(v -> {
-            responseUsersList.add(new ModelMapper().map(v, ResponseUser.class));
-        });
+    public ResponseEntity<Page<ResponseUser>> getUsersByDate(@RequestBody RequestDate requestDate,
+                                                             @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
+        Page<UserEntity> usersList = userService.getUserAllBetween(requestDate, pageRequest);
+        Page<ResponseUser> responseUsersList = usersList.map(
+                v -> new ModelMapper().map(v, ResponseUser.class)
+        );
 
         return ResponseEntity.status(HttpStatus.OK).body(responseUsersList);
     }
@@ -268,6 +174,15 @@ public class UserController {
         String result = userService.getUserEmailByUserId(userId);
         return result;
     }
+
+    /* 신규 가입 및 전체 가입 유저 수 조회 */
+    @ApiOperation(value="유저 수 조회", notes="신규 가입 및 전체 가입 유저 수 조회하기")
+    @GetMapping("/users/count")
+    public ResponseEntity<ResponseUserCount> getUserCount() {
+        Long newUser = userService.getNewUserCount();
+        Long totalUser = userService.getTotalUserCount();
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseUserCount(newUser, totalUser));
 
     @ApiOperation(value = "선호도 조사 등록", notes = "사용자의 선호도 조사 등록")
     @PostMapping("/users/preference")
