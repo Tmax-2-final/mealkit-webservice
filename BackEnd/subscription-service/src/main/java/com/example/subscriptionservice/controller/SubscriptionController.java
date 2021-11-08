@@ -2,6 +2,7 @@ package com.example.subscriptionservice.controller;
 
 import com.example.subscriptionservice.dto.SubShipDto;
 import com.example.subscriptionservice.dto.SubscriptionDto;
+import com.example.subscriptionservice.dto.SubscriptionGradeDto;
 import com.example.subscriptionservice.entity.SubscriptionEntity;
 import com.example.subscriptionservice.entity.SubscriptionGradeEntity;
 import com.example.subscriptionservice.entity.SubscriptionShipsEntity;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -71,24 +73,22 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.OK).body(responseSubscriptionGradeList);
     }
 
-//    @ApiOperation(value = "특정회원 구독등급 조회", notes = "특정회원의 구독등급을 조회한다.")
-//    @GetMapping("/subscription/grade/{userId}")
-//    public ResponseEntity<ResponseSubscriptionGrade> getUserSubscriptionGrade(@PathVariable("userId") String userId) {
-//        log.info("특정회원 구독등급 조회 API START");
-//
-//        ModelMapper mapper = new ModelMapper();
-//        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-//
-//        SubscriptionDto subscriptionDto = subscriptionService.getSubscription(userId);
-//
-//        SubscriptionGradeEntity subscriptionGradeEntity = subscriptionService.getSubscriptionGrade(subscriptionDto.getSubGradeId());
-//
-//        ResponseSubscriptionGrade responseSubscriptionGrade = mapper.map(subscriptionGradeEntity, ResponseSubscriptionGrade.class);
-//
-//        log.info("특정회원 구독등급 조회 API END");
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(responseSubscriptionGrade);
-//    }
+    @ApiOperation(value = "구독등급 상세정보 조회", notes = "구독등급 상세정보를 조회한다.")
+    @GetMapping("/subscription/grade/{subGradeId}")
+    public ResponseEntity<ResponseSubscriptionGrade> getUserSubscriptionGrade(@PathVariable("subGradeId") Integer subGradeId) {
+        log.info("특정회원 구독등급 조회 API START");
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        SubscriptionGradeDto subscriptionGradeDto = subscriptionService.getSubscriptionGrade(subGradeId);
+
+        ResponseSubscriptionGrade responseSubscriptionGrade = mapper.map(subscriptionGradeDto, ResponseSubscriptionGrade.class);
+
+        log.info("특정회원 구독등급 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseSubscriptionGrade);
+    }
 
     @ApiOperation(value = "구독 등록", notes = "구독 신청한 회원의 구독을 등록한다.")
     @PostMapping(value = "/subscription")
@@ -171,19 +171,28 @@ public class SubscriptionController {
     }
 
     @ApiOperation(value = "구독 결제", notes = "결제일이 당일인 구독들을 결제한다.")
-    @GetMapping(value = "/subscription/payment")
-    public ResponseEntity<String> paymentSubscription(){
+    @PutMapping(value = "/subscription/payment")
+    public ResponseEntity<List<ResponseSubscription>> paymentSubscription(){
         log.info("구독 결제 API START");
 
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
 
         // 구독 결제 서비스 호출
-        subscriptionService.paymentSubscription();
+        Iterable<SubscriptionDto> subscriptionDtoList = subscriptionService.paymentSubscription();
+
+        List<ResponseSubscription> responseSubscriptionList = new ArrayList<>();
+
+        subscriptionDtoList.forEach(v -> {
+            // 구독등급 Dto 값 설정
+            SubscriptionGradeDto subscriptionGradeDto = subscriptionService.getSubscriptionGrade(v.getSubGradeId());
+            v.setSubscriptionGradeDto(subscriptionGradeDto);
+            responseSubscriptionList.add(new ModelMapper().map(v, ResponseSubscription.class));
+        });
 
         log.info("구독 결제 API END");
 
-        return ResponseEntity.status(HttpStatus.OK).body("구독 결제 완료");
+        return ResponseEntity.status(HttpStatus.OK).body(responseSubscriptionList);
     }
 
     @ApiOperation(value = "구독여부 확인", notes = "구독여부를 확인한다.")
@@ -248,7 +257,28 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.OK).body("구독패키지 확정 완료");
     }
 
-    @ApiOperation(value = "구독배송 조회", notes = "특정 회원의 구독 정보를 조회한다.")
+    @ApiOperation(value = "전체 구독배송 조회", notes = "전체 구독 배송정보를 조회한다.")
+    @GetMapping(value = "/subscription/ships")
+    public ResponseEntity<List<ResponseSubShip>> getAllSubscriptionShips(){
+        log.info("전체 구독배송 조회 API START");
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+
+        Iterable<SubscriptionShipsEntity> subscriptionShipsList = subscriptionService.getAllSubShips();
+
+        List<ResponseSubShip> responseSubShipList = new ArrayList<>();
+
+        subscriptionShipsList.forEach(v -> {
+            responseSubShipList.add(new ModelMapper().map(v, ResponseSubShip.class));
+        });
+
+        log.info("전체 구독배송 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseSubShipList);
+    }
+
+    @ApiOperation(value = "구독배송 조회", notes = "특정 회원의 구독배송 정보를 조회한다.")
     @GetMapping(value = "/subscription/ships/{userId}")
     public ResponseEntity<List<ResponseSubShip>> getSubscriptionShips(@PathVariable("userId") String userId){
         log.info("구독배송 조회 API START");
@@ -284,5 +314,21 @@ public class SubscriptionController {
         log.info("구독배송 배송정보 변경 API END");
 
         return ResponseEntity.status(HttpStatus.OK).body("구독배송 배송정보 변경 완료");
+    }
+
+    @ApiOperation(value = "매출액 조회", notes = "타입별 매출액을 조회한다.")
+    @GetMapping(value = "/subscription/revenue/{type}")
+    public ResponseEntity<Long> getRevenue(@PathVariable("type") String type){
+        log.info("매출액 조회 API START");
+
+        Long revenue = 0L;
+
+        if(type.equals("total")) revenue = subscriptionService.getTotalRevenue();
+        if(type.equals("recent")) revenue = subscriptionService.getRevenueMonth();
+        if(type.equals("past")) revenue = subscriptionService.getRevenueMonthAgo();
+
+        log.info("매출액 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(revenue);
     }
 }

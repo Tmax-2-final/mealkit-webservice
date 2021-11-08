@@ -9,10 +9,8 @@ import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
     
 export default function ReviewForm(props) {
-
-    // const pkgId = props.location.state.pkgId;
-    // const productId = props.location.state.productId;
-    // const orderType = props.location.state.orderType;
+    const {pkgId, productId, orderType, pkgName, productName} = props.location.state;
+    console.log(pkgId, productId, orderType, pkgName, productName);
     
 
     const [title, setTitle] = useState("");
@@ -82,9 +80,11 @@ export default function ReviewForm(props) {
             rating: rating,
             userId: userId,
             image: newFileName,
-            pkgId: 0,
-            productId: 3,
-            orderType: 1
+            pkgId: pkgId,
+            productId: productId,
+            orderType: orderType,
+            pkgName: pkgName,
+            productName: productName
         };
 
         console.log(body);
@@ -161,7 +161,7 @@ export default function ReviewForm(props) {
                                                                 name="rating"
                                                                 value={rating}
                                                                 onChange= {
-                                                                 ratingHandler
+                                                                    ratingHandler
                                                                 }
                                                             />
                                                             <br />

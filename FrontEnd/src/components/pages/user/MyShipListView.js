@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
+import { withRouter } from 'react-router';
+import axios from 'axios';
 
 function MyShipListView(props) {
     const {shipData} = props;
+    const [patalogData, setPatalogData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     function popupWindow(url, windowName, win, w, h) {
         const y = win.top.outerHeight / 2 + win.top.screenY - ( h / 2);
@@ -14,6 +18,38 @@ function MyShipListView(props) {
         popupWindow(`/subscription/ChangeAddressAndDueDate/${shipData.id}/${shipData.postcode}/${shipData.address}/${shipData.addressDetail}/${shipData.dueDate}`, '배송정보 변경', window, 600, 500);  
 
     }
+
+    useEffect(() => {
+        let userId = localStorage.getItem('userid');
+        let token = localStorage.getItem('token');
+
+        if (!userId || userId === 'undefined') {
+            window.location.href = "/login";
+        }
+        if (!token || token === 'undefined') {
+            window.location.href = "/login";
+        }
+
+        const apiName = "구독패키지 조회";
+
+        axios.get(`/catalog-service/patalogs/${shipData.pkgId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then(res => {
+                console.log(`=== ${apiName} DATA ===`);
+                console.log(res.data);
+                console.log('=======================');
+
+                setPatalogData(res.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                alert(`${apiName}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+                console.log(error.response);
+            })
+    }, []);
 
     const subShipStatusText = (subShipStatus) => {
         switch (subShipStatus) {
@@ -32,48 +68,105 @@ function MyShipListView(props) {
         }
     }
 
+    const registerReviewHandler = e => {
+        // 배송완료 상태만 리뷰 작성 가능
+        if(shipData.status !== '5'){
+            alert("배송 완료된 패키지에 대해서만 리뷰 작성이 가능합니다.");
+            return;
+        }
+
+        props.history.push({
+            pathname:"/review/register",
+            state: {
+                orderType: 1,
+                pkgId: shipData.pkgId,
+                productId: null,
+                pkgName: shipData.name,
+                productName: null,
+            }
+        })
+    }
+
+    const viewPkgDetailHandler = e => {
+        // 상품 준비상태인 경우만 배송정보 변경 가능
+        if(shipData.status !== '1'){
+            alert("상품 준비중인 상태만 배송정보 변경이 가능합니다.");
+            return;
+        }
+        
+        props.history.push({
+            pathname: "/mypage/mysubpkgdetail",
+            state: {
+                pkgId: shipData.pkgId,
+                shipStatus: shipData.status
+            }
+        })
+    }
+
     return (
-        <tr>
-            <td className="product-orderId">{shipData.id}</td>
-            <td className="product-name">
-                <span>{shipData.pkgId}</span>
-            </td>
-            <td className="product-price-cart">
-                <span className="amount">{`${shipData.address} ${shipData.addressDetail}`}</span>
-            </td>
-            <td className="product-quantity">
-                <span className="amount">{shipData.type === '1' ? "새벽배송" : "일반배송"}</span>
-            </td>
-            <td className="product-quantity">
-                <span className="amount">{subShipStatusText(shipData.status)}</span>
-            </td>
-            <td className="product-subtotal"><span>{(shipData.dueDate).split('T')[0]}</span></td>
-            <td className="product-status">
-                <Button 
-                    sx={{width:"12rem", height:"3rem", mb:"1rem"}}
-                    variant="outlined"
-                    size="large"
-                >
-                    리뷰 작성
-                </Button>
-                {/* <Button 
-                    sx={{width:"12rem", height:"3rem", mb:"1rem"}}
-                    variant="contained"
-                    size="large"
-                >
-                    구독패키지 변경
-                </Button> */}
-                <Button 
-                    sx={{width:"12rem", height:"3rem"}}
-                    variant="outlined"
-                    size="large"
-                    onClick={openShipInfoHandler}
-                >
-                    배송정보 변경
-                </Button>
-            </td>        
-        </tr>
+        <>
+            {loading ?
+                <div></div>
+                :
+                <div class="card col-10 mb-30">
+                    <div class="card-header row justify-content-between" style={{cursor:"pointer"}}
+                        onClick={viewPkgDetailHandler}
+                    >
+                        {/* patalogData.pkgMgt && patalogData.pkgMgt.length */}
+                        <div className="col-10" style={{fontWeight:"bold", fontSize:"1.4rem"}}>{`${shipData.pkgName} (${patalogData.pkgMgt && patalogData.pkgMgt[0].catalogEntity.name}${patalogData.pkgMgt.length > 1 ? " 외 " + patalogData.pkgMgt.length + "개의 상품)" : ")" }`}</div>
+                        <div className="col-2 text-right"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                    <div class="card-body row justify-content-between">
+                        <div className="col-1 my-auto m-0 p-0">
+                            <img src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${patalogData.pkgMgt && patalogData.pkgMgt[0].catalogEntity.image1}`} 
+                                className="img-fluid mx-auto" alt="" 
+                                style={{width:"100%", height:"100%"}}/>
+                        </div>
+                        <div className="col-7">
+                            <div className="row">
+                                <div className="col-3 pr-0">배송번호</div>
+                                <div className="col-9 pl-0">{shipData.id}</div>
+                            </div>
+                            <div className="row pt-1">
+                                <div className="col-3 pr-0">배송지</div>
+                                <div className="col-9 pl-0">{`${shipData.address} ${shipData.addressDetail}`}</div>
+                            </div>
+                            <div className="row pt-1">
+                                <div className="col-3 pr-0">배송구분</div>
+                                <div className="col-9 pl-0">{shipData.type === 1 ? "새벽배송" : "일반배송"}</div>
+                            </div>
+                            <div className="row pt-1">
+                                <div className="col-3 pr-0">배송상태</div>
+                                <div className="col-9 pl-0">{subShipStatusText(shipData.status)}</div>
+                            </div>
+                            <div className="row pt-1">
+                                <div className="col-3 pr-0">배송예정일</div>
+                                <div className="col-9 pl-0">{shipData.dueDate}</div>
+                            </div>
+                        </div>
+                        <div className="col-3 text-center my-auto">
+                            <Button 
+                                sx={{width:"100%", height:"3rem", mb:"1rem"}}
+                                variant="outlined"
+                                size="large"
+                                onClick={registerReviewHandler}
+                            >
+                                패키지 리뷰 작성
+                            </Button>
+                            <Button 
+                                sx={{width:"100%", height:"3rem"}}
+                                variant="outlined"
+                                size="large"
+                                onClick={openShipInfoHandler}
+                            >
+                                배송정보 변경
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </>
     );
 }
 
-export default MyShipListView;
+export default withRouter(MyShipListView);

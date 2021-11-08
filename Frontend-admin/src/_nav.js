@@ -20,12 +20,6 @@ import {
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
-const logoutHandler = (e) => {
-  e.preventDefault();
-  window.localStorage.setItem('isLoggedIn', false);
-  window.location.href = "/";
-}
-
 const _nav = [
   {
     component: CNavGroup,
@@ -105,7 +99,7 @@ const _nav = [
   {
     component: CNavItem,
     name: '업무 종료',
-    to: {logoutHandler},
+    to: '/logout',
     icon: <CIcon icon={cilPowerStandby} customClassName="nav-icon" />,
   },
   // {

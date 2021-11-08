@@ -166,3 +166,11 @@ footer ul li a:link {
     color:#c5c5c5;
 }
 
+.alert-card {
+    cursor: pointer;
+}
+
+.alert-card:hover {
+    transform: scale(1.1);
+    transition: 0.5s;
+}

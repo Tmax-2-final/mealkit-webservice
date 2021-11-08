@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { useHistory } from 'react-router'
 import {
   CContainer,
   CHeader,
@@ -22,10 +23,13 @@ const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
+  const history = useHistory();
+
   const logoutHandler = (e) => {
     e.preventDefault();
-    window.localStorage.setItem('isLoggedIn', false);
-    window.location.href="/";
+    history.push({
+      pathname: '/logout'
+    })
   }
 
   return (

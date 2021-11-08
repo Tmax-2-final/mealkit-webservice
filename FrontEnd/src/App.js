@@ -55,6 +55,8 @@ import KakaoLoginCallback from './components/oauth/KakaoLoginCallback';
 import MySubShips from './components/pages/user/MySubShips';
 import ChangeAddressAndDueDate from './components/elements/widgets/subscription/ChangeAddressAndDueDate';
 import RecommendList from "./components/pages/recommendlist/RecommendList";
+import MySubPkgDetail from './components/pages/user/MySubPkgDetail';
+
 
 
 function App() {
@@ -88,9 +90,10 @@ function App() {
           <Route exact path="/mypage/myInfo"><MyInfoEdit /></Route>
           <Route exact path="/mypage/myOrder"><MyOrder /></Route>
           <Route exact path="/mypage/myship"><MySubShips/></Route>
+          <Route exact path="/mypage/mysubpkgdetail" component={MySubPkgDetail}></Route>
           {/* <Route exact path="/mypage/myReview"><MyReview /></Route> */}
           <Route exact path="/mypage/shipping"><ShippingTable /></Route>
-          <Route exact path="/review/register"><ReviewForm /></Route>
+          <Route exact path="/review/register" component={ReviewForm}></Route>
           <Route exact path="/mypage/review/list"><UserReviewList /></Route>
           <Route exact path="/review/list"><ProductReviewList /></Route>
           <Route exact path="/review/list"><PkgReviewList /></Route>

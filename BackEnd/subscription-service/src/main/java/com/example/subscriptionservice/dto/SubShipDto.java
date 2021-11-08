@@ -12,6 +12,7 @@ public class SubShipDto implements Serializable {
     private Long id;
     private String userId;
     private Long pkgId;
+    private String pkgName;
     private String postcode;
     private String address;
     private String addressDetail;

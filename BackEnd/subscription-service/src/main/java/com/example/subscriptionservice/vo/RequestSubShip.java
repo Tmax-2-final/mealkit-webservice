@@ -13,6 +13,7 @@ public class RequestSubShip {
     private Long id;
     private String userId;
     private Long pkgId;
+    private String pkgName;
     private String postcode;
     private String address;
     private String addressDetail;
