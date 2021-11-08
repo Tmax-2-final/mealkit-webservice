@@ -39,10 +39,10 @@ function ConfirmSubPkg(props) {
 
     useEffect(() => {
         if(address.split(" ")[0] === '서울' || address.split(" ")[0] === '경기'|| address.split(" ")[0] === '인천'){
-            setShipType(1);
+            setShipType('1');
         }
         else {
-            setShipType(2);
+            setShipType('2');
         }
     }, [address])
 
@@ -250,6 +250,7 @@ function ConfirmSubPkg(props) {
 
         if (window.confirm(`해당 패키지구성 및 배송지 정보로 구독패키지 확정 및 배송 시작을 하시겠습니까?`)) {
             const pkgId = 1;
+            const pkgName = "테스트 패키지 이름";
 
             const params = {
                 userId : userId,
@@ -273,6 +274,7 @@ function ConfirmSubPkg(props) {
                 const body = {
                     userId : userId,
                     pkgId: pkgId,
+                    pkgName: pkgName,
                     address: address,
                     addressDetail: addressDetail,
                     postcode: postcode,
