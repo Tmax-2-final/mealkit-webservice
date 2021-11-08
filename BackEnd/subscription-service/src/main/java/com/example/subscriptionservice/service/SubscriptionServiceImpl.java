@@ -9,6 +9,7 @@ import com.example.subscriptionservice.entity.SubscriptionShipsEntity;
 import com.example.subscriptionservice.jpa.SubscriptionGradeRepository;
 import com.example.subscriptionservice.jpa.SubscriptionRepository;
 import com.example.subscriptionservice.jpa.SubscriptionShipsRepository;
+import com.example.subscriptionservice.querydsl.SubscriptionSearchParam;
 import com.example.subscriptionservice.vo.RequestCancelSubscription;
 import com.example.subscriptionservice.vo.RequestUpdateSubscription;
 import com.example.subscriptionservice.vo.ResponseSubscription;
@@ -17,6 +18,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -148,6 +151,86 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
 
         subscriptionShipsRepository.saveAll(subscriptionShipsEntities);
+    }
+
+    @Override
+    public Page<SubscriptionDto> getAllSubscription(Pageable pageRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Page<SubscriptionEntity> subscriptionList = subscriptionRepository.findAll(pageRequest);
+
+
+        Page<SubscriptionDto> subscriptionDtoList = subscriptionList.map(
+                    v -> {
+                        SubscriptionGradeDto subscriptionGradeDto = modelMapper.map(v.getSubscriptionGradeEntity(), SubscriptionGradeDto.class);
+                        SubscriptionDto subscriptionDto = modelMapper.map(v, SubscriptionDto.class);
+                        subscriptionDto.setSubscriptionGradeDto(subscriptionGradeDto);
+                        return subscriptionDto;
+                    }
+        );
+
+        return subscriptionDtoList;
+    }
+
+    @Override
+    public Page<SubscriptionDto> getSubscriptionByStatus(Character status, Pageable pageRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Page<SubscriptionEntity> subscriptionList = subscriptionRepository.findByStatus(status, pageRequest);
+
+        Page<SubscriptionDto> subscriptionDtoList = subscriptionList.map(
+                v -> {
+                    SubscriptionGradeDto subscriptionGradeDto = modelMapper.map(v.getSubscriptionGradeEntity(), SubscriptionGradeDto.class);
+                    SubscriptionDto subscriptionDto = modelMapper.map(v, SubscriptionDto.class);
+                    subscriptionDto.setSubscriptionGradeDto(subscriptionGradeDto);
+                    return subscriptionDto;
+                }
+        );
+
+        return subscriptionDtoList;
+    }
+
+    @Override
+    public Page<SubscriptionDto> getSubscriptionByStatusAndStartDateBetween(Character status, LocalDate startDate, LocalDate endDate, Pageable pageRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        LocalDateTime startDateTime =  LocalDateTime.of(startDate, LocalTime.of(0,0,0));
+        LocalDateTime endDateTime =  LocalDateTime.of(endDate, LocalTime.of(23,59,59));
+
+        Page<SubscriptionEntity> subscriptionList = subscriptionRepository.findByStatusAndStartDateBetween(status, startDateTime, endDateTime, pageRequest);
+
+        Page<SubscriptionDto> subscriptionDtoList = subscriptionList.map(
+                v -> {
+                    SubscriptionGradeDto subscriptionGradeDto = modelMapper.map(v.getSubscriptionGradeEntity(), SubscriptionGradeDto.class);
+                    SubscriptionDto subscriptionDto = modelMapper.map(v, SubscriptionDto.class);
+                    subscriptionDto.setSubscriptionGradeDto(subscriptionGradeDto);
+                    return subscriptionDto;
+                }
+        );
+
+        return subscriptionDtoList;
+    }
+
+    @Override
+    public Page<SubscriptionDto> getSubscriptionBySearchKeyword(SubscriptionSearchParam subscriptionSearchParam, Pageable pageReqeust) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Page<SubscriptionEntity> subscriptionList = subscriptionRepository.findAllBySearchKeyword(subscriptionSearchParam, pageReqeust);
+
+        Page<SubscriptionDto> subscriptionDtoList = subscriptionList.map(
+                v -> {
+                    SubscriptionGradeDto subscriptionGradeDto = modelMapper.map(v.getSubscriptionGradeEntity(), SubscriptionGradeDto.class);
+                    SubscriptionDto subscriptionDto = modelMapper.map(v, SubscriptionDto.class);
+                    subscriptionDto.setSubscriptionGradeDto(subscriptionGradeDto);
+                    return subscriptionDto;
+                }
+        );
+
+        return subscriptionDtoList;
     }
 
     @Override
@@ -296,9 +379,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         LocalDate startDatetime = LocalDate.now().minusMonths(2);
         LocalDate endDatetime = LocalDate.now().minusMonths(1);
 
-        Long revenueMonthAgo = subscriptionShipsRepository.getRevenueBetween(startDatetime, endDatetime);
-
-        return revenueMonthAgo;
+        return subscriptionShipsRepository.getRevenueBetween(startDatetime, endDatetime);
     }
 
     @Override
@@ -307,16 +388,24 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         LocalDate startDatetime = LocalDate.now().minusMonths(1);
         LocalDate endDatetime = LocalDate.now();
 
-        Long revenueMonth = subscriptionShipsRepository.getRevenueBetween(startDatetime, endDatetime);
-
-        return revenueMonth;
+        return subscriptionShipsRepository.getRevenueBetween(startDatetime, endDatetime);
     }
 
     @Override
     public Long getTotalRevenue() {
-        Long totalRevenue = subscriptionShipsRepository.getTotalRevenue();
+        return subscriptionShipsRepository.getTotalRevenue();
+    }
 
-        return totalRevenue;
+    @Override
+    public Long getTotalSubscriptionCnt() {
+        return subscriptionRepository.count();
+    }
+
+    @Override
+    public Long getNewSubscriptionCnt() {
+        LocalDateTime startDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
+        LocalDateTime endDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
+        return subscriptionRepository.countByStartDateBetween(startDateTime, endDateTime);
     }
 
     private Sort sortByAscSubGradeId() {

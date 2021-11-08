@@ -20,6 +20,7 @@ public class ResponseSubscription implements Serializable {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String cancelContent;
+    private Integer changeSubGradeId;
 
     private SubscriptionGradeDto subscriptionGradeDto;
 }

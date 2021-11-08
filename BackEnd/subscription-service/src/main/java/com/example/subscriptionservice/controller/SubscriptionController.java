@@ -6,6 +6,7 @@ import com.example.subscriptionservice.dto.SubscriptionGradeDto;
 import com.example.subscriptionservice.entity.SubscriptionEntity;
 import com.example.subscriptionservice.entity.SubscriptionGradeEntity;
 import com.example.subscriptionservice.entity.SubscriptionShipsEntity;
+import com.example.subscriptionservice.querydsl.SubscriptionSearchParam;
 import com.example.subscriptionservice.service.SubscriptionService;
 import com.example.subscriptionservice.vo.*;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +15,10 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -151,7 +156,73 @@ public class SubscriptionController {
 
         return ResponseEntity.status(HttpStatus.OK).body("구독취소 완료");
     }
-    
+
+    @ApiOperation(value = "구독 전체 페이징 조회", notes = "모든 회원들의 구독 정보를 페이지별로 조회한다.")
+    @GetMapping(value = "/subscription")
+    public ResponseEntity<Page<ResponseSubscription>> getAllSubscription(@PageableDefault(size = 8, sort = "subId", direction = Sort.Direction.DESC) Pageable pageRequest){
+        log.info("구독 전체 조회 API START");
+
+        Page<SubscriptionDto> subscriptionList = subscriptionService.getAllSubscription(pageRequest);
+        Page<ResponseSubscription> responseSubscriptionList = subscriptionList.map(
+                v -> new ModelMapper().map(v, ResponseSubscription.class)
+        );
+
+        log.info("구독 전체 페이징 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseSubscriptionList);
+    }
+
+    @ApiOperation(value = "구독 상태+기간(시작일) 별 페이징 조회", notes = "모든 회원들의 구독 정보를 상태+기간(시작일) 별로 페이징 조회한다.")
+    @GetMapping(value = "/subscription/status/{status}")
+    public ResponseEntity<Page<ResponseSubscription>> getSubscriptionByStatus(@PathVariable("status") Character status,
+                                                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value="startDate", required = false) LocalDate startDate,
+                                                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value="endDate", required = false) LocalDate endDate,
+                                                                            @PageableDefault(size = 8, sort = "subId", direction = Sort.Direction.DESC) Pageable pageRequest){
+        log.info("구독 상태+기간(시작일) 별 페이징 조회 API START");
+
+        Page<SubscriptionDto> subscriptionList = null;
+
+        if(startDate != null && endDate != null) {
+            // 날짜 타입 변경 LocalDate -> Date
+            subscriptionList = subscriptionService.getSubscriptionByStatusAndStartDateBetween(status, startDate, endDate, pageRequest);
+        }
+        else {
+            subscriptionList = subscriptionService.getSubscriptionByStatus(status, pageRequest);
+        }
+
+
+        Page<ResponseSubscription> responseSubscriptionList = subscriptionList.map(
+                v -> new ModelMapper().map(v, ResponseSubscription.class)
+        );
+
+        log.info("구독 상태+기간(시작일) 별 페이징 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseSubscriptionList);
+    }
+
+    @ApiOperation(value = "구독 기간(시작일) 내 키워드 페이징 조회", notes = "모든 회원들의 구독 정보를 구독 기간(시작일) 내 키워드 페이징 조회한다.")
+    @GetMapping(value = "/subscription/keyword/search")
+    public ResponseEntity<Page<ResponseSubscription>> getSubscriptionByUserIdContaining(@RequestParam(value = "searchType", required = false, defaultValue = "all") String searchType,
+                                                                                        @RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue,
+                                                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "startDate", required = false) LocalDate startDate,
+                                                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "endDate", required = false) LocalDate endDate,
+                                                                                        @PageableDefault(size = 8, sort = "subId", direction = Sort.Direction.DESC) Pageable pageRequest){
+        log.info("구독 기간(시작일) 내 키워드 페이징 조회 API START");
+
+        // 검색에 필요한 parameter 세팅 작업
+        SubscriptionSearchParam subscriptionSearchParam = new SubscriptionSearchParam(searchType, searchValue, startDate, endDate);
+
+        Page<SubscriptionDto> subscriptionList = subscriptionService.getSubscriptionBySearchKeyword(subscriptionSearchParam, pageRequest);
+
+        Page<ResponseSubscription> responseSubscriptionList = subscriptionList.map(
+                v -> new ModelMapper().map(v, ResponseSubscription.class)
+        );
+
+        log.info("구독 기간(시작일) 내 키워드 페이징 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseSubscriptionList);
+    }
+
     @ApiOperation(value = "구독 조회", notes = "특정 회원의 구독 정보를 조회한다.")
     @GetMapping(value = "/subscription/{userId}")
     public ResponseEntity<ResponseSubscription> getSubscription(@PathVariable("userId") String userId){
@@ -323,12 +394,32 @@ public class SubscriptionController {
 
         Long revenue = 0L;
 
+        // 전체 매출액
         if(type.equals("total")) revenue = subscriptionService.getTotalRevenue();
+        // 최근 매출액 (기간 : 1달전 ~ 오늘)
         if(type.equals("recent")) revenue = subscriptionService.getRevenueMonth();
+        // 1달전 매출액 (기간 : 2달전~1달전)
         if(type.equals("past")) revenue = subscriptionService.getRevenueMonthAgo();
 
         log.info("매출액 조회 API END");
 
         return ResponseEntity.status(HttpStatus.OK).body(revenue);
+    }
+
+    @ApiOperation(value = "구독 수 조회", notes = "타입별 구독수를 조회한다.")
+    @GetMapping(value = "/subscription/count/{type}")
+    public ResponseEntity<Long> getSubscriptionCnt(@PathVariable("type") String type){
+        log.info("구독 수 조회 API START");
+
+        Long subscriptionCnt = 0L;
+
+        // 전체 구독 수
+        if(type.equals("total")) subscriptionCnt = subscriptionService.getTotalSubscriptionCnt();
+        // 오늘 구독 수
+        if(type.equals("new")) subscriptionCnt = subscriptionService.getNewSubscriptionCnt();
+
+        log.info("구독 수 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(subscriptionCnt);
     }
 }

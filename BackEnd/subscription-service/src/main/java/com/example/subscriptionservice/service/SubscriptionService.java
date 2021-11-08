@@ -6,11 +6,15 @@ import com.example.subscriptionservice.dto.SubscriptionGradeDto;
 import com.example.subscriptionservice.entity.SubscriptionEntity;
 import com.example.subscriptionservice.entity.SubscriptionGradeEntity;
 import com.example.subscriptionservice.entity.SubscriptionShipsEntity;
+import com.example.subscriptionservice.querydsl.SubscriptionSearchParam;
 import com.example.subscriptionservice.vo.RequestCancelSubscription;
 import com.example.subscriptionservice.vo.RequestUpdateSubscription;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public interface SubscriptionService {
     /*구독 등급 조회*/
@@ -30,6 +34,15 @@ public interface SubscriptionService {
 
     /*구독 취소*/
     void cancelSubscription(RequestCancelSubscription requestCancelSubscription);
+
+    /*구독 전체조회*/
+    Page<SubscriptionDto> getAllSubscription(Pageable pageRequest);
+
+    Page<SubscriptionDto> getSubscriptionByStatus(Character status, Pageable pageRequest);
+
+    Page<SubscriptionDto> getSubscriptionByStatusAndStartDateBetween(Character status, LocalDate startDate, LocalDate endDate, Pageable pageRequest);
+
+    Page<SubscriptionDto> getSubscriptionBySearchKeyword(SubscriptionSearchParam subscriptionSearchParam, Pageable pageReqeust);
 
     /*구독 조회*/
     SubscriptionDto getSubscription(String userId);
@@ -69,4 +82,8 @@ public interface SubscriptionService {
 
     /*총 매출액 조회*/
     Long getTotalRevenue();
+
+    Long getTotalSubscriptionCnt();
+
+    Long getNewSubscriptionCnt();
 }
