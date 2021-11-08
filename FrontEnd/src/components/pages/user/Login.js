@@ -47,14 +47,36 @@ export default function Login(props) {
                 .then((res) => {
                     console.log(res)
                     if (res.status === 200) {
-
-                        const { accessToken } = res.headers.token;
-                        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
                         
                         window.localStorage.setItem('token', res.headers.token)
                         window.localStorage.setItem('userid', res.headers.userid)
                         window.localStorage.setItem('role', res.headers.role)
-                        window.location.href = "/";
+
+                        axios.get(`/user-service/users/${res.headers.userid}/preference`, {
+                            headers: {
+                                Authorization: `Bearer ${res.headers.token}`
+                            }
+                        })
+                        .then((res) => {
+                            console.log(res)
+                            if(res.status === 200) {
+                                if(res.data.result === false){
+                                    props.history.push({
+                                        pathname: '/preference'
+                                    })
+                                }
+                                else {
+                                    window.location.href = '/'
+                                }
+                            }
+                            else {
+                                window.location.href = '/'
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            window.location.href = '/'
+                        })
                     }
                     else {
                         alert("아이디 혹은 비밀번호가 틀렸습니다");
