@@ -18,7 +18,7 @@ spring:
         git:
           uri: https://github.com/Tmax-2-final/mealkit-config
           username: wmin401
-          password: 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
+          password: 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
           default-label: main
 #          uri: file:///Users/namgonkim/Documents/GitHub/mealkit-config
 #          username:

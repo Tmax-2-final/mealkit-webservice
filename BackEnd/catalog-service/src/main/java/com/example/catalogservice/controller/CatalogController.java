@@ -262,7 +262,7 @@ public class CatalogController {
     }
 
     @ApiOperation(value = "패키지 조회", notes = "해당하는 패키지번호의 패키지번호를 조회한다")
-    @GetMapping("/firstpatalogs")
+    @GetMapping("/{userId}/firstpatalogs")
     public ResponseEntity<PatalogEntity> getPatalog() {
         log.info("before retrieve patalogs data");
         PatalogEntity patalogEntity = catalogService.getPatalog();

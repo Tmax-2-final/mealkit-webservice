@@ -5,7 +5,7 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 import Rating from "../../ui/Rating";
 
-export default function PackageShop({search, categoryName, setSearch, props}) {
+export default function RecommendShop({search, categoryName, setSearch, props}) {
     console.log(search)
     console.log(categoryName);
     console.log(props);
@@ -14,8 +14,6 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
     const [onActive, setOnActive] = useState(false);
 
     const [newData, setnewData] = useState([]);
-    const [preferenceData, setPreferenceData] = useState();
-    const [catalogData, setCatalogData] = useState();
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ postsPerPage ] = useState(5);
     const [ loading, setLoading ] = useState(false);
@@ -23,65 +21,38 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-    let userId = localStorage.getItem('userid');
-    let token = localStorage.getItem('token');
-
-    console.log(token);
-
     useEffect(() => {
 
         const fetchPosts = async () => {
             setLoading(true);
         }
 
-        axios.get("/catalog-service/patalogs")
+        axios.get("/catalog-service/catalogs")
             .then(res => {
                 setnewData(res.data);
                 setSearch(null);
                 setLoading(false);
                 console.log(res.data);
             });
-
-        axios.get(`/user-service/users/preference/{userId}`,{
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-
-        })
-            .then(res => {
-                setPreferenceData(res.data);
-                console.log(res.data);
-
-            })
-
-        axios.get(`/catalog-service/catalogs`)
-            .then(res =>{
-                setCatalogData(res.data);
-                console.log(res.data);
-
-            })
-
-
         fetchPosts();
     },[]);
 
 
-    const categoryData = categoryName !== "전체메뉴" ? categoryName !== "추천 패키지" ? newData.filter(item => item.category === categoryName ) : catalogData.filter(item => item.age === preferenceData.age ||
-        item.theme === preferenceData.theme || item.flavor === preferenceData.flavor) :newData;
+    const categoryData = categoryName !== "전체메뉴" ? newData.filter(item => item.category === categoryName ) : newData;
     const searchData = search !== null ? newData.filter(item => (item.name.toLowerCase().includes(search)) || (item.category.includes(search))) : newData;
 
     const searchList = searchData.map((item, index) => (
 
-        <div className={`col-xl-${columNumber} col-md-6 col-lg-${columNumber} col-sm-6`} key={item.patalogsId}>
+        <div className={`col-xl-${columNumber} col-md-6 col-lg-${columNumber} col-sm-6`} key={item.catalogId}>
             <div className="product-wrap mb-25">
                 <div className="product-img">
-                    <Link to={`/packagedetail/${item.patalogId}`}>
-                        <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
-                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
+                    <Link to={`/productdetail/${item.catalogId}`}>
+                        <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
+                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
                     </Link>
                 </div>
                 <div className="product-content text-center">
-                    <h3><Link to={`/packagedetail/${item.patalogId}`}>{item.name}</Link></h3>
+                    <h3><Link to={`/productdetail/${item.catalogId}`}>{item.name}</Link></h3>
                     <div className="product-rating">
                         {item.rating && item.rating > 0 ? (
                             <Rating ratingValue={item.rating} />
@@ -97,36 +68,6 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
             </div>
         </div>
 
-
-    )).slice(indexOfFirstPost, indexOfLastPost);
-
-
-    const packageList = categoryData.map((item, index) => (
-
-        <div className={`col-xl-${columNumber} col-md-6 col-lg-${columNumber} col-sm-6`} key={item.patalogId}>
-            <div className="product-wrap mb-25">
-                <div className="product-img">
-                    <Link to={`/packagedetail/${item.patalogId}`}>
-                        <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
-                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
-                    </Link>
-                </div>
-                <div className="product-content text-center">
-                    <h3><Link to={`/packagedetail/${item.patalogId}`}>{item.name}</Link></h3>
-                    <div className="product-rating">
-                        {item.rating && item.rating > 0 ? (
-                            <Rating ratingValue={item.rating} />
-                        ) : (
-                            ""
-                        )}
-                    </div>
-                    <div className="product-price">
-                        <span>{item.unitPrice}원</span>
-                        {/*<span className="old">{item.unitPrice}</span>*/}
-                    </div>
-                </div>
-            </div>
-        </div>
 
     )).slice(indexOfFirstPost, indexOfLastPost);
 
@@ -135,13 +76,13 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
         <div className={`col-xl-${columNumber} col-md-6 col-lg-${columNumber} col-sm-6`} key={item.catalogId}>
             <div className="product-wrap mb-25">
                 <div className="product-img">
-                    <Link to={`/packagedetail/${item.catalogId}`}>
+                    <Link to={`/productdetail/${item.catalogId}`}>
                         <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
                         <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
                     </Link>
                 </div>
                 <div className="product-content text-center">
-                    <h3><Link to={`/packagedetail/${item.catalogId}`}>{item.name}</Link></h3>
+                    <h3><Link to={`/productdetail/${item.catalogId}`}>{item.name}</Link></h3>
                     <div className="product-rating">
                         {item.rating && item.rating > 0 ? (
                             <Rating ratingValue={item.rating} />
@@ -160,7 +101,7 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
     )).slice(indexOfFirstPost, indexOfLastPost);
 
     const currentNewData = (search == null ? categoryData :searchData);
-    const currentList = (categoryName == "유저 패키지"? packageList : categoryList)
+    const currentList = (search == null? categoryList : searchList)
 
 
     const handleLayout = (sln, coln) => {

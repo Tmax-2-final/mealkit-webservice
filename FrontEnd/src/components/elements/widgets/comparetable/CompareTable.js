@@ -2,15 +2,18 @@ import React, {useState, useEffect} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import Rating from '../../ui/Rating';
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
-function ComareTable(props) {
+export default function CompareTable(props) {
     const [myPackageDatas, setMyPackageDatas] = useState([]);
     const [columNumber, setColumNumber] = useState(4);
     const [patalogData, setPatalogData] = useState();
     const [pkgMgtData, setPkgMgtData] = useState([]);
-
+    const history = useHistory();
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('userid');
+
+    console.log(token);
 
     const headers = {
         Authorization: `Bearer ${token}`
@@ -42,7 +45,9 @@ function ComareTable(props) {
 
     }
 
-    const handleDelete = (id) => {
+    const handleDelete = (id, e) => {
+        e.preventDefault();
+        console.log(id);
 
         axios.delete(`/catalog-service/${userId}/mypackage/${id}`, {
             headers : headers
@@ -61,7 +66,8 @@ function ComareTable(props) {
 
     }
 
-    const handleAllDelete = (id) => {
+    const handleAllDelete = (e) => {
+        e.preventDefault();
         axios.delete(`/catalog-service/${userId}/mypackage`)
             .then(res => {
                 alert("삭제 되었습니다.")
@@ -88,7 +94,7 @@ function ComareTable(props) {
                     </Link>
                 </div>
                 <div className="compare-remove">
-                    <button onClick={()=>handleDelete(item.myPkgId)}><i className="las la-trash"></i></button>
+                    <button onClick={(e)=>handleDelete(item.myPkgId, e)}><i className="las la-trash"></i></button>
                 </div>
                 <div className="product-content text-center">
                     <h3><Link to={`/packagedetail/${item.catalogEntity.catalogId}`}>{item.catalogEntity.name}</Link></h3>
@@ -113,62 +119,19 @@ function ComareTable(props) {
     )).slice(0, 30);
 
 
-
-    // const comparelist01 = myPackageDatas.map(item => (
-    //
-    //     <td className="product-image-title">
-    //         <div className="compare-remove">
-    //             <button onClick={()=>handleDelete(item.catalogEntity.catalogId)}><i className="las la-trash"></i></button>
-    //         </div>
-    //         <div className="product-img">
-    //         <Link className="image" to={`/packagedetail/${item.catalogEntity.catalogId}`}><img className="img-fluid" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.catalogEntity.image1}`} alt=""/></Link>
-    //         <div className="product-title">
-    //             <Link className="image" to={`/packagedetail/${item.catalogEntity.catalogId}`}>{item.catalogEntity.name}</Link>
-    //         </div>
-    //         </div>
-    //         {/*<div className="compare-btn">*/}
-    //         {/*    <Link className="image" to={`/packagedetail/${item.catalogEntity.catalogId}`}>패키지 상세 페이지</Link>*/}
-    //         {/*</div>*/}
-    //     </td>
-    // )).slice(0,7);
-
-    // const comparelist02 = myPackageDatas.map(item => (
-    //     <td className="product-price">
-    //         {/*<span className="amount old">{item.unitPrice.toFixed(2)}</span>*/}
-    //         <span className="amount">{item.catalogEntity.unitPrice}</span>
-    //     </td>
-    // )).slice(0,7);
-
-    // const comparelist03 = myPackageDatas.map(item => (
-    //     <td className="product-desc">
-    //         <p>N/A</p>
-    //     </td>
-    // )).slice(0,7);
-
-    // const comparelist04 = myPackageDatas.map(item => (
-    //     <td className="product-rating">
-    //         {item.rating && item.rating > 0 ? (
-    //             <Rating ratingValue={item.rating} />
-    //         ) : (
-    //         ""
-    //         )}
-    //     </td>
-    // )).slice(0,7);
-
     const confirmSubPkgHandler = (e) => {
 
         let body = {
-            name: "hello1님의 패키지",
-            category: userId + "님의 패키지",
+            name: userId +"님의 패키지",
+            category: "유저 패키지",
             rating: "3",
             image: "01.jpg"
         }
 
         console.log(body);
 
-        axios.post(`/catalog-service/${userId}/patalogs`,{
-            headers: headers,
-            body: body
+        axios.post(`/catalog-service/${userId}/patalogs`, body,{
+            headers: headers
         } )
             .then(res => {
                 console.log(res)
@@ -192,9 +155,8 @@ function ComareTable(props) {
                             setPkgMgtData(jsonArray);
                             console.log(jsonArray);
                             console.log(pkgMgtData);
-                            axios.post(`/catalog-service/${userId}/pkgmgt`, {
-                                headers : headers,
-                                body : jsonArray
+                            axios.post(`/catalog-service/${userId}/pkgmgt`, jsonArray, {
+                                headers : headers
                             })
                                 .then(res => {
                                     console.log(res)
@@ -227,7 +189,9 @@ function ComareTable(props) {
 
         e.preventDefault();
 
-        props.history.push({        
+        console.log(props);
+
+        history.push({
             pathname: "/subscription/confirmusubpkg",
             state: {
                 myPkgData : myPackageDatas
@@ -245,7 +209,7 @@ function ComareTable(props) {
                                 <Link to="#" onClick={confirmSubPkgHandler}>패키지 확정</Link>
                             </div>
                             <div className="cart-clear">
-                                <button onClick={()=>handleAllDelete("hello1")}>패키지 비우기</button>
+                                <button onClick={handleAllDelete}>패키지 비우기</button>
                             </div>
                         </div>
                         <div className="compare-page-content">
@@ -293,5 +257,3 @@ function ComareTable(props) {
         </div>
     );
 }
-
-export default withRouter(ComareTable);
