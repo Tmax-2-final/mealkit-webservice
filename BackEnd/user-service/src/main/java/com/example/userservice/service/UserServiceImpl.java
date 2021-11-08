@@ -2,26 +2,25 @@ package com.example.userservice.service;
 
 import com.example.userservice.client.CatalogServiceClient;
 import com.example.userservice.client.OrderServiceClient;
-import com.example.userservice.dto.CartDto;
+
 import com.example.userservice.dto.PrfrDto;
 import com.example.userservice.dto.UserDto;
 import com.example.userservice.entity.*;
-import com.example.userservice.jpa.CartRepository;
 import com.example.userservice.jpa.PrfrRepository;
 import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.vo.RequestDate;
-import com.example.userservice.vo.ResponseOrder;
-import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -29,8 +28,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
@@ -38,7 +41,6 @@ import java.util.*;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
-    private final CartRepository cartRepository;
     private final PrfrRepository prfrRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final Environment env;
@@ -52,7 +54,6 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           CartRepository cartRepository,
                            PrfrRepository prfrRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
                            Environment env,
@@ -61,7 +62,6 @@ public class UserServiceImpl implements UserService{
                            CatalogServiceClient catalogServiceClient,
                            CircuitBreakerFactory circuitBreakerFactory) {
         this.userRepository = userRepository;
-        this.cartRepository = cartRepository;
         this.prfrRepository = prfrRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.env = env;
@@ -90,6 +90,7 @@ public class UserServiceImpl implements UserService{
         return user;
     }
 
+    @Transactional
     @Override
     public UserDto createUser(UserDto userDto) {
         /* 권한 부여 */
@@ -145,20 +146,20 @@ public class UserServiceImpl implements UserService{
         /*
         * 2) Open Feign 방식
         */
-        Iterable<OrderEntity> ordersList = null;
+//        Iterable<OrderEntity> ordersList = null;
 //        try {
 //            ordersList = orderServiceClient.getOrder(userId);
 //        } catch (FeignException e) {
 //            log.error(e.getMessage());
 //        }
         /* Circuit Breaker */
-        log.info("Before call order-service");
-        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("my-circuitbreaker");
-        ordersList = circuitBreaker.run(() -> orderServiceClient.getOrder(userId),
-                throwable -> new ArrayList<>());
-        log.info("After call order-service");
-
-        userDto.setOrders(ordersList);
+//        log.info("Before call order-service");
+//        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("my-circuitbreaker");
+//        ordersList = circuitBreaker.run(() -> orderServiceClient.getOrder(userId),
+//                throwable -> new ArrayList<>());
+//        log.info("After call order-service");
+//
+//        userDto.setOrders(ordersList);
 
         return userDto;
     }
@@ -190,10 +191,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Iterable<UserEntity> getUserByAll() {
-        return userRepository.findAll();
+    public Page<UserEntity> getUserByAll(Pageable pageRequest) {
+        return userRepository.findAll(pageRequest);
     }
 
+    @Transactional
     @Override
     public String updateUserPassword(UserDto userDto) {
         String randomPwd = UUID.randomUUID().toString().substring(0, 10);
@@ -210,101 +212,33 @@ public class UserServiceImpl implements UserService{
         return randomPwd;
     }
 
-    @Override
-    public CartDto createCart(CartDto cartDto) {
-        // 1. cartDto -> cartEntity -> jpa -> mariadb
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
-        CartEntity cartEntity = mapper.map(cartDto, CartEntity.class); // userDto -> userEntity 로 매핑
-        // 2. repository save
-        cartRepository.save(cartEntity);
-        // 3. result entity -> dto
-        CartDto resultCartDto = mapper.map(cartEntity, CartDto.class);
-
-        return resultCartDto;
-    }
-
-    @Override
-    public Iterable<CartEntity> getUserCartsByUserIdAll(String userId) {
-
-        Iterable<CartEntity> result = cartRepository.findAllByUserId(userId);
-
-
-        CatalogEntity catalogEntity = null;
-        try {
-            for(CartEntity cartEntity :  result){
-                Long productId = cartEntity.getProductId();
-                catalogEntity = catalogServiceClient.getCatalog(productId);
-                String image = catalogEntity.getImage();
-                String productName = catalogEntity.getName();
-                cartEntity.setImage(image);
-                cartEntity.setName(productName);
-            }
-
-        } catch (FeignException e) {
-            log.error(e.getMessage());
-        }
-
-        return result;
-    }
-
-    @Override
-    public void deleteCart(CartEntity cartEntity) {
-        cartRepository.delete(cartEntity);
-    }
-
-    @Override
-    public Optional<CartEntity> getCartByCartId(Long cartId) {
-        return cartRepository.findById(cartId);
-    }
-
-    @Override
-    public void updateUserCarts(CartDto cartDto) {
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
-        CartEntity cartEntity = mapper.map(cartDto, CartEntity.class);
-
-        cartRepository.save(cartEntity);
-
-    }
-
+    @Transactional
     @Override
     public void updateUsers(UserDto userDto) {
 
+        UserEntity originUser = userRepository.findByUserId(userDto.getUserId());
+
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
-        UserEntity userEntity = mapper.map(userDto, UserEntity.class);
+        UserEntity updateUser = mapper.map(userDto, UserEntity.class);
 
-        userEntity.setEncryptedPwd(bCryptPasswordEncoder.encode(userDto.getPwd())); // 비밀번호 암호화
-
-        userRepository.save(userEntity);
-    }
-
-    @Override
-    public Iterable<UserEntity> getUserAllBetween(RequestDate requestDate) {
-        return userRepository.findAllByNameContainingAndCreatedAtBetween(requestDate.getSearchData(), requestDate.getStartDate(), requestDate.getEndDate());
-
-    }
-
-    @Override
-    public CartDto getCartByProductId(CartDto cartDto) {
-
-        Optional<CartEntity> cartEntity = cartRepository.findByProductIdAndUserId(cartDto.getProductId(), cartDto.getUserId());
-        if(!cartEntity.isPresent()) {
-            CartDto nullDto = new CartDto();
-            nullDto.setFind(0);
-
-            return nullDto;
+        if(userDto.getPwd() != null && !userDto.getPwd().equals("")) {
+            log.info("비밀번호도 함께 수정합니다.");
+            updateUser.setEncryptedPwd(bCryptPasswordEncoder.encode(userDto.getPwd())); // 비밀번호 암호화
         }
 
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
-        CartDto resultDto = mapper.map(cartEntity.get(), CartDto.class);
-        resultDto.setFind(1);
+        copyNonNullProperties(updateUser, originUser);
 
-        return resultDto;
+        userRepository.save(originUser);
     }
 
+    @Override
+    public Page<UserEntity> getUserAllBetween(RequestDate requestDate, Pageable pageRequest) {
+        return userRepository.findAllByNameContainingAndCreatedAtBetween(requestDate.getSearchData(), requestDate.getStartDate(), requestDate.getEndDate(), pageRequest);
+
+    }
+
+    @Transactional
     @Override
     public void deleteUser(UserEntity userEntity) {
         userRepository.delete(userEntity);
@@ -320,7 +254,39 @@ public class UserServiceImpl implements UserService{
         return userRepository.findOauthByUserId(userId);
     }
 
+    @Override
+    public Long getNewUserCount() {
+        Date startDate = Timestamp.valueOf(LocalDate.now().atStartOfDay());
+        Date endDate = Timestamp.valueOf(LocalDate.now().plusDays(1L).atStartOfDay());
+        log.info("현재 시간: " + startDate);
+        log.info("내일 시간: " + endDate);
+        return userRepository.countByCreatedAtBetween(startDate, endDate);
+    }
 
+    @Override
+    public Long getTotalUserCount() {
+        return userRepository.count();
+    }
+
+    /* 객체의 내부 데이터 중 null 값이 있는지 없는지 확인 */
+    public static void copyNonNullProperties(Object src, Object target) {
+        BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
+    }
+
+    public static String[] getNullPropertyNames (Object source) {
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
+
+        Set<String> emptyNames = new HashSet<String>();
+        for (java.beans.PropertyDescriptor pd : pds) {
+            Object srcValue = src.getPropertyValue(pd.getName());
+            if (srcValue == null) emptyNames.add(pd.getName());
+        }
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
+    }
+
+    @Transactional
     @Override
     public PrfrDto createPrfr(PrfrDto prfrDto) {
         ModelMapper mapper = new ModelMapper();
@@ -343,11 +309,13 @@ public class UserServiceImpl implements UserService{
         return prfrRepository.findAllByUserId(userId);
     }
 
+    @Transactional
     @Override
     public void deletePrfr(String userId ,Long prfrId) {
         prfrRepository.deleteByUserIdAndPrfrId(userId, prfrId);
     }
 
+    @Transactional
     @Override
     public void updatePrfr(PrfrDto prfrDto, String userId, Long prfrId) {
         ModelMapper mapper = new ModelMapper();
@@ -360,5 +328,14 @@ public class UserServiceImpl implements UserService{
         prfrEntity.setCookingtime(prfrDto.getCookingtime());
 
         prfrRepository.save(prfrEntity);
+    }
+
+    @Override
+    public boolean getUserPrfrDone(String userId) { // 0: 선호도 안함 false, 1: 선호도 함 true
+        Long userPrfr = prfrRepository.countByUserId(userId);
+        if(userPrfr == 0) {
+            return false;
+        }
+        return true;
     }
 }

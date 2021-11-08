@@ -26,21 +26,9 @@ public class PatalogEntity implements Serializable {
     private String image;
 
     @Column(nullable = true)
-    private String details;
-
-    @Column(nullable = false)
-    private String publisher;
-
-    @Column(nullable = false)
-    private String author;
-
-    @Column(nullable = false)
-    private Integer unitPrice;
-
-    @Column(nullable = true)
     private Double rating;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String category;
 
     @Column(nullable = false, updatable = false, insertable = false)
@@ -50,9 +38,6 @@ public class PatalogEntity implements Serializable {
     @Column(nullable = false, insertable = false, updatable = false)
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     private Date modifiedAt;
-
-    @Column
-    private Integer stock;
 
     @OneToMany(targetEntity = PkgMgtEntity.class)
     @JoinColumn(name = "patalogId")

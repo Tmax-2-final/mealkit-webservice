@@ -9,13 +9,17 @@ import com.example.subscriptionservice.entity.SubscriptionShipsEntity;
 import com.example.subscriptionservice.jpa.SubscriptionGradeRepository;
 import com.example.subscriptionservice.jpa.SubscriptionRepository;
 import com.example.subscriptionservice.jpa.SubscriptionShipsRepository;
+import com.example.subscriptionservice.querydsl.SubscriptionSearchParam;
 import com.example.subscriptionservice.vo.RequestCancelSubscription;
 import com.example.subscriptionservice.vo.RequestUpdateSubscription;
+import com.example.subscriptionservice.vo.ResponseSubscription;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +27,8 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -53,8 +55,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public SubscriptionGradeEntity getSubscriptionGrade(int subGradeId) {
-        return subscriptionGradeRepository.findBySubGradeId(subGradeId);
+    public SubscriptionGradeDto getSubscriptionGrade(Integer subGradeId) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        SubscriptionGradeEntity subscriptionGradeEntity = subscriptionGradeRepository.findBySubGradeId(subGradeId);
+
+        SubscriptionGradeDto subscriptionGradeDto = modelMapper.map(subscriptionGradeEntity, SubscriptionGradeDto.class);
+
+        return subscriptionGradeDto;
     }
 
     @Transactional
@@ -133,6 +142,95 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         SubscriptionEntity deleteSubscriptionEntity = modelMapper.map(subscriptionDto, SubscriptionEntity.class);
 
         subscriptionRepository.save(deleteSubscriptionEntity);
+
+        Iterable<SubscriptionShipsEntity> subscriptionShipsEntities = getSubShips(requestCancelSubscription.getUserId());
+
+        for (SubscriptionShipsEntity subscriptionShipsEntity : subscriptionShipsEntities) {
+            // 환불 가능한 상품준비중(1)인 배송건에 대해서만 배송취소(4) 처리
+            if(subscriptionShipsEntity.getStatus() == '1') subscriptionShipsEntity.setStatus('4');
+        }
+
+        subscriptionShipsRepository.saveAll(subscriptionShipsEntities);
+    }
+
+    @Override
+    public Page<SubscriptionDto> getAllSubscription(Pageable pageRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Page<SubscriptionEntity> subscriptionList = subscriptionRepository.findAll(pageRequest);
+
+
+        Page<SubscriptionDto> subscriptionDtoList = subscriptionList.map(
+                    v -> {
+                        SubscriptionGradeDto subscriptionGradeDto = modelMapper.map(v.getSubscriptionGradeEntity(), SubscriptionGradeDto.class);
+                        SubscriptionDto subscriptionDto = modelMapper.map(v, SubscriptionDto.class);
+                        subscriptionDto.setSubscriptionGradeDto(subscriptionGradeDto);
+                        return subscriptionDto;
+                    }
+        );
+
+        return subscriptionDtoList;
+    }
+
+    @Override
+    public Page<SubscriptionDto> getSubscriptionByStatus(Character status, Pageable pageRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Page<SubscriptionEntity> subscriptionList = subscriptionRepository.findByStatus(status, pageRequest);
+
+        Page<SubscriptionDto> subscriptionDtoList = subscriptionList.map(
+                v -> {
+                    SubscriptionGradeDto subscriptionGradeDto = modelMapper.map(v.getSubscriptionGradeEntity(), SubscriptionGradeDto.class);
+                    SubscriptionDto subscriptionDto = modelMapper.map(v, SubscriptionDto.class);
+                    subscriptionDto.setSubscriptionGradeDto(subscriptionGradeDto);
+                    return subscriptionDto;
+                }
+        );
+
+        return subscriptionDtoList;
+    }
+
+    @Override
+    public Page<SubscriptionDto> getSubscriptionByStatusAndStartDateBetween(Character status, LocalDate startDate, LocalDate endDate, Pageable pageRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        LocalDateTime startDateTime =  LocalDateTime.of(startDate, LocalTime.of(0,0,0));
+        LocalDateTime endDateTime =  LocalDateTime.of(endDate, LocalTime.of(23,59,59));
+
+        Page<SubscriptionEntity> subscriptionList = subscriptionRepository.findByStatusAndStartDateBetween(status, startDateTime, endDateTime, pageRequest);
+
+        Page<SubscriptionDto> subscriptionDtoList = subscriptionList.map(
+                v -> {
+                    SubscriptionGradeDto subscriptionGradeDto = modelMapper.map(v.getSubscriptionGradeEntity(), SubscriptionGradeDto.class);
+                    SubscriptionDto subscriptionDto = modelMapper.map(v, SubscriptionDto.class);
+                    subscriptionDto.setSubscriptionGradeDto(subscriptionGradeDto);
+                    return subscriptionDto;
+                }
+        );
+
+        return subscriptionDtoList;
+    }
+
+    @Override
+    public Page<SubscriptionDto> getSubscriptionBySearchKeyword(SubscriptionSearchParam subscriptionSearchParam, Pageable pageReqeust) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Page<SubscriptionEntity> subscriptionList = subscriptionRepository.findAllBySearchKeyword(subscriptionSearchParam, pageReqeust);
+
+        Page<SubscriptionDto> subscriptionDtoList = subscriptionList.map(
+                v -> {
+                    SubscriptionGradeDto subscriptionGradeDto = modelMapper.map(v.getSubscriptionGradeEntity(), SubscriptionGradeDto.class);
+                    SubscriptionDto subscriptionDto = modelMapper.map(v, SubscriptionDto.class);
+                    subscriptionDto.setSubscriptionGradeDto(subscriptionGradeDto);
+                    return subscriptionDto;
+                }
+        );
+
+        return subscriptionDtoList;
     }
 
     @Override
@@ -152,26 +250,40 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void paymentSubscription() {
+    public Iterable<SubscriptionDto> paymentSubscription() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
         LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
         LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
 
-        Iterable<SubscriptionEntity> subscriptionEntityList = subscriptionRepository.findByNextPaymentDateBetween(startDatetime, endDatetime);
+        Iterable<SubscriptionEntity> subscriptionEntityList = subscriptionRepository.findByStatusAndNextPaymentDateLessThanEqual('2', endDatetime);
 
         // 구독 등급 변경 체크 (change_sub_grade_id)
         subscriptionEntityList.forEach(v -> {
-            if(v.getChangeSubGradeId() != null){
+            if(v.getChangeSubGradeId() != null) {
                 //responseSubscriptionGradeList.add(new ModelMapper().map(v, ResponseSubscriptionGrade.class));
                 v.setSubGradeId(v.getChangeSubGradeId());
                 v.setChangeSubGradeId(null);
-
-                // 다음 결제일 계산 및 설정
-                LocalDateTime nextMonthDate = LocalDateTime.of(LocalDate.now().plusMonths(1), LocalTime.now());
-                v.setLastPaymentDate(LocalDateTime.now());
-                v.setNextPaymentDate(nextMonthDate);
             }
+
+            v.setSubPkgId(null);
+            // 결제 후 구독중(패키지확정전) 상태로 변경
+            v.setStatus('1');
+
+            // 다음 결제일 계산 및 설정
+            LocalDateTime nextMonthDate = LocalDateTime.of(LocalDate.now().plusMonths(1), LocalTime.now());
+            v.setLastPaymentDate(LocalDateTime.now());
+            v.setNextPaymentDate(nextMonthDate);
         });
-        subscriptionRepository.saveAll(subscriptionEntityList);
+
+        List<SubscriptionEntity> subscriptionEntityList2 = subscriptionRepository.saveAll(subscriptionEntityList);
+
+        List<SubscriptionDto> subscriptionDtoList = subscriptionEntityList2.stream().map(v -> modelMapper.map(v, SubscriptionDto.class)).collect(Collectors.toList());
+
+        //SubscriptionDto returnValue = modelMapper.map(responseSubscriptionsList, SubscriptionDto.class);
+
+        return subscriptionDtoList;
     }
 
     @Override
@@ -191,14 +303,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-
-
         List<SubscriptionShipsEntity> subscriptionShipsEntityList = new ArrayList<>();
+
+
+        subShipDto.setDueDate(subShipDto.getDueDate());
 
         for(int i = 0; i < 4; i++){
             SubscriptionShipsEntity subscriptionShipsEntity = modelMapper.map(subShipDto, SubscriptionShipsEntity.class);
             // 7일씩 더해서 배송예정일자를 수정
-            LocalDateTime dueDate = subscriptionShipsEntity.getDueDate().plusDays(7*i);
+            LocalDate dueDate = subscriptionShipsEntity.getDueDate().plusDays(7*i);
             subscriptionShipsEntity.setDueDate(dueDate);
             subscriptionShipsEntityList.add(subscriptionShipsEntity);
         }
@@ -211,6 +324,28 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    public Iterable<SubscriptionShipsEntity> getAllSubShips() {
+        return subscriptionShipsRepository.findAll();
+    }
+
+    @Override
+    public Iterable<SubscriptionShipsEntity> getSubShips(String userId) {
+        return subscriptionShipsRepository.findByUserId(userId);
+    }
+
+    @Override
+    public void updateSubShip(Long shipId, String postcode, String address, String addressDetail, LocalDate dueDate, Character type) {
+        Optional<SubscriptionShipsEntity> subscriptionEntity = subscriptionShipsRepository.findById(shipId);
+        subscriptionEntity.get().setAddress(address);
+        subscriptionEntity.get().setAddressDetail(addressDetail);
+        subscriptionEntity.get().setPostcode(postcode);
+        subscriptionEntity.get().setDueDate(dueDate);
+        subscriptionEntity.get().setType(type);
+
+        subscriptionShipsRepository.save(subscriptionEntity.get());
+    }
+
+    @Override
     public Long getRefundAmount(String userId) {
         return subscriptionShipsRepository.getRefundAmountByUserId(userId);
     }
@@ -220,6 +355,58 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         
     }
 
+    @Override
+    public void confirmSubPkg(String userId, Long pkgId) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        SubscriptionDto subscriptionDto = getSubscription(userId);
+
+        // 구독중 - 구독패키지 확정완료
+        Character subscribingAndAfterConfirmedPkgStatus = '2';
+
+        subscriptionDto.setStatus(subscribingAndAfterConfirmedPkgStatus);
+        subscriptionDto.setSubPkgId(pkgId);
+
+        SubscriptionEntity subscriptionEntity = modelMapper.map(subscriptionDto, SubscriptionEntity.class);
+
+        subscriptionRepository.save(subscriptionEntity);
+    }
+
+    @Override
+    public Long getRevenueMonthAgo() {
+        // 오늘로부터 2달전~1달전 매출액 기간 설정
+        LocalDate startDatetime = LocalDate.now().minusMonths(2);
+        LocalDate endDatetime = LocalDate.now().minusMonths(1);
+
+        return subscriptionShipsRepository.getRevenueBetween(startDatetime, endDatetime);
+    }
+
+    @Override
+    public Long getRevenueMonth() {
+        // 오늘로부터 1달전~오늘 매출액 기간 설정
+        LocalDate startDatetime = LocalDate.now().minusMonths(1);
+        LocalDate endDatetime = LocalDate.now();
+
+        return subscriptionShipsRepository.getRevenueBetween(startDatetime, endDatetime);
+    }
+
+    @Override
+    public Long getTotalRevenue() {
+        return subscriptionShipsRepository.getTotalRevenue();
+    }
+
+    @Override
+    public Long getTotalSubscriptionCnt() {
+        return subscriptionRepository.count();
+    }
+
+    @Override
+    public Long getNewSubscriptionCnt() {
+        LocalDateTime startDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
+        LocalDateTime endDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
+        return subscriptionRepository.countByStartDateBetween(startDateTime, endDateTime);
+    }
 
     private Sort sortByAscSubGradeId() {
         return Sort.by(Sort.Direction.ASC, "subGradeId");

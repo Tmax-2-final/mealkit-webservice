@@ -6,10 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 import javax.transaction.Transactional;
 
 public interface PrfrRepository extends CrudRepository<PrfrEntity, Long> {
+
     Iterable<PrfrEntity> findAllByUserId(String userId);
-
     PrfrEntity findByPrfrId(Long prfrId);
-
     Long countByUserId(String userId);
 
     @Transactional

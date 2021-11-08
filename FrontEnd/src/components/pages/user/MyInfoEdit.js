@@ -83,7 +83,7 @@ export default function Register(props) {
         };
 
         let response =
-            axios.put(`/user-service/${userId}/users`, body, {
+            axios.put(`/user-service/users/${userId}`, body, {
                 headers : {
                     Authorization : `Bearer ${token}`
                 },

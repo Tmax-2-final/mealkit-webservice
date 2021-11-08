@@ -14,6 +14,13 @@ import { Link } from "react-router-dom";
 function MyPage(props) {
 
 
+    const userId = localStorage.getItem('userid');
+    const token = localStorage.getItem('token');
+
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
+
     const [data, setData] = useState([]);
     const [userDatas, setUserDatas] = useState([]);
 
@@ -75,6 +82,42 @@ function MyPage(props) {
             })
     }, []);
 
+    const subCancelHandler = (e) => {
+        if(!userId){
+            alert("로그인 후 진행해주세요.");
+            props.history.push({
+                pathname: '/login',
+                state: {
+                }
+            })
+        }
+        else {
+            props.history.push({
+                pathname: '/subscription/cancel',
+                state: {
+                }
+            })
+        }
+    }
+
+    const subChangeHandler = () => {
+        if(!userId){
+            alert("로그인 후 진행해주세요.");
+            props.history.push({
+                pathname: '/login',
+                state: {
+                }
+            })
+        }
+        else {
+            props.history.push({
+                pathname: '/subscription/editgrade',
+                state: {
+                }
+            })
+        }
+    }
+
     return (
         <Fragment>
 
@@ -94,6 +137,7 @@ function MyPage(props) {
                     </div>
                     
                     <div className="col-8 offset-1">
+
                         <br /><br />
                         
                         <div className="user-detail-title" style={{ paddingBottom: "15px" }}>
@@ -134,6 +178,7 @@ function MyPage(props) {
                                                 <p style={{ color: "grey" }}>{data.birth}</p>
                                                 <p style={{ color: "grey" }}>{data.gender}</p>
                                                 <p style={{ color: "grey" }}>{new Date(Date.parse(data.createdAt)).toLocaleString().split("오")[0]}</p>
+
                                             </div>
                                         </div>
                                     </div>

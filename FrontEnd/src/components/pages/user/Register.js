@@ -244,13 +244,7 @@ export default function Register(props) {
                         if (res.status === 201) {
                             alert("회원가입이 완료되었습니다.")
                             props.history.push({
-                                pathname: "/preference",
-                                state: {
-                                    userId: id,
-                                    name: name,
-                                    gender: gender,
-                                    birth: birth
-                                }
+                                pathname: "/login"
                             })
                             
                         }

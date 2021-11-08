@@ -7,7 +7,9 @@ export default function SideMenu() {
     const [isRole, setIsRole] = useState(localStorage.getItem('role'));
     const [isLogin, setIsLogin] = useState(localStorage.getItem('token'));
 
-    const onClickHandler = () => {
+    const onClickHandler = (e) => {
+        e.preventDefault();
+
         localStorage.removeItem('userid');
         localStorage.removeItem('token');
         localStorage.removeItem('role');
@@ -18,7 +20,9 @@ export default function SideMenu() {
         window.location.href="/";
     }
 
-    const backdoorHandler = () => {
+    const backdoorHandler = (e) => {
+        e.preventDefault();
+
         localStorage.setItem('token',"123")
         window.location.href="/";
     }
@@ -50,12 +54,12 @@ export default function SideMenu() {
                                 (
                                     <Fragment>
                                             <Link style={{ paddingLeft: "15px" }} to="/mypage"><b>마이페이지</b></Link>
-                                            <Link style={{ paddingLeft: "15px" }} onClick={onClickHandler}><b>로그아웃</b></Link>
+                                            <Link style={{ paddingLeft: "15px" }} to="/#" onClick={onClickHandler}><b>로그아웃</b></Link>
                                             
                                     </Fragment>
                                 )
                             }
-                            <Link style={{ paddingLeft: "15px" }} onClick={backdoorHandler}><b>백도어</b></Link>
+                            <Link style={{ paddingLeft: "15px" }} to="/#" onClick={backdoorHandler}><b>백도어</b></Link>
                         </ul>
                     </nav>                
                 </div>
@@ -64,7 +68,7 @@ export default function SideMenu() {
                     (
                             <div className="second-main-menu" style={{ float: "center" }}>
                                 <p>{localStorage.getItem('userid')}<span style={{ color: "gray" }}> 회원님 안녕하세요.</span></p>
-                                <Link to="/mypkg"> <i type="button" class="fas fa-archive fa-2x" /></Link>
+                                <Link to="/mypkg"> <i type="button" className="fas fa-archive fa-2x" /></Link>
                             </div>
                     )
                     :

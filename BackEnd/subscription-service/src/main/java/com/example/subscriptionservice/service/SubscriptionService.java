@@ -5,15 +5,23 @@ import com.example.subscriptionservice.dto.SubscriptionDto;
 import com.example.subscriptionservice.dto.SubscriptionGradeDto;
 import com.example.subscriptionservice.entity.SubscriptionEntity;
 import com.example.subscriptionservice.entity.SubscriptionGradeEntity;
+import com.example.subscriptionservice.entity.SubscriptionShipsEntity;
+import com.example.subscriptionservice.querydsl.SubscriptionSearchParam;
 import com.example.subscriptionservice.vo.RequestCancelSubscription;
 import com.example.subscriptionservice.vo.RequestUpdateSubscription;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 public interface SubscriptionService {
     /*구독 등급 조회*/
     Iterable<SubscriptionGradeEntity>  getAllSubscriptionGrade();
 
     /*특정 구독 등급 조회*/
-    SubscriptionGradeEntity getSubscriptionGrade(int subGradeId);
+    SubscriptionGradeDto getSubscriptionGrade(Integer subGradeId);
 
     /*구독 등록*/
     SubscriptionDto createSubscription(SubscriptionDto subscriptionDto);
@@ -27,11 +35,20 @@ public interface SubscriptionService {
     /*구독 취소*/
     void cancelSubscription(RequestCancelSubscription requestCancelSubscription);
 
+    /*구독 전체조회*/
+    Page<SubscriptionDto> getAllSubscription(Pageable pageRequest);
+
+    Page<SubscriptionDto> getSubscriptionByStatus(Character status, Pageable pageRequest);
+
+    Page<SubscriptionDto> getSubscriptionByStatusAndStartDateBetween(Character status, LocalDate startDate, LocalDate endDate, Pageable pageRequest);
+
+    Page<SubscriptionDto> getSubscriptionBySearchKeyword(SubscriptionSearchParam subscriptionSearchParam, Pageable pageReqeust);
+
     /*구독 조회*/
     SubscriptionDto getSubscription(String userId);
 
     /*구독 결제*/
-    void paymentSubscription();
+    Iterable<SubscriptionDto>  paymentSubscription();
 
     /*구독 여부확인*/
     long existSubscription(String userId);
@@ -39,9 +56,34 @@ public interface SubscriptionService {
     /*구독 배송 등록*/
     SubShipDto createSubShips(SubShipDto subShipDto);
 
+    /*전체 구독 배송 조회*/
+    Iterable<SubscriptionShipsEntity>  getAllSubShips();
+
+    /*구독 배송 조회*/
+    Iterable<SubscriptionShipsEntity>  getSubShips(String userId);
+
+    /*구독 배송정보 변경*/
+    void  updateSubShip(Long shipId, String postcode, String address, String addressDetail, LocalDate dueDate, Character type);
+
     /*구독취소 하는 회원의 환불금액 조회*/
     Long getRefundAmount(String userId);
 
     /*환불회원의 배송 배송취소 처리 */
     void updateRefundCancelShips(String userId);
+
+    /*구독패키지 확정*/
+    void confirmSubPkg(String userId, Long pkgId);
+
+    /*한달전 매출액 조회*/
+    Long getRevenueMonthAgo();
+
+    /*한달간 매출액 조회*/
+    Long getRevenueMonth();
+
+    /*총 매출액 조회*/
+    Long getTotalRevenue();
+
+    Long getTotalSubscriptionCnt();
+
+    Long getNewSubscriptionCnt();
 }

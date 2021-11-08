@@ -49,9 +49,15 @@ import Grade from './components/pages/subscription/Grade';
 import SubRegister from './components/pages/subscription/Register';
 import ConfirmSubPkg from './components/pages/subscription/ConfirmSubPkg';
 import SubscriptionComplete from './components/pages/subscription/SubscriptionComplete';
+import ConfirmSubPkgComplete from './components/pages/subscription/ConfirmSubPkgComplete';
 import CancelComplete from './components/pages/subscription/CancelComplete';
 import UpdateComplete from './components/pages/subscription/UpdateComplete';
 import KakaoLoginCallback from './components/oauth/KakaoLoginCallback';
+import MySubShips from './components/pages/user/MySubShips';
+import ChangeAddressAndDueDate from './components/elements/widgets/subscription/ChangeAddressAndDueDate';
+import RecommendList from "./components/pages/recommendlist/RecommendList";
+import MySubPkgDetail from './components/pages/user/MySubPkgDetail';
+
 
 
 function App() {
@@ -62,7 +68,7 @@ function App() {
       {/* <ToTop> */}
         <Switch>
           <Route exact path="/"><Home /></Route>
-          <Route exact path="/compare"><Compare /></Route>
+          <Route exact path="/compare" component={Compare}></Route>
           <Route exact path="/cart" component={Cart}></Route>
           <Route exact path="/wishlist"><Wishlist /></Route>
           <Route exact path="/features"><Features /></Route>
@@ -73,9 +79,10 @@ function App() {
           <Redirect exact from="/productlist/:selCategoryName/reload" to="/productlist/:selCategoryName" />
           <Route exact path="/productlist"><ProductList /></Route>
           <Route exact path="/packagelist"><PackageList /></Route>
+          <Route exact path="/recommendlist"><RecommendList /></Route>
           <Route exact path="/packagedetail/:id" component={PackageDetail}></Route>
           <Route exact path="/myaccount"><MyAccount /></Route>
-          <Route exact path="/login"><Login /></Route>
+          <Route exact path="/login" component={Login}></Route>
           <Route exact path="/oauth/callback/kakao" component={KakaoLoginCallback}></Route>
           <Route exact path="/register" component={Register}></Route>
           <Route exact path="/preference" component={Preference}></Route>
@@ -84,9 +91,11 @@ function App() {
         <Route exact path="/mypage/myInfo" ><MyInfoEdit /></Route>
         <Route exact path="/mypage/myInfoEdit" component={UserDetailEdit}></Route>
           <Route exact path="/mypage/myOrder"><MyOrder /></Route>
+          <Route exact path="/mypage/myship"><MySubShips/></Route>
+          <Route exact path="/mypage/mysubpkgdetail" component={MySubPkgDetail}></Route>
           {/* <Route exact path="/mypage/myReview"><MyReview /></Route> */}
           <Route exact path="/mypage/shipping"><ShippingTable /></Route>
-          <Route exact path="/review/register"><ReviewForm /></Route>
+          <Route exact path="/review/register" component={ReviewForm}></Route>
           <Route exact path="/mypage/review/list"><UserReviewList /></Route>
           <Route exact path="/review/list"><ProductReviewList /></Route>
           <Route exact path="/review/list"><PkgReviewList /></Route>
@@ -106,6 +115,8 @@ function App() {
           <Route exact path="/subscription/subscriptioncomplete" component={SubscriptionComplete} />
           <Route exact path="/subscription/cancelcomplete" component={CancelComplete} />
           <Route exact path="/subscription/updatecomplete" component={UpdateComplete} />
+          <Route exact path="/subscription/confirmSubPkgcomplete" component={ConfirmSubPkgComplete} />
+          <Route exact path="/subscription/ChangeAddressAndDueDate/:id/:postcode/:address/:addressDetail/:dueDate" component={ChangeAddressAndDueDate} />
         </Switch>
       {/* </ToTop> */}
     </BrowserRouter>

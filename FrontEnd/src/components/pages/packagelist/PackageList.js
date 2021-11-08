@@ -1,7 +1,7 @@
 import Header from '../../layout/Header';
 import Footer from '../../layout/Footer';
 import Bread from '../../elements/ui/Bread';
-import SidePackage from '../../elements/widgets/productlist/SidePackage';
+import SidePackage from '../../elements/widgets/packagelist/SidePackage';
 import PackageShop from '../../elements/widgets/packagelist/PackageShop';
 
 import React, {useEffect, useState} from 'react';

@@ -16,6 +16,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import axios from 'axios'
 
 const Login = (props) => {
 
@@ -47,18 +48,46 @@ const Login = (props) => {
       return;
     }
 
+    let body ={
+      userId: id,
+      password: password
+    }
+
+    // let response =
+    //   axios.post("/user-service/login", body)
+    //     .then((res) => {
+    //       console.log(res)
+    //       if (res.status === 200) {
+
+    //         const { accessToken } = res.headers.token;
+    //         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+
+    //         window.localStorage.setItem('isLoggedIn', 'true')
+    //         window.localStorage.setItem('token', res.headers.token)
+    //         window.localStorage.setItem('userid', res.headers.userid)
+    //         window.localStorage.setItem('role', res.headers.role)
+    //         window.location.href = "/";
+    //       }
+    //       else {
+    //         alert("아이디 혹은 비밀번호가 틀렸습니다");
+    //       }
+    //     })
+    //     .catch(err => {
+    //       alert("아이디 혹은 비밀번호가 틀렸습니다");
+    //     })
     
-      if(id === "mailkit.admin" && password === "mailkit") {
-        
-        window.localStorage.setItem('isLoggedIn', 'true')
-        history.push({
-          pathname: '/',
-          state: {}
-        });
-      }
-      else {
-        setIsRight("아이디 또는 비밀번호가 틀렸습니다.");
-      }
+    if (id === "admin.kits") {
+      window.localStorage.setItem('isLoggedIn', 'true')
+      window.localStorage.setItem('token',
+      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbi5raXRzIiwiZXhwIjoxNjM3MjI2MDUwfQ.jlhzWtkpaD2ErVuoa66oSMrq8OBQHz0o6lAUNKYa03cEZ7BlSMD7MmouEtBWJr2sAJrv0AaSzAmTGRPxOd03sg')
+      history.push({
+        pathname: '/',
+        state: {}
+      });
+    }
+    else {
+      setIsRight("아이디 또는 비밀번호가 틀렸습니다.");
+    }
 
   }
 

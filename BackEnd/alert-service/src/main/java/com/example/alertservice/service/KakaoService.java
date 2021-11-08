@@ -63,9 +63,9 @@ public class KakaoService {
 		return kakaoEntity;
 	}
 
-	public void sendKakaoTalkToMe(KakaoEntity kakao) {
+	public String sendKakaoTalkToMe(KakaoEntity kakao) {
 		String uri = KAKAO_API_HOST + "/v2/api/talk/memo/send";
-		httpCallService.CallwithToken(Const.POST, uri, kakao.getAccess_token(),
+		return httpCallService.CallwithToken(Const.POST, uri, kakao.getAccess_token(),
 				"template_id="+ kakao.getTemplate_id() +
 						"&template_args="+utilService.template_args(kakao.getUserId()));
 	}

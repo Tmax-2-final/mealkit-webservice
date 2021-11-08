@@ -1,17 +1,31 @@
 import React, {useState, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import Rating from '../../ui/Rating';
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
-export default function ComareTable() {
-
+export default function CompareTable(props) {
     const [myPackageDatas, setMyPackageDatas] = useState([]);
     const [columNumber, setColumNumber] = useState(4);
+    const [patalogData, setPatalogData] = useState();
+    const [pkgMgtData, setPkgMgtData] = useState([]);
+    const history = useHistory();
+    let token = localStorage.getItem('token');
+    let userId = localStorage.getItem('userid');
+
+    console.log(token);
+
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
+
 
     let process = require('../../../../myProcess.json');
 
     useEffect(() => {
-        axios.get("/catalog-service/hello1/mypackage")
+        axios.get(`/catalog-service/${userId}/mypackage`, {
+            headers : headers
+        })
             .then(res => {
                 setMyPackageDatas(res.data);
                 console.log(res.data);
@@ -21,36 +35,40 @@ export default function ComareTable() {
     console.log(myPackageDatas);
 
 
-    const handleDelete = (id) => {
 
-        axios.delete(`/catalog-service/hello1/mypackage/${id}`)
+
+
+    const createPatalog = () => {
+
+
+
+
+    }
+
+    const handleDelete = (id, e) => {
+        e.preventDefault();
+        console.log(id);
+
+        axios.delete(`/catalog-service/${userId}/mypackage/${id}`, {
+            headers : headers
+        })
             .then(res => {
                 alert("삭제 되었습니다.")
-                axios.get(`/catalog-service/mypackage`)
+                axios.get(`/catalog-service/${userId}/mypackage`,{
+                    headers : headers
+                })
                     .then(data => {
                         console.log(data.data);
                         setMyPackageDatas(data.data);
                         // setCatalogDatas(data.data);
                     })
             })
-        
-        // fetch(`http://${process.IP}:${process.PORT}/compare/${id}`,{
-        //     method: "DELETE"
-        // }).then(
-        //     alert("삭제되었습니다."),
-        //     fetch(`http://${process.IP}:${process.PORT}/compare`)
-        //     .then(res => {
-        //         return res.json();
-        //     })
-        //     .then(data => {
-        //         setMyPackageDatas(data);
-        //         console.log(data);
-        //     })
-        // )
+
     }
 
-    const handleAllDelete = (id) => {
-        axios.delete(`/catalog-service/hello1/mypackage`)
+    const handleAllDelete = (e) => {
+        e.preventDefault();
+        axios.delete(`/catalog-service/${userId}/mypackage`)
             .then(res => {
                 alert("삭제 되었습니다.")
                 axios.get(`catalog-service/mypackage`)
@@ -60,6 +78,9 @@ export default function ComareTable() {
                     })
             })
     }
+
+
+
 
 
     const comparelist01 = myPackageDatas.map((item, index) => (
@@ -73,7 +94,7 @@ export default function ComareTable() {
                     </Link>
                 </div>
                 <div className="compare-remove">
-                    <button onClick={()=>handleDelete(item.myPkgId)}><i className="las la-trash"></i></button>
+                    <button onClick={(e)=>handleDelete(item.myPkgId, e)}><i className="las la-trash"></i></button>
                 </div>
                 <div className="product-content text-center">
                     <h3><Link to={`/packagedetail/${item.catalogEntity.catalogId}`}>{item.catalogEntity.name}</Link></h3>
@@ -95,52 +116,88 @@ export default function ComareTable() {
             </div>
         </div>
 
-    )).slice(0, 7);
+    )).slice(0, 30);
 
 
+    const confirmSubPkgHandler = (e) => {
 
-    // const comparelist01 = myPackageDatas.map(item => (
-    //
-    //     <td className="product-image-title">
-    //         <div className="compare-remove">
-    //             <button onClick={()=>handleDelete(item.catalogEntity.catalogId)}><i className="las la-trash"></i></button>
-    //         </div>
-    //         <div className="product-img">
-    //         <Link className="image" to={`/packagedetail/${item.catalogEntity.catalogId}`}><img className="img-fluid" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.catalogEntity.image1}`} alt=""/></Link>
-    //         <div className="product-title">
-    //             <Link className="image" to={`/packagedetail/${item.catalogEntity.catalogId}`}>{item.catalogEntity.name}</Link>
-    //         </div>
-    //         </div>
-    //         {/*<div className="compare-btn">*/}
-    //         {/*    <Link className="image" to={`/packagedetail/${item.catalogEntity.catalogId}`}>패키지 상세 페이지</Link>*/}
-    //         {/*</div>*/}
-    //     </td>
-    // )).slice(0,7);
+        let body = {
+            name: userId +"님의 패키지",
+            category: "유저 패키지",
+            rating: "3",
+            image: "01.jpg"
+        }
 
-    // const comparelist02 = myPackageDatas.map(item => (
-    //     <td className="product-price">
-    //         {/*<span className="amount old">{item.unitPrice.toFixed(2)}</span>*/}
-    //         <span className="amount">{item.catalogEntity.unitPrice}</span>
-    //     </td>
-    // )).slice(0,7);
+        console.log(body);
 
-    // const comparelist03 = myPackageDatas.map(item => (
-    //     <td className="product-desc">
-    //         <p>N/A</p>
-    //     </td>
-    // )).slice(0,7);
+        axios.post(`/catalog-service/${userId}/patalogs`, body,{
+            headers: headers
+        } )
+            .then(res => {
+                console.log(res)
+                if (res.status == 201) {
+                    alert("상품 등록이 완료 되었습니다.");
+                    console.log(res.data);
+                    axios.get(`/catalog-service/${userId}/firstpatalogs`, {
+                        headers : headers
+                    } )
+                        .then(res => {
+                            setPatalogData(res.data);
+                            console.log(res.data);
+                            let jsonArray = new Array();
+                            myPackageDatas.map( item=> {
+                                let jsonObj = new Object();
+                                jsonObj.catalogId = item.catalogEntity.catalogId;
+                                jsonObj.patalogId = res.data.patalogId;
+                                jsonObj = JSON.stringify(jsonObj);
+                                jsonArray.push(JSON.parse(jsonObj));
+                            })
+                            setPkgMgtData(jsonArray);
+                            console.log(jsonArray);
+                            console.log(pkgMgtData);
+                            axios.post(`/catalog-service/${userId}/pkgmgt`, jsonArray, {
+                                headers : headers
+                            })
+                                .then(res => {
+                                    console.log(res)
+                                    if(res.status == 201){
+                                        console.log(res.data);
+                                    }
+                                    else{
+                                        console.log(res);
+                                        alert("오류 발생")
+                                    }
+                                })
+                        })
 
-    // const comparelist04 = myPackageDatas.map(item => (
-    //     <td className="product-rating">
-    //         {item.rating && item.rating > 0 ? (
-    //             <Rating ratingValue={item.rating} />
-    //         ) : (
-    //         ""
-    //         )}
-    //     </td>
-    // )).slice(0,7);
 
-    
+                }
+                else if(res.status === 200) {
+                    alert("장바구니에 동일한 상품이 있어 수량을 변경했습니다.");
+
+                }
+                else {
+                    console.log(res);
+                    alert("오류 발생. 장바구니에 상품이 담기지 않았습니다.")
+                }
+            })
+            .catch(err => {
+                alert("다시 다시 입력해주세요.");
+                console.log(body);
+            });
+
+
+        e.preventDefault();
+
+        console.log(props);
+
+        history.push({
+            pathname: "/subscription/confirmusubpkg",
+            state: {
+                myPkgData : myPackageDatas
+            }
+        })
+    }
 
     return(
         <div className="compare-main-area pt-90 pb-100">
@@ -149,10 +206,10 @@ export default function ComareTable() {
                     <div className="col-lg-12">
                         <div className="cart-shiping-update-wrapper">
                             <div className="cart-shiping-update">
-                                <a href="/packagelist">구독하기</a>
+                                <Link to="#" onClick={confirmSubPkgHandler}>패키지 확정</Link>
                             </div>
                             <div className="cart-clear">
-                                <button onClick={()=>handleAllDelete("hello1")}>패키지 비우기</button>
+                                <button onClick={handleAllDelete}>패키지 비우기</button>
                             </div>
                         </div>
                         <div className="compare-page-content">

@@ -3,7 +3,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 
 // OAuth2RedirectHandler;
-const KakaoLoginCallback = () => {
+const KakaoLoginCallback = (props) => {
 
     const [loading, setLoading] = useState(true);
 
@@ -23,7 +23,33 @@ const KakaoLoginCallback = () => {
                     window.localStorage.setItem('oauth', res.headers.oauth)
 
                     setLoading(!loading);
-                    window.location.href="/";
+                    
+                    axios.get(`/user-service/users/${res.headers.userid}/preference`, {
+                        headers: {
+                            Authorization: `Bearer ${res.headers.token}`
+                        }
+                    })
+                        .then((res) => {
+                            console.log(res)
+                            if (res.status === 200) {
+                                if (res.data.result === false) {
+                                    props.history.push({
+                                        pathname: '/preference'
+                                    })
+                                }
+                                else {
+                                    window.location.href = '/'
+                                }
+                            }
+                            else {
+                                window.location.href = '/'
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            window.location.href = '/'
+                        })
+
                 }
                 else {
                     alert("소셜 로그인 실패");

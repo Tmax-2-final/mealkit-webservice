@@ -15,7 +15,11 @@ import PackageDetailRight from "./PackageDetailRight";
 
 export default function PackageTop1({props, packageData}) {
     useEffect(()=>{
-    },[packageData])
+    },[])
+
+    console.log(packageData);
+
+
 
     const [value, setValue] = useState('1');
 
