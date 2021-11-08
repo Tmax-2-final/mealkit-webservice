@@ -24,13 +24,31 @@ const KakaoLoginCallback = (props) => {
 
                     setLoading(!loading);
                     
-                    axios.get(`/user-service/users/preference/` + res.headers.userid)
-                    // 선호도 조사가 되지 않았으면 일로
-                    // props.history.push({
-                    //     pathname: ,
-                    //
-                    // })
-                    // 되어있으면 일로
+                    axios.get(`/user-service/users/${res.headers.userid}/preference`, {
+                        headers: {
+                            Authorization: `Bearer ${res.headers.token}`
+                        }
+                    })
+                        .then((res) => {
+                            console.log(res)
+                            if (res.status === 200) {
+                                if (res.data.result === false) {
+                                    props.history.push({
+                                        pathname: '/preference'
+                                    })
+                                }
+                                else {
+                                    window.location.href = '/'
+                                }
+                            }
+                            else {
+                                window.location.href = '/'
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            window.location.href = '/'
+                        })
 
                 }
                 else {

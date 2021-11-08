@@ -247,4 +247,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(responsePrfr);
     }
 
+    @ApiOperation(value = "특정 회원이 선호도 조사를 마쳤는지 점검", notes = "0: 선호도 안함 false, 1: 선호도 함 true")
+    @GetMapping("/users/{userId}/preference")
+    public ResponseEntity<Map<String, Boolean>> getUserPrfrDone(@PathVariable("userId") String userId) { // 0: 선호도 안함 false, 1: 선호도 함 true
+        Map<String, Boolean> result = new HashMap<>();
+        Boolean data = userService.getUserPrfrDone(userId);
+        result.put("result", data);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
 }

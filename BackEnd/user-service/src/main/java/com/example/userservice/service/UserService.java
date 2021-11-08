@@ -65,4 +65,7 @@ public interface UserService extends UserDetailsService {
 
     /* 특정 회원의 선호도 수정 */
     void updatePrfr(PrfrDto prfrDto, String userId, Long prfrId);
+
+    /* 특정 회원의 선호도 조사 완료 여부 */
+    boolean getUserPrfrDone(String userId);
 }

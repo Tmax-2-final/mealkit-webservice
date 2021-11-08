@@ -55,22 +55,22 @@ export default function Preference(props) {
 
     const ageHandler = (e) => {
         e.preventDefault();
-        alert(e.target.value);
         setAge(e.target.value);
     };
 
     const genderHandler = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
+        console.log(e.target.value)
         setGender(e.target.value);
     };
 
     const cookingtimeHandler = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         setCookingtime(e.target.value);
     };
 
     const [age, setAge] = useState(10);
-    const [gender, setGender] = useState(0);
+    const [gender, setGender] = useState('0');
     const [cookingtime, setCookingtime] = useState(0);
     
     let themeText = "";
@@ -78,11 +78,6 @@ export default function Preference(props) {
 
     let SetThemeText = "";
     let SetFlavorText = "";
-    
-
-    
-    let userId = localStorage.getItem('userid');
-    let token = localStorage.getItem('token');
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -107,7 +102,9 @@ export default function Preference(props) {
             return;
         }
 
-
+        let userId = localStorage.getItem('userid');
+        let token = localStorage.getItem('token');
+        
         themeText = "";
 
         for (let item of checkedThemeItems) {
@@ -137,13 +134,16 @@ export default function Preference(props) {
 
         console.log(body);
      
-        axios.post("/user-service/users/preference", body)
+        axios.post("/user-service/users/preference", body, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then((res) => {
                 console.log(res)
                 if (res.status === 201) {
                     alert("선호도 등록이 완료되었습니다.")
-                    window.location.href = "/";
-
+                    window.location.href = '/'
                 }
                 else {
                     alert("다시 입력해주세요.");
@@ -214,8 +214,12 @@ export default function Preference(props) {
                                                             </div>
                                                             <div>
                                                                 <br /><br /><strong>2. 성별을 골라주세요</strong><br /><br />
-                                                                <input type="radio" name="gender" value="1" onChange={ genderHandler } style={{ width: "15px", height: "15px", margin: "8px" }} /> 여성
-                                                                <input type="radio" name="gender" value="2" onChange={ genderHandler } style={{ width: "15px", height: "15px", margin: "8px" }} /> 남성
+                                                                <input type="radio" name="gender" value="1" onChange={ genderHandler }
+                                                                        style={{ width: "15px", height: "15px", margin: "8px" }}
+                                                                        checked={gender === "1" ? true : false} /> 여성
+                                                                <input type="radio" name="gender" value="2" onChange={ genderHandler }
+                                                                        style={{ width: "15px", height: "15px", margin: "8px" }}
+                                                                        checked={gender === "2" ? true : false}/> 남성
                     
                                                             </div>
                                                             <br /><br />

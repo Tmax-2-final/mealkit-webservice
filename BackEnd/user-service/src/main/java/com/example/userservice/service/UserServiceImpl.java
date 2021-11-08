@@ -315,4 +315,13 @@ public class UserServiceImpl implements UserService{
 
         prfrRepository.save(prfrEntity);
     }
+
+    @Override
+    public boolean getUserPrfrDone(String userId) { // 0: 선호도 안함 false, 1: 선호도 함 true
+        Long userPrfr = prfrRepository.countByUserId(userId);
+        if(userPrfr == 0) {
+            return false;
+        }
+        return true;
+    }
 }
