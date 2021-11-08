@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import SideCategoryList from './SideCategoryList';
+import SideCategoryList from '../productlist/SideCategoryList';
 import axios from 'axios';
 
 export default function SidePackage({setCategoryName, setSearch}) {

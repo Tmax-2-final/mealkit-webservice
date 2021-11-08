@@ -28,7 +28,7 @@ public class PatalogEntity implements Serializable {
     @Column(nullable = true)
     private Double rating;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String category;
 
     @Column(nullable = false, updatable = false, insertable = false)

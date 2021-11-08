@@ -4,12 +4,14 @@ import Bread from '../../elements/ui/Bread';
 import CompareTable from '../../elements/widgets/comparetable/CompareTable';
 import { Fragment } from 'react';
 
-export default function Compare() {
+export default function Compare({props}) {
     return(
         <Fragment>
             <Header />
             <Bread productName = "패키지 직접 제작"/>
-            <CompareTable />
+            <CompareTable
+                props = {props}
+            />
             <Footer />
         </Fragment>
     );
