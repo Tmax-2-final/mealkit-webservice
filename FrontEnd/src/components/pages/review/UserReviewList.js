@@ -39,12 +39,12 @@ export default function UserReviewList(props) {
                 productUrl={`test3`}
             />
             <section id="mypage">
-                <div className="container">
+                
                     <div className="row">
-                        <div className="col-3">
+                        <div className="col-2 offset-1">
                             <Sidebar />
                         </div>
-                        <div className="col-9">
+                        <div className="col-8 offset-1">
                             <div className="row">
                                 {/* <div className="col-lg-7 col-md-12 ml-auto mr-auto"> */}
                                 <div className="login-register-wrapper">
@@ -66,7 +66,7 @@ export default function UserReviewList(props) {
                             </div>
                         </div>
                     </div>
-                </div>
+                
                 <br /><br /><br />
             </section>
             {/*<ProductBottom/>*/}

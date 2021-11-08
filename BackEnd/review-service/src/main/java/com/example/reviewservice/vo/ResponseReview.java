@@ -14,6 +14,8 @@ public class ResponseReview {
     private Long pkgId;
     private Integer orderType;
     private Long productId;
+    private String productName;
+    private String pkgName;
     private String userId;
     private Date createdAt;
     private Date modifiedAt;

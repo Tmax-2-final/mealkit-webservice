@@ -71,7 +71,7 @@ const Sidebar = () => {
                         <div className="sidebar-blog-content">
 
                             <h4>
-                                <Link to={process.env.PUBLIC_URL + "/mypage/myInfo"}>
+                                <Link to={process.env.PUBLIC_URL + "/mypage/myInfoEdit"}>
                                     개인 정보 수정
                                 </Link>
                             </h4>
