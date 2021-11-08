@@ -157,16 +157,18 @@ function MyPage(props) {
 
                                                         </ul>
                                                     </div>
+                                                    <div className="text-right">
+                                                        <button className="btn btn-outline-primary btn-sm" type="submit" onClick={subChangeHandler} >
+                                                            <span>구독변경</span>
+                                                        </button>
+                                                        <button className="btn btn-outline-primary btn-sm ml-10" type="submit" onClick={subCancelHandler}>
+                                                            <span>구독취소</span>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <button className="btn btn-outline-primary btn-sm" type="submit" onClick={subChangeHandler} >
-                                        <span>구독변경</span>
-                                    </button>
-                                    <button className="btn btn-outline-primary btn-sm" type="submit" onClick={subCancelHandler}>
-                                        <span>구독취소</span>
-                                    </button>
                                 </div>
                             </div>
                         </div>

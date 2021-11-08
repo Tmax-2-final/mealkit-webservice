@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import Bread from '../../elements/ui/Bread';
 import Footer from '../../layout/Footer';
 import Header from '../../layout/Header';
@@ -8,6 +8,7 @@ import axios from 'axios';
 function Cancel(props) {
     const userId = localStorage.getItem('userid');
     const token = localStorage.getItem('token');
+    const [subscriptionData, setSubscriptionData] = useState({});
 
     const headers = {
         Authorization: `Bearer ${token}`
@@ -58,6 +59,8 @@ function Cancel(props) {
                         console.log(`====== 특정회원 구독 조회 DATA INFO ======`);
                         console.log(res.data); 
                         console.log(`========================================`);
+
+                        setSubscriptionData(res.data);
         
                         const cancelStatus = '3';
         
@@ -90,7 +93,9 @@ function Cancel(props) {
                 productName = "구독 취소"
                 productUrl = "/subscription/cancel"
             />
-            <CancelDetail/>
+            <CancelDetail
+                subscriptionData = {subscriptionData}
+            />
             <Footer/>
         </Fragment>
     );
