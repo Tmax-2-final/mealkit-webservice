@@ -62,23 +62,6 @@ public class AlertController {
                 env.getProperty("token.secret"), env.getProperty("token.expiration_time"), env.getProperty("gateway.ip"));
     }
 
-    @ApiOperation(value = "이메일 테스트 발송", notes="이메일 테스트 발송")
-    @GetMapping("/send-test")
-    public MailEntity sendTestMail(String email) {
-        MailEntity mailEntity = new MailEntity();
-        try {
-            mailEntity.setAddress(email);
-            mailEntity.setTitle("테스트 발송 이메일입니다.");
-            mailEntity.setMessage("안녕하세요. 반가워요!");
-
-            mailService.sendMail(mailEntity);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return mailEntity;
-    }
-
     @ApiOperation(value = "이메일 인증", notes="회원가입 본인 인증용 이메일 발송")
     @GetMapping("/alerts/email")
     public ResponseEntity<String> createUserCheckEmail(String email) {
@@ -136,17 +119,18 @@ public class AlertController {
 
     @ApiOperation(value="알림 발송", notes="알림 코드에 따른 알림 발송(메일&카카오)")
     @PostMapping("/alerts")
-    public Map<String, Integer> sendAndSaveAlerts(@RequestBody RequestAlert requestAlert) {
-        Map<String, Integer> result = new HashMap<>();
+    public Map<String, String> sendAndSaveAlerts(@RequestBody RequestAlert requestAlert) {
+        Map<String, String> result = new HashMap<>();
         // 카카오 알림 발송 코드
         if(requestAlert.getOauth() != null && requestAlert.getOauth().equals("kakao")) {
             log.info("카카오 알림 발송 시작");
-            // 0. 토큰 만료 기간부터 파악, 만료되었다면 갱신이 먼저
+            // 0. 토큰 만료 기간부터 파악, 만료되었다면 갱신이 먼저 - 불가능함
             // kakaoService.refreshKakaoToken();
             // 1. 카카오 메세지 발송을 위한 카카오 알림 폼 제작
             KakaoEntity kakaoEntity = kakaoService.createKakaoForm(requestAlert);
             // 2. 카카오 메세지 발송
-            kakaoService.sendKakaoTalkToMe(kakaoEntity);
+            String kakaoTalkResult = kakaoService.sendKakaoTalkToMe(kakaoEntity);
+            result.put("kakao_result_code", kakaoTalkResult);
             log.info("카카오 알림 발송 완료");
         }
         // 이메일 발송 코드
@@ -158,7 +142,7 @@ public class AlertController {
             // 3. 알림 발송
             mailService.sendMail(mailEntity);
             // 4. 알림 전송 성공 코드
-            result.put("result_code", 0);
+            result.put("result_code", "0");
             log.info("이메일 알림 발송 성공, DB에 알림 내역 저장 시작");
             // 5. 알림 내역 db 저장
             alertService.saveAlerts(requestAlert.getType(), requestAlert.getUserId(), mailEntity);
@@ -166,14 +150,14 @@ public class AlertController {
         }
         catch(Exception e) {
             log.error("이메일 발송 실패");
-            result.put("result_code", 550);
+            result.put("result_code", "550");
         }
         return result;
     }
 
     @ApiOperation(value = "알림 내역 전체 페이징 조회", notes = "모든 알림 내역을 페이지별로 조회")
     @GetMapping("/alerts")
-    public ResponseEntity<Page<ResponseAlert>> getAllAlerts(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
+    public ResponseEntity<Page<ResponseAlert>> getAllAlerts(@PageableDefault(size = 8, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
         Page<AlertsEntity> alertsList = alertService.getAllAlerts(pageRequest);
         Page<ResponseAlert> responseAlertList = alertsList.map(
                 v -> new ModelMapper().map(v, ResponseAlert.class)
@@ -191,7 +175,7 @@ public class AlertController {
     public ResponseEntity<Page<ResponseAlert>> getAlertsByCode(@PathVariable("type") Integer type,
                                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value="startDate", required = false) LocalDate startDate,
                                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value="endDate", required = false) LocalDate endDate,
-                                                               @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
+                                                               @PageableDefault(size = 8, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
         Page<AlertsEntity> alertsList = null;
         // 1. 특정 기간이 포함된 경우
         if(startDate != null && endDate != null) {
@@ -219,7 +203,7 @@ public class AlertController {
                                                                @RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue,
                                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "startDate", required = false) LocalDate startDate,
                                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "endDate", required = false) LocalDate endDate,
-                                                               @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
+                                                               @PageableDefault(size = 8, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageRequest) {
         // 검색에 필요한 parameter 세팅 작업
         AlertsSearchParam alertsSearchParam = utilService.setAlertsSearchParameter(searchType, searchValue, startDate, endDate);
 

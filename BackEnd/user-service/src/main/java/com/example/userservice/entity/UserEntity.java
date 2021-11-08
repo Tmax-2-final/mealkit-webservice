@@ -57,8 +57,4 @@ public class UserEntity {
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     private Date modifiedAt;
 
-    @OneToMany(targetEntity = CartEntity.class)
-    @JoinColumn(name = "cartId")
-    List<CartEntity> cartEntityList = new ArrayList<>();
-
 }

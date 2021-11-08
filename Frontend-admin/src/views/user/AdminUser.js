@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { CPagination, CPaginationItem } from '@coreui/react';
+import { ClipLoader } from "react-spinners";
 
 const AdminUser = (props) => {
 
@@ -14,12 +15,17 @@ const AdminUser = (props) => {
 
   const [startDate, setStartDate] = useState(new Date("2021/01/01"));
   const [endDate, setEndDate] = useState(new Date());
+
   const [search, setSearch] = useState("");
+
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPages, setCurrentPages] = useState(1);
+  const [whatPages, setWhatPages] = useState(0); // 0 전체 회원 페이지, 1 검색 회원 페이지
 
   useEffect(() => {
 
     let token = localStorage.getItem('token');
-    const result = axios.get(`/user-service/users`, {
+    const result = axios.get(`/user-service/users?page=`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -27,14 +33,47 @@ const AdminUser = (props) => {
         .then((res) => {
           console.log(res.data);
           if (res.status === 200) {
-            setUserDatas(res.data);
+            setUserDatas(res.data.content);
+            setTotalPages(res.data.totalPages);
+            setCurrentPages(res.data.number + 1);
+            setWhatPages(0);
             setLoading(false)
           }
         })
   }, []);
 
-  const searchHandler = (e) => {
+  const searchChange = (e) => {
     e.preventDefault();
+    setSearch(e.target.value);
+  }
+
+
+  const rendering = () => {
+    const result = [];
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === currentPages) {
+        result.push(
+          <CPaginationItem
+            active
+            onClick={(e) => { pageHandler(i, whatPages, e) }}
+          >{i}</CPaginationItem>
+        )
+      }
+      else {
+        result.push(
+          <CPaginationItem
+            onClick={(e) => { pageHandler(i, whatPages, e) }}
+          >{i}</CPaginationItem>
+        )
+      }
+
+    }
+    return result;
+  }
+
+  const searchHandler = (pageNum, e) => {
+    e.preventDefault();
+    setLoading(true)
 
     let token = localStorage.getItem('token');
 
@@ -46,26 +85,55 @@ const AdminUser = (props) => {
 
     console.log(body);
 
-    axios.post(`/user-service/users/date`, body, {
+    axios.post(`/user-service/users/date?page=${pageNum}`, body, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
       .then((res) => {
         console.log(res);
-        alert('검색을 시작합니다');
-        setUserDatas(res.data);
+        if(res.status === 200){
+          setUserDatas(res.data.content);
+          setTotalPages(res.data.totalPages);
+          setCurrentPages(res.data.number + 1);
+          setWhatPages(1);
+          setLoading(false)
+        }
       })
       .catch((err) => {
         console.log(err);
         alert('오류가 발생했습니다');
       })
-
   }
 
-  const searchChange = (e) => {
+  const pageHandler = (pageNum, pageFlag, e) => {
     e.preventDefault();
-    setSearch(e.target.value);
+    console.log(pageNum)
+    setLoading(true)
+    setCurrentPages(pageNum)
+    let token = localStorage.getItem('token')
+
+    if(pageFlag === 0) {
+      const reuslt = axios.get(`/user-service/users?page=`+pageNum, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then((res) => {
+        console.log(res.data)
+        if(res.status === 200) {
+          setUserDatas(res.data.content);
+          setTotalPages(res.data.totalPages);
+          setCurrentPages(res.data.number + 1);
+          setLoading(false)
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    }else if(pageFlag === 1) {
+      searchHandler(pageNum, e);
+    }
   }
 
   return (
@@ -82,8 +150,8 @@ const AdminUser = (props) => {
               endDate={endDate}
             />
           </div>
-          <div className="col-12 col-lg-1">
-            <span>~</span>
+          <div className="col-12 col-lg-1 mt-1" style={{ textAlign: "center" }}>
+            <span style={{ fontSize: "20px" }}>~</span>
           </div>
           <div className="col-12 col-lg-2">
             <DatePicker
@@ -95,29 +163,48 @@ const AdminUser = (props) => {
               minDate={startDate}
             />
           </div>
-          <div className="col-12 col-lg-4" >
-            <div className="pro-sidebar-search">
-              <form className="pro-sidebar-search-form">
-                <input
-                  onChange={searchChange}
-                  type="text"
-                  placeholder="사용자명 입력"
-                  value={search}
-                />
-                <button onClick={searchHandler}>
-                  <i className="las la-search" />
-                </button>
-
-              </form>
+          <div className="col-12 col-lg-5">
+            <div className="input-group">
+              <input
+                className="form-control"
+                onChange={searchChange}
+                type="text"
+                placeholder="고객 이름 입력"
+                value={search}
+              />
+              <button type="button" className="btn btn-primary" onClick={(e) => searchHandler(1, e)}>
+                <i className="fas fa-search" />
+              </button>
             </div>
           </div>
         </div>
       </div>
-      <UserTable
-        userDatas={userDatas}
-        setUserDatas={setUserDatas}
-        loading={loading}
-      />
+      {
+        loading ?
+          (
+            <div className="kako-login-loading-box" style={{ textAlign: "center", paddingTop: "250px" }}>
+              <ClipLoader
+                color="gray"
+                loading={loading}
+                size="50px" />
+            </div>
+          )
+          :
+          (
+            <div>
+              <UserTable
+                userDatas={userDatas}
+                setUserDatas={setUserDatas}
+                loading={loading}
+              />
+              <CPagination className="pb-40" aria-label="Page navigation example">
+                {rendering()}
+              </CPagination>
+            </div>
+            
+          )
+      }
+
       
     </Fragment>
   )

@@ -1,12 +1,10 @@
 import { CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
 import React from 'react';
-import { CPagination, CPaginationItem } from '@coreui/react';
-import { useHistory } from 'react-router';
 
 export default function UserTable({ alertDatas, setAlertDatas, loading }) {
 
     return (
-        <div className="cart-main-area pt-20 pb-30">
+        <div className="cart-main-area pt-20 pb-2">
             <div className="container">
                 {/* <h3 className="cart-page-title">회원 목록</h3> */}
                 <div className="row">
@@ -45,17 +43,6 @@ export default function UserTable({ alertDatas, setAlertDatas, loading }) {
 
                                     </CTableBody>
                                 </CTable>
-                                <CPagination aria-label="Page navigation example">
-                                    <CPaginationItem aria-label="Previous" disabled>
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </CPaginationItem>
-                                    <CPaginationItem active>1</CPaginationItem>
-                                    <CPaginationItem>2</CPaginationItem>
-                                    <CPaginationItem>3</CPaginationItem>
-                                    <CPaginationItem aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </CPaginationItem>
-                                </CPagination>
                             </div>
 
                         </div>

@@ -3,6 +3,7 @@ import { CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTabl
 import React from 'react';
 import { CPagination, CPaginationItem } from '@coreui/react';
 import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 
 
 export default function UserTable({ userDatas, setUserDatas, loading}){
@@ -11,22 +12,52 @@ export default function UserTable({ userDatas, setUserDatas, loading}){
 
     const userDetailHandler = (params, e) => {
         e.preventDefault();
-        alert(params.name);
+        console.log(params.name);
+
+        let birth = '';
+        if(!params.birth || params.birth === "") {
+            birth = '비공개'
+        }else {
+            birth = new Date(Date.parse(params.birth)).toLocaleString().split("오")[0]
+        }
+        let gender = '';
+        if(!params.gender || params.gender === 0) {
+            gender = '비공개'
+        }else {
+            if(params.gender === 1) {
+                gender = '남성';
+            }else{
+                gender = '여성';
+            }
+        }
+        let oauth = '';
+        if(!params.oauth || params.oauth === "") {
+            oauth = '자체 회원'
+        } else {
+            oauth = '카카오'
+        }
+
         history.push({
             pathname: '/users/detail',
             state: {
                 name: params.name,
                 userId: params.userId,
                 email: params.email,
-                birth: '1',
-                gender: '1',
+                birth: birth,
+                gender: gender,
                 createdAt: params.createdAt,
+                oauth: oauth,
             }
         })
     }
 
+    const deleteHandler = (userId, e) => {
+        e.preventDefault();
+        console.log(userId);
+    }
+
     return (
-        <div className="cart-main-area pt-20 pb-30">
+        <div className="cart-main-area pt-20 pb-2">
             <div className="container">
                 {/* <h3 className="cart-page-title">회원 목록</h3> */}
                 <div className="row">
@@ -50,14 +81,15 @@ export default function UserTable({ userDatas, setUserDatas, loading}){
                                             loading === false ?
                                             (
                                             userDatas.map((item, index) => (
-                                                <CTableRow key={index} onClick={(e) => userDetailHandler(item, e)}>
-                                                    <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
-                                                    <CTableDataCell>{item.name}</CTableDataCell>
-                                                    <CTableDataCell>{item.userId}</CTableDataCell>
-                                                    <CTableDataCell>{item.email}</CTableDataCell>
+                                                <CTableRow key={index}>
+                                                    {/* <input type="checkbox" style={{ width: '20px', height: '20px' }} /> */}
+                                                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                                                    <CTableDataCell onClick={(e) => userDetailHandler(item, e)}>{item.name}</CTableDataCell>
+                                                    <CTableDataCell onClick={(e) => userDetailHandler(item, e)}>{item.userId}</CTableDataCell>
+                                                    <CTableDataCell onClick={(e) => userDetailHandler(item, e)}>{item.email}</CTableDataCell>
                                                     <CTableDataCell>N</CTableDataCell>
                                                     <CTableDataCell>{new Date(Date.parse(item.createdAt)).toLocaleString().split("오")[0]}</CTableDataCell>
-                                                    <CTableDataCell>12<i className="fas fa-smile"></i></CTableDataCell>
+                                                    <CTableDataCell><Link onClick={(e) => deleteHandler(item.userId, e)}><i className="far fa-trash-alt"></i></Link></CTableDataCell>
                                                 </CTableRow>
                                             ))
                                             )
@@ -67,19 +99,7 @@ export default function UserTable({ userDatas, setUserDatas, loading}){
 
                                     </CTableBody>
                                 </CTable>
-                                <CPagination aria-label="Page navigation example">
-                                    <CPaginationItem aria-label="Previous" disabled>
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </CPaginationItem>
-                                    <CPaginationItem active>1</CPaginationItem>
-                                    <CPaginationItem>2</CPaginationItem>
-                                    <CPaginationItem>3</CPaginationItem>
-                                    <CPaginationItem aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </CPaginationItem>
-                                </CPagination>
                             </div>
-                            
                         </div>
                     </div>
                 </div>
