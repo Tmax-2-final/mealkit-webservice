@@ -6,14 +6,28 @@ export default function PackageDetailLeft2({packageData}) {
     const [imageCurrentNo, setImageCurrentNo] = useState(0);
     const [ pkgMgtDatas, setPkgMgtDatas] = useState();
 
+    console.log(packageData);
+
+    let token = localStorage.getItem('token');
+    let userId = localStorage.getItem('userid');
+
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
+
 
     useEffect(()=> {
-        axios.get(`/catalog-service/pkgmgt/${packageData.patalogId}`)
+        axios.get(`/catalog-service/${userId}/pkgmgt/${packageData.patalogId}`,{
+            headers: headers
+        })
             .then(res => {
                 setPkgMgtDatas(res.data);
                 console.log(res.data);
-            }, [])
-    })
+
+            })
+    },[packageData])
+
+    console.log(pkgMgtDatas);
 
 
         const images = [

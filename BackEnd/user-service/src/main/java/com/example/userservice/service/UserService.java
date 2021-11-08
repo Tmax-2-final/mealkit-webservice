@@ -1,6 +1,8 @@
 package com.example.userservice.service;
 
+import com.example.userservice.dto.PrfrDto;
 import com.example.userservice.dto.UserDto;
+import com.example.userservice.entity.PrfrEntity;
 import com.example.userservice.entity.UserEntity;
 import com.example.userservice.vo.RequestDate;
 import org.springframework.data.domain.Page;
@@ -48,4 +50,19 @@ public interface UserService extends UserDetailsService {
     /* 유저 수 조회 */
     Long getNewUserCount();
     Long getTotalUserCount();
+
+    /* 선호도 조사 등록하기 */
+    PrfrDto createPrfr(PrfrDto prfrDto);
+
+    /* 전체 선호도 조회 */
+    Iterable<PrfrEntity> getAllPrfrs();
+
+    /* 특정 회원의 선호도 조회 */
+    Iterable<PrfrEntity> getPrfrsByUserId(String userId);
+
+    /* 특정 회원의 선호도 삭제 */
+    void deletePrfr(String userId ,Long prfrId);
+
+    /* 특정 회원의 선호도 수정 */
+    void updatePrfr(PrfrDto prfrDto, String userId, Long prfrId);
 }

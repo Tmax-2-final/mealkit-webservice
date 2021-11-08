@@ -1,5 +1,6 @@
 package com.example.userservice.jpa;
 
+import com.example.userservice.entity.PrfrEntity;
 import com.example.userservice.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

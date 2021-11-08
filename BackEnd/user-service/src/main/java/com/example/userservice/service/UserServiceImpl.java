@@ -2,8 +2,11 @@ package com.example.userservice.service;
 
 import com.example.userservice.client.CatalogServiceClient;
 import com.example.userservice.client.OrderServiceClient;
+
+import com.example.userservice.dto.PrfrDto;
 import com.example.userservice.dto.UserDto;
-import com.example.userservice.entity.UserEntity;
+import com.example.userservice.entity.*;
+import com.example.userservice.jpa.PrfrRepository;
 import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.vo.RequestDate;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +40,11 @@ import java.util.*;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final PrfrRepository prfrRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final Environment env;
     private final RestTemplate restTemplate;
+
 
     // openFeign
     private final OrderServiceClient orderServiceClient;
@@ -48,6 +53,7 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
+                           PrfrRepository prfrRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
                            Environment env,
                            RestTemplate restTemplate,
@@ -55,12 +61,14 @@ public class UserServiceImpl implements UserService{
                            CatalogServiceClient catalogServiceClient,
                            CircuitBreakerFactory circuitBreakerFactory) {
         this.userRepository = userRepository;
+        this.prfrRepository = prfrRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.env = env;
         this.restTemplate = restTemplate;
         this.orderServiceClient = orderServiceClient;
         this.catalogServiceClient = catalogServiceClient;
         this.circuitBreakerFactory = circuitBreakerFactory;
+
     }
 
     @Override
@@ -266,5 +274,44 @@ public class UserServiceImpl implements UserService{
         }
         String[] result = new String[emptyNames.size()];
         return emptyNames.toArray(result);
+
+    public PrfrDto createPrfr(PrfrDto prfrDto) {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        PrfrEntity prfrEntity = mapper.map(prfrDto, PrfrEntity.class);
+
+        prfrRepository.save(prfrEntity);
+
+        return prfrDto;
+    }
+
+    @Override
+    public Iterable<PrfrEntity> getAllPrfrs(){
+        return prfrRepository.findAll();
+    }
+
+    @Override
+    public Iterable<PrfrEntity> getPrfrsByUserId(String userId) {
+        return prfrRepository.findAllByUserId(userId);
+    }
+
+    @Override
+    public void deletePrfr(String userId ,Long prfrId) {
+        prfrRepository.deleteByUserIdAndPrfrId(userId, prfrId);
+    }
+
+    @Override
+    public void updatePrfr(PrfrDto prfrDto, String userId, Long prfrId) {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+
+        PrfrEntity prfrEntity = prfrRepository.findByUserIdAndPrfrId(userId, prfrId);
+
+        prfrEntity.setTheme(prfrDto.getTheme());
+        prfrEntity.setFlavor(prfrDto.getFlavor());
+        prfrEntity.setCookingtime(prfrDto.getCookingtime());
+
+        prfrRepository.save(prfrEntity);
     }
 }

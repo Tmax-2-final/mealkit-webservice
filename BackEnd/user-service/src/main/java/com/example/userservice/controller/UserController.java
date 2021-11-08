@@ -1,6 +1,8 @@
 package com.example.userservice.controller;
 
+import com.example.userservice.dto.PrfrDto;
 import com.example.userservice.dto.UserDto;
+import com.example.userservice.entity.PrfrEntity;
 import com.example.userservice.entity.UserEntity;
 import com.example.userservice.service.UserService;
 import com.example.userservice.vo.*;
@@ -181,6 +183,67 @@ public class UserController {
         Long totalUser = userService.getTotalUserCount();
 
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseUserCount(newUser, totalUser));
+
+    @ApiOperation(value = "선호도 조사 등록", notes = "사용자의 선호도 조사 등록")
+    @PostMapping("/users/preference")
+    public ResponseEntity<ResponsePrfr> createPrfr(@RequestBody @Valid RequestPrfr prfr) {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        PrfrDto prfrDto = mapper.map(prfr, PrfrDto.class);
+        userService.createPrfr(prfrDto);
+        ResponsePrfr responsePrfr = mapper.map(prfrDto, ResponsePrfr.class);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responsePrfr);
+    }
+
+    @ApiOperation(value = "선호도 조회", notes = "관리자의 선호도 전체 목록 조회")
+    @GetMapping("/users/preference")
+    public ResponseEntity<Iterable<PrfrEntity>> getPrfr(){
+        Iterable<PrfrEntity> prfrList = userService.getAllPrfrs();
+        return ResponseEntity.status(HttpStatus.OK).body(prfrList);
+    }
+
+    @ApiOperation(value = "특정 회원 선호도 조회", notes = "특정 회원의 선호도 모두 조회")
+    @GetMapping("/users/preference/{userId}")
+    public ResponseEntity<List<ResponsePrfr>> getPrfr(@PathVariable("userId") String userId){
+        Iterable<PrfrEntity> prfrList = userService.getPrfrsByUserId(userId);
+        List<ResponsePrfr> responsePrfrList = new ArrayList<>();
+        prfrList.forEach(v -> {
+            System.out.println(v.getPrfrId());
+            responsePrfrList.add(new ModelMapper().map(v, ResponsePrfr.class));
+        });
+        return ResponseEntity.status(HttpStatus.OK).body(responsePrfrList);
+    }
+
+    @ApiOperation(value = "선호도 삭제", notes = "해당 고객이 자신이 작성한 선호도 삭제")
+    @DeleteMapping("/users/preference/{userId}/{prfrId}")
+    public ResponseEntity<ResponsePrfr> deletePrfr(@PathVariable("userId") String userId,
+                                                       @PathVariable("prfrId") Long prfrId){
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        try{
+            userService.deletePrfr(userId, prfrId);
+        } catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @ApiOperation(value = "선호도 수정", notes = "해당 고객이 자신이 작성한 선호도 수정")
+    @PutMapping("/users/preference/{userId}/{prfrId}")
+    public ResponseEntity<ResponsePrfr> updatePrfr(@RequestBody RequestPrfr requestPrfr,
+                                                       @PathVariable("userId") String userId,
+                                                       @PathVariable("prfrId") Long prfrId){
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        PrfrDto prfrDto = mapper.map(requestPrfr, PrfrDto.class);
+        userService.updatePrfr(prfrDto, userId, prfrId);
+        ResponsePrfr responsePrfr = mapper.map(prfrDto, ResponsePrfr.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responsePrfr);
     }
 
 }

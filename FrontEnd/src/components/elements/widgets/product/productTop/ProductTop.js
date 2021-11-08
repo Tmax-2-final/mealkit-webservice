@@ -74,12 +74,12 @@ export default function ProductTop({props, productData}) {
                     </div>
                 </div>
                 <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <div className="row">
+                    <div className="row mt-30">
                         <img src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/product-1-info.PNG`} className="img-fluid mx-auto" alt="" style={{width:"auto", maxHeight:"100%"}}/>
                     </div>
                 </div>
                 <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                    <div className="row">                    
+                    <div className="row mt-30">                    
                         <ReviewTable
                             reviewDatas={reviewDatas}
                             setReviewDatas={setReviewDatas}

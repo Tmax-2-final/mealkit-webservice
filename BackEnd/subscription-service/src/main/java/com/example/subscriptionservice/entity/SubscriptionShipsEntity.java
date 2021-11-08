@@ -3,6 +3,7 @@ package com.example.subscriptionservice.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -20,8 +21,17 @@ public class SubscriptionShipsEntity {
     @Column(nullable = false)
     private Long pkgId;
 
-    @Column(nullable = false, length = 200)
-    private String shipAddress;
+    @Column(nullable = false, length = 10)
+    private String postcode;
+
+    @Column(nullable = false, length = 100)
+    private String address;
+
+    @Column(nullable = false, length = 100)
+    private String addressDetail;
+
+    @Column(nullable = false)
+    private Character type;
 
     @Column(nullable = false, insertable = false)
     private Character status;
@@ -30,7 +40,7 @@ public class SubscriptionShipsEntity {
     private LocalDateTime startDate;
 
     @Column(nullable = false)
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
 
     @Column(nullable = false)
     private Long price;

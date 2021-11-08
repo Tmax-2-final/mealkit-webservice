@@ -7,6 +7,7 @@ import axios from "axios";
 
 
 export default function PackageDetailBottom({packageData}) {
+
     const [value, setValue] = useState('1');
 
     const [reviewCnt, setReviewCnt] = useState('1324')
@@ -31,12 +32,18 @@ export default function PackageDetailBottom({packageData}) {
     let userId = localStorage.getItem('userid');
 
 
+    console.log(packageData);
+
+
     useEffect(() => {
-        axios.get(`/catalog-service/pkgmgt/${packageData.patalogId}`)
+        axios.get(`/catalog-service/${userId}/pkgmgt/${packageData.patalogId}`)
             .then(res => {
                 setPkgMgtDatas(res.data);
                 console.log(res.data);
-            }, [])
+
+            })
+
+
 
         axios.get(`/review-service/reviews/${userId}`, {
             headers: {
@@ -47,7 +54,7 @@ export default function PackageDetailBottom({packageData}) {
                 console.log(data);
                 setReviewDatas(data.data);
             });
-    }, [pkgMgtDatas]);
+    }, [packageData]);
 
     
     return(

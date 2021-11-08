@@ -1,17 +1,28 @@
 import React, {useState, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import Rating from '../../ui/Rating';
 import axios from "axios";
 
-export default function ComareTable() {
-
+function ComareTable(props) {
     const [myPackageDatas, setMyPackageDatas] = useState([]);
     const [columNumber, setColumNumber] = useState(4);
+    const [patalogData, setPatalogData] = useState();
+    const [pkgMgtData, setPkgMgtData] = useState([]);
+
+    let token = localStorage.getItem('token');
+    let userId = localStorage.getItem('userid');
+
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
+
 
     let process = require('../../../../myProcess.json');
 
     useEffect(() => {
-        axios.get("/catalog-service/hello1/mypackage")
+        axios.get(`/catalog-service/${userId}/mypackage`, {
+            headers : headers
+        })
             .then(res => {
                 setMyPackageDatas(res.data);
                 console.log(res.data);
@@ -21,36 +32,37 @@ export default function ComareTable() {
     console.log(myPackageDatas);
 
 
+
+
+
+    const createPatalog = () => {
+
+
+
+
+    }
+
     const handleDelete = (id) => {
 
-        axios.delete(`/catalog-service/hello1/mypackage/${id}`)
+        axios.delete(`/catalog-service/${userId}/mypackage/${id}`, {
+            headers : headers
+        })
             .then(res => {
                 alert("삭제 되었습니다.")
-                axios.get(`/catalog-service/mypackage`)
+                axios.get(`/catalog-service/${userId}/mypackage`,{
+                    headers : headers
+                })
                     .then(data => {
                         console.log(data.data);
                         setMyPackageDatas(data.data);
                         // setCatalogDatas(data.data);
                     })
             })
-        
-        // fetch(`http://${process.IP}:${process.PORT}/compare/${id}`,{
-        //     method: "DELETE"
-        // }).then(
-        //     alert("삭제되었습니다."),
-        //     fetch(`http://${process.IP}:${process.PORT}/compare`)
-        //     .then(res => {
-        //         return res.json();
-        //     })
-        //     .then(data => {
-        //         setMyPackageDatas(data);
-        //         console.log(data);
-        //     })
-        // )
+
     }
 
     const handleAllDelete = (id) => {
-        axios.delete(`/catalog-service/hello1/mypackage`)
+        axios.delete(`/catalog-service/${userId}/mypackage`)
             .then(res => {
                 alert("삭제 되었습니다.")
                 axios.get(`catalog-service/mypackage`)
@@ -60,6 +72,9 @@ export default function ComareTable() {
                     })
             })
     }
+
+
+
 
 
     const comparelist01 = myPackageDatas.map((item, index) => (
@@ -95,7 +110,7 @@ export default function ComareTable() {
             </div>
         </div>
 
-    )).slice(0, 7);
+    )).slice(0, 30);
 
 
 
@@ -140,7 +155,85 @@ export default function ComareTable() {
     //     </td>
     // )).slice(0,7);
 
-    
+    const confirmSubPkgHandler = (e) => {
+
+        let body = {
+            name: "hello1님의 패키지",
+            category: userId + "님의 패키지",
+            rating: "3",
+            image: "01.jpg"
+        }
+
+        console.log(body);
+
+        axios.post(`/catalog-service/${userId}/patalogs`,{
+            headers: headers,
+            body: body
+        } )
+            .then(res => {
+                console.log(res)
+                if (res.status == 201) {
+                    alert("상품 등록이 완료 되었습니다.");
+                    console.log(res.data);
+                    axios.get(`/catalog-service/${userId}/firstpatalogs`, {
+                        headers : headers
+                    } )
+                        .then(res => {
+                            setPatalogData(res.data);
+                            console.log(res.data);
+                            let jsonArray = new Array();
+                            myPackageDatas.map( item=> {
+                                let jsonObj = new Object();
+                                jsonObj.catalogId = item.catalogEntity.catalogId;
+                                jsonObj.patalogId = res.data.patalogId;
+                                jsonObj = JSON.stringify(jsonObj);
+                                jsonArray.push(JSON.parse(jsonObj));
+                            })
+                            setPkgMgtData(jsonArray);
+                            console.log(jsonArray);
+                            console.log(pkgMgtData);
+                            axios.post(`/catalog-service/${userId}/pkgmgt`, {
+                                headers : headers,
+                                body : jsonArray
+                            })
+                                .then(res => {
+                                    console.log(res)
+                                    if(res.status == 201){
+                                        console.log(res.data);
+                                    }
+                                    else{
+                                        console.log(res);
+                                        alert("오류 발생")
+                                    }
+                                })
+                        })
+
+
+                }
+                else if(res.status === 200) {
+                    alert("장바구니에 동일한 상품이 있어 수량을 변경했습니다.");
+
+                }
+                else {
+                    console.log(res);
+                    alert("오류 발생. 장바구니에 상품이 담기지 않았습니다.")
+                }
+            })
+            .catch(err => {
+                alert("다시 다시 입력해주세요.");
+                console.log(body);
+            });
+
+
+        e.preventDefault();
+
+        props.history.push({        
+            pathname: "/subscription/confirmusubpkg",
+            state: {
+                myPkgData : myPackageDatas
+            }
+        })
+    }
 
     return(
         <div className="compare-main-area pt-90 pb-100">
@@ -149,7 +242,7 @@ export default function ComareTable() {
                     <div className="col-lg-12">
                         <div className="cart-shiping-update-wrapper">
                             <div className="cart-shiping-update">
-                                <a href="/packagelist">구독하기</a>
+                                <Link to="#" onClick={confirmSubPkgHandler}>패키지 확정</Link>
                             </div>
                             <div className="cart-clear">
                                 <button onClick={()=>handleAllDelete("hello1")}>패키지 비우기</button>
@@ -200,3 +293,5 @@ export default function ComareTable() {
         </div>
     );
 }
+
+export default withRouter(ComareTable);
