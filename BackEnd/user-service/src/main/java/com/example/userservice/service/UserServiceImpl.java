@@ -28,6 +28,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
@@ -89,6 +90,7 @@ public class UserServiceImpl implements UserService{
         return user;
     }
 
+    @Transactional
     @Override
     public UserDto createUser(UserDto userDto) {
         /* 권한 부여 */
@@ -193,6 +195,7 @@ public class UserServiceImpl implements UserService{
         return userRepository.findAll(pageRequest);
     }
 
+    @Transactional
     @Override
     public String updateUserPassword(UserDto userDto) {
         String randomPwd = UUID.randomUUID().toString().substring(0, 10);
@@ -209,6 +212,7 @@ public class UserServiceImpl implements UserService{
         return randomPwd;
     }
 
+    @Transactional
     @Override
     public void updateUsers(UserDto userDto) {
 
@@ -217,6 +221,11 @@ public class UserServiceImpl implements UserService{
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
         UserEntity updateUser = mapper.map(userDto, UserEntity.class);
+
+        if(userDto.getPwd() != null && !userDto.getPwd().equals("")) {
+            log.info("비밀번호도 함께 수정합니다.");
+            updateUser.setEncryptedPwd(bCryptPasswordEncoder.encode(userDto.getPwd())); // 비밀번호 암호화
+        }
 
         copyNonNullProperties(updateUser, originUser);
 
@@ -229,6 +238,7 @@ public class UserServiceImpl implements UserService{
 
     }
 
+    @Transactional
     @Override
     public void deleteUser(UserEntity userEntity) {
         userRepository.delete(userEntity);
@@ -276,6 +286,8 @@ public class UserServiceImpl implements UserService{
         return emptyNames.toArray(result);
     }
 
+    @Transactional
+    @Override
     public PrfrDto createPrfr(PrfrDto prfrDto) {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -297,11 +309,13 @@ public class UserServiceImpl implements UserService{
         return prfrRepository.findAllByUserId(userId);
     }
 
+    @Transactional
     @Override
     public void deletePrfr(String userId ,Long prfrId) {
         prfrRepository.deleteByUserIdAndPrfrId(userId, prfrId);
     }
 
+    @Transactional
     @Override
     public void updatePrfr(PrfrDto prfrDto, String userId, Long prfrId) {
         ModelMapper mapper = new ModelMapper();
