@@ -268,12 +268,13 @@ public class UserServiceImpl implements UserService{
         java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
 
         Set<String> emptyNames = new HashSet<String>();
-        for(java.beans.PropertyDescriptor pd : pds) {
+        for (java.beans.PropertyDescriptor pd : pds) {
             Object srcValue = src.getPropertyValue(pd.getName());
             if (srcValue == null) emptyNames.add(pd.getName());
         }
         String[] result = new String[emptyNames.size()];
         return emptyNames.toArray(result);
+    }
 
     public PrfrDto createPrfr(PrfrDto prfrDto) {
         ModelMapper mapper = new ModelMapper();

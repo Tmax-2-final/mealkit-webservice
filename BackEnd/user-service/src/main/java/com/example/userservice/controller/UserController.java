@@ -183,6 +183,7 @@ public class UserController {
         Long totalUser = userService.getTotalUserCount();
 
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseUserCount(newUser, totalUser));
+    }
 
     @ApiOperation(value = "선호도 조사 등록", notes = "사용자의 선호도 조사 등록")
     @PostMapping("/users/preference")
