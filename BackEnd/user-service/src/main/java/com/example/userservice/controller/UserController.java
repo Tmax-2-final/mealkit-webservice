@@ -7,6 +7,7 @@ import com.example.userservice.entity.UserEntity;
 import com.example.userservice.service.UserService;
 import com.example.userservice.vo.*;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/")
 public class UserController {
