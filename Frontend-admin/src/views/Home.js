@@ -7,8 +7,8 @@ import { ClipLoader } from "react-spinners";
 const Home = () => {
 
     const [loading, setLoading] = useState(true);
-    const [prevMonthMoney, setPrevMonthMoney] = useState(10); // 이전 달 매출 액
-    const [currentMonthMoney, setCurrentMonthMoney] = useState(20); // 현재 달 매출 액
+    const [prevMonthMoney, setPrevMonthMoney] = useState(0); // 이전 달 매출 액
+    const [currentMonthMoney, setCurrentMonthMoney] = useState(0); // 현재 달 매출 액
     const [totalMoney, setTotalMony] = useState(200); // 총 매출 액
     const [newSubscribe, setNewSubscribe] = useState(0); // 한달간 구독 주문 건수
     const [totalSubscribe, setTotalSubscribe] = useState(0); // 전체 구독 주문 건수
@@ -23,16 +23,35 @@ const Home = () => {
     useEffect(() => {
         async function loadData() {
             const token = localStorage.getItem('token')
-            // 1. 매출액 
-
+            const headers = {
+                Authorization: `Bearer ${token}`
+            }
+            // 1. 매출액
+            await axios.get(`subscription-service/subscription/revenue/total`, { headers : headers})
+            .then((res) => {
+                console.log(res.data)
+                if(res.status === 200) {
+                    setTotalMony(res.data)
+                }
+            })
+            await axios.get(`subscription-service/subscription/revenue/past`, { headers: headers })
+                .then((res) => {
+                    console.log(res)
+                    if (res.status === 200) {
+                        setPrevMonthMoney(res.data)
+                    }
+                })
+            await axios.get(`subscription-service/subscription/revenue/recent`, { headers: headers })
+                .then((res) => {
+                    console.log(res)
+                    if (res.status === 200) {
+                        setCurrentMonthMoney(res.data)
+                    }
+                })
             // 2. 구독 건수(신규, 전체)
 
             // 3. 유저 수(신규, 전체)
-            const resultByUser = await axios.get(`/user-service/users/count`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+            const resultByUser = await axios.get(`/user-service/users/count`, { headers: headers })
                 .then((res) => {
                     console.log(res.data);
                     if (res.status === 200) {
@@ -69,7 +88,7 @@ const Home = () => {
                                                     labels: ['이전 달', '현재 달'],
                                                     datasets: [
                                                         {
-                                                            label: '영업 이익(만원)',
+                                                            label: '영업 이익(원)',
                                                             backgroundColor: '#f87979',
                                                             data: [{prevMonthMoney}, {currentMonthMoney}],
                                                         },

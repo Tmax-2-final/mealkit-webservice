@@ -79,7 +79,7 @@ const Login = (props) => {
     if (id === "admin.kits") {
       window.localStorage.setItem('isLoggedIn', 'true')
       window.localStorage.setItem('token',
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbi5raXRzIiwiZXhwIjoxNjM2ODcyNjE3fQ.s4nW1tJoLzswgHLJyC2UPh_A3T44rilC2S2RxZgCr6FAG3-2NNU62StRfG0KTm_dCfgQkDL_kbRWj-jv8oaGUg')
+      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbi5raXRzIiwiZXhwIjoxNjM3MjI2MDUwfQ.jlhzWtkpaD2ErVuoa66oSMrq8OBQHz0o6lAUNKYa03cEZ7BlSMD7MmouEtBWJr2sAJrv0AaSzAmTGRPxOd03sg')
       history.push({
         pathname: '/',
         state: {}
