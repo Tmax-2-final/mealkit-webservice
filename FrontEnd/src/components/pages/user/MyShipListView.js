@@ -15,6 +15,12 @@ function MyShipListView(props) {
     }
 
     const openShipInfoHandler = e => {
+        // 상품 준비상태인 경우만 배송정보 변경 가능
+        if(shipData.status !== '1'){
+            alert("상품 준비중인 상태만 배송정보 변경이 가능합니다.");
+            return;
+        }
+
         popupWindow(`/subscription/ChangeAddressAndDueDate/${shipData.id}/${shipData.postcode}/${shipData.address}/${shipData.addressDetail}/${shipData.dueDate}`, '배송정보 변경', window, 600, 500);  
 
     }
@@ -56,13 +62,13 @@ function MyShipListView(props) {
             case "1":
                 return <span>상품 준비중</span>
             case "2":
-                return <span>배송중</span>
+                return <span>발송완료</span>
             case "3":
-                return <span>배송완료</span>
+                return <span>배송중</span>
             case "4":
                 return <span>배송취소</span>
             case "5":
-                return <span>구매확정</span>
+                return <span>배송완료</span>
             default:
                 return <span>에러</span>
         }
@@ -81,19 +87,13 @@ function MyShipListView(props) {
                 orderType: 1,
                 pkgId: shipData.pkgId,
                 productId: null,
-                pkgName: shipData.name,
+                pkgName: shipData.pkgName,
                 productName: null,
             }
         })
     }
 
     const viewPkgDetailHandler = e => {
-        // 상품 준비상태인 경우만 배송정보 변경 가능
-        if(shipData.status !== '1'){
-            alert("상품 준비중인 상태만 배송정보 변경이 가능합니다.");
-            return;
-        }
-        
         props.history.push({
             pathname: "/mypage/mysubpkgdetail",
             state: {

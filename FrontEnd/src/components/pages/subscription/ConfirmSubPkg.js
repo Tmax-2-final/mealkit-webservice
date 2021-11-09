@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 
 function ConfirmSubPkg(props) {
-    const {myPkgData} = props.location.state;
+    const {myPkgData, pkgId, pkgName} = props.location.state;
 
     const userId = localStorage.getItem('userid');
     const token = localStorage.getItem('token');
@@ -186,11 +186,11 @@ function ConfirmSubPkg(props) {
             <tr key={item.myPkgId}>
                 <td style={{width:"15%"}}>
                     <img className="img-fluid" width="100px" height="auto" 
-                        src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.catalogEntity.image1}`} alt=""
+                        src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt=""
                     />
                 </td>
-                <td className="text-center align-middle" style={{fontSize:"1.2rem"}}>{item.catalogEntity.name}</td>
-                <td className="text-center align-middle" style={{fontSize:"1.2rem"}}>{item.catalogEntity.category}</td>
+                <td className="text-center align-middle" style={{fontSize:"1.2rem"}}>{item.name}</td>
+                <td className="text-center align-middle" style={{fontSize:"1.2rem"}}>{item.category}</td>
                 <td className="text-center align-middle" style={{fontSize:"1.2rem"}}>1개</td>
             </tr>
         );
@@ -249,9 +249,6 @@ function ConfirmSubPkg(props) {
         }
 
         if (window.confirm(`해당 패키지구성 및 배송지 정보로 구독패키지 확정 및 배송 시작을 하시겠습니까?`)) {
-            const pkgId = 1;
-            const pkgName = "테스트 패키지 이름";
-
             const params = {
                 userId : userId,
                 pkgId : pkgId
@@ -289,7 +286,7 @@ function ConfirmSubPkg(props) {
                 console.log(body);
                 console.log("=================================");
 
-                axios.post(`/subscription-service/subscription/ships`, body)
+                axios.post(`/subscription-service/ships`, body)
                 .then(res => {
                     
                     if(res.status === 201){

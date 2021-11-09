@@ -194,7 +194,9 @@ export default function CompareTable(props) {
         history.push({
             pathname: "/subscription/confirmusubpkg",
             state: {
-                myPkgData : myPackageDatas
+                myPkgData : myPackageDatas.catalogEntity,
+                pkgId : 1,
+                pkgName : "테스트 패키지 이름"
             }
         })
     }
