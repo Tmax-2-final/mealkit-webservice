@@ -9,8 +9,10 @@ import com.example.subscriptionservice.entity.SubscriptionShipsEntity;
 import com.example.subscriptionservice.jpa.SubscriptionGradeRepository;
 import com.example.subscriptionservice.jpa.SubscriptionRepository;
 import com.example.subscriptionservice.jpa.SubscriptionShipsRepository;
+import com.example.subscriptionservice.querydsl.ShipsSearchParam;
 import com.example.subscriptionservice.querydsl.SubscriptionSearchParam;
 import com.example.subscriptionservice.vo.RequestCancelSubscription;
+import com.example.subscriptionservice.vo.RequestUpdateShips;
 import com.example.subscriptionservice.vo.RequestUpdateSubscription;
 import com.example.subscriptionservice.vo.ResponseSubscription;
 import lombok.extern.slf4j.Slf4j;
@@ -299,7 +301,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Transactional
     @Override
-    public SubShipDto createSubShips(SubShipDto subShipDto) {
+    public SubShipDto createShips(SubShipDto subShipDto) {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
@@ -321,6 +323,92 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         SubShipDto returnValue = modelMapper.map(obj, SubShipDto.class);
 
         return returnValue;
+    }
+
+    @Override
+    public List<SubShipDto> updateShipsStatus(RequestUpdateShips requestUpdateShips) {
+
+        Iterable<SubscriptionShipsEntity> subscriptionShipsEntityList = subscriptionShipsRepository.findShipIn(requestUpdateShips.getIds());
+
+        subscriptionShipsEntityList.forEach(v -> {
+            // 배송 시작(3)인 경우
+            if(requestUpdateShips.getStatus() == '3') v.setStartDate(LocalDateTime.of(LocalDate.now(), LocalTime.now()));
+            v.setStatus(requestUpdateShips.getStatus());
+        });
+
+        List<SubscriptionShipsEntity> subscriptionShipsEntityList2 = subscriptionShipsRepository.saveAll(subscriptionShipsEntityList);
+
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        List<SubShipDto> subShipDtoList = new ArrayList<>();
+
+        subscriptionShipsEntityList2.forEach(v -> {
+            SubShipDto subShipDto = modelMapper.map(v, SubShipDto.class);
+            subShipDtoList.add(subShipDto);
+        });
+
+        return subShipDtoList;
+    }
+
+    @Override
+    public Page<SubShipDto> getAllShips(Pageable pageRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Page<SubscriptionShipsEntity> shipList = subscriptionShipsRepository.findAll(pageRequest);
+
+
+        Page<SubShipDto> shipDtoList = shipList.map(
+                v ->  modelMapper.map(v, SubShipDto.class)
+        );
+
+        return shipDtoList;
+    }
+
+    @Override
+    public Page<SubShipDto> getShipsByStatus(Character status, Pageable pageRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Page<SubscriptionShipsEntity> shipList = subscriptionShipsRepository.findByStatus(status, pageRequest);
+
+        Page<SubShipDto> shipDtoList = shipList.map(
+                v ->  modelMapper.map(v, SubShipDto.class)
+        );
+
+        return shipDtoList;
+    }
+
+    @Override
+    public Page<SubShipDto> getShipsByStatusAndStartDateBetween(Character status, LocalDate startDate, LocalDate endDate, Pageable pageRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+//        LocalDateTime startDateTime =  LocalDateTime.of(startDate, LocalTime.of(0,0,0));
+//        LocalDateTime endDateTime =  LocalDateTime.of(endDate, LocalTime.of(23,59,59));
+
+        Page<SubscriptionShipsEntity> shipList = subscriptionShipsRepository.findByStatusAndDueDateBetween(status, startDate, endDate, pageRequest);
+
+        Page<SubShipDto> shipDtoList = shipList.map(
+                v ->  modelMapper.map(v, SubShipDto.class)
+        );
+
+        return shipDtoList;
+    }
+
+    @Override
+    public Page<SubShipDto> getShipsBySearchKeyword(ShipsSearchParam shipsSearchParam, Pageable pageReqeust) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Page<SubscriptionShipsEntity> shipList = subscriptionShipsRepository.findAllBySearchKeyword(shipsSearchParam, pageReqeust);
+
+        Page<SubShipDto> shipDtoList = shipList.map(
+                v ->  modelMapper.map(v, SubShipDto.class)
+        );
+
+        return shipDtoList;
     }
 
     @Override

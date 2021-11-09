@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 public class SubscriptionRespositoryQueryDslImpl extends QuerydslRepositorySupport implements SubscriptionRespositoryQueryDsl{

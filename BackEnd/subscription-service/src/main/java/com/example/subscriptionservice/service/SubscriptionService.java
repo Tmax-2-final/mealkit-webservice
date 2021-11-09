@@ -6,8 +6,10 @@ import com.example.subscriptionservice.dto.SubscriptionGradeDto;
 import com.example.subscriptionservice.entity.SubscriptionEntity;
 import com.example.subscriptionservice.entity.SubscriptionGradeEntity;
 import com.example.subscriptionservice.entity.SubscriptionShipsEntity;
+import com.example.subscriptionservice.querydsl.ShipsSearchParam;
 import com.example.subscriptionservice.querydsl.SubscriptionSearchParam;
 import com.example.subscriptionservice.vo.RequestCancelSubscription;
+import com.example.subscriptionservice.vo.RequestUpdateShips;
 import com.example.subscriptionservice.vo.RequestUpdateSubscription;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 public interface SubscriptionService {
     /*구독 등급 조회*/
@@ -35,7 +38,7 @@ public interface SubscriptionService {
     /*구독 취소*/
     void cancelSubscription(RequestCancelSubscription requestCancelSubscription);
 
-    /*구독 전체조회*/
+    /*구독 페이징 조회*/
     Page<SubscriptionDto> getAllSubscription(Pageable pageRequest);
 
     Page<SubscriptionDto> getSubscriptionByStatus(Character status, Pageable pageRequest);
@@ -53,8 +56,20 @@ public interface SubscriptionService {
     /*구독 여부확인*/
     long existSubscription(String userId);
 
-    /*구독 배송 등록*/
-    SubShipDto createSubShips(SubShipDto subShipDto);
+    /*배송 등록*/
+    SubShipDto createShips(SubShipDto subShipDto);
+
+    /*배송 상태 변경*/
+    List<SubShipDto> updateShipsStatus(RequestUpdateShips requestUpdateShips);
+
+    /*배송 페이징 조회*/
+    Page<SubShipDto> getAllShips(Pageable pageRequest);
+
+    Page<SubShipDto> getShipsByStatus(Character status, Pageable pageRequest);
+
+    Page<SubShipDto> getShipsByStatusAndStartDateBetween(Character status, LocalDate startDate, LocalDate endDate, Pageable pageRequest);
+
+    Page<SubShipDto> getShipsBySearchKeyword(ShipsSearchParam shipsSearchParam, Pageable pageReqeust);
 
     /*전체 구독 배송 조회*/
     Iterable<SubscriptionShipsEntity>  getAllSubShips();
