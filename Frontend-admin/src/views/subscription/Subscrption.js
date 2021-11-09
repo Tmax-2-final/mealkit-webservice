@@ -253,6 +253,7 @@ const Subscrption = (props) => {
                             startDate={startDate}
                             endDate={endDate}
                             locale="ko"
+                            dateFormat="yyyy.MM.dd(eee)"
                         />
                     </div>
                     <div className="col-12 col-lg-1 mt-1" style={{textAlign:"center"}}>
@@ -267,6 +268,7 @@ const Subscrption = (props) => {
                             endDate={endDate}
                             minDate={startDate}
                             locale="ko"
+                            dateFormat="yyyy.MM.dd(eee)"
                         />
                     </div>
                     <div className="col-12 col-lg-2">
