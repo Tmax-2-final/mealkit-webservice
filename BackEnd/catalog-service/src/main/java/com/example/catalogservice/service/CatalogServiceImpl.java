@@ -5,6 +5,7 @@ import com.example.catalogservice.dto.MyPackageDto;
 import com.example.catalogservice.dto.PatalogDto;
 import com.example.catalogservice.dto.PkgMgtDto;
 import com.example.catalogservice.jpa.*;
+import com.example.catalogservice.vo.RequestMyPackage;
 import com.example.catalogservice.vo.ResponseMyPackage;
 import com.example.catalogservice.vo.ResponsePatalog;
 import com.example.catalogservice.vo.ResponsePkgMgt;
@@ -106,37 +107,6 @@ public class CatalogServiceImpl implements CatalogService{
     }
 
     @Override
-    public ResponseMyPackage createMyPackageCatalogs(MyPackageDto myPackageDto) {
-        // 1. cartDto -> cartEntity -> jpa -> mariadb
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
-
-        MyPackageEntity myPackageEntity = mapper.map(myPackageDto, MyPackageEntity.class );
-
-        // 2. repository save
-        myPackageRepository.save(myPackageEntity);
-        // 3. result entity -> dto
-
-        List<ResponseMyPackage> responseMyPackageList = myPackageDtoList.stream().map(v -> mapper.map(v, ResponseMyPackage.class)).collect(Collectors.toList());
-
-        return responseMyPackageList;
-
-
-        long i = 0;
-        patalog.setPatalogId(i++);
-
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        PatalogEntity patalogEntity = mapper.map(patalog, PatalogEntity.class);
-
-        patalogRepository.save(patalogEntity);
-
-        PatalogDto patalogDto = mapper.map(patalogEntity, PatalogDto.class);
-
-        return patalogDto;
-    }
-
-    @Override
     public List<ResponseMyPackage> createMyPackage(List<MyPackageDto> myPackageDtoList) {
         // 1. cartDto -> cartEntity -> jpa -> mariadb
         ModelMapper mapper = new ModelMapper();
@@ -151,6 +121,21 @@ public class CatalogServiceImpl implements CatalogService{
         List<ResponseMyPackage> responseMyPackageList = myPackageDtoList.stream().map(v -> mapper.map(v, ResponseMyPackage.class)).collect(Collectors.toList());
 
         return responseMyPackageList;
+    }
+
+    @Override
+    public MyPackageDto createMyPkgCatalogs(MyPackageDto myPackageDto) {
+        // 1. cartDto -> cartEntity -> jpa -> mariadb
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+
+        MyPackageEntity myPackageEntity = mapper.map(myPackageDto, MyPackageEntity.class );
+
+        // 2. repository save
+        myPackageRepository.save(myPackageEntity);
+        // 3. result entity -> dto
+
+        return myPackageDto;
     }
 
     @Override

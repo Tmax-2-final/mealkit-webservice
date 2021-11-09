@@ -28,7 +28,7 @@ public interface CatalogService {
     Iterable<PackageEntity> getAllPackage();
     CatalogDto createCatalog(CatalogDto catalog);
     List<ResponseMyPackage> createMyPackage(List<MyPackageDto> myPackageDtoList);
-    ResponseMyPackage createMyPkgCatalogs(RequestMyPackage requestMyPackage, String userId);
+    MyPackageDto createMyPkgCatalogs(MyPackageDto myPackageDto);
     List<ResponsePkgMgt> createPkgMgt(List<PkgMgtDto> pkgMgtDtoList);
     PatalogDto createPatalog(PatalogDto patalog);
     MyPackageDto getMyPackageByCatalogId(MyPackageDto myPackageDto);

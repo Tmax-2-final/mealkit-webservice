@@ -5,6 +5,7 @@ import axios from "axios";
 export default function PackageDetailLeft2({packageData}) {
     const [imageCurrentNo, setImageCurrentNo] = useState(0);
     const [ pkgMgtDatas, setPkgMgtDatas] = useState([]);
+    const [ loading, setLoading ] = useState(false);
 
     console.log(packageData);
 
@@ -17,13 +18,22 @@ export default function PackageDetailLeft2({packageData}) {
 
 
     useEffect(()=> {
+
+        const fetchPosts = async () => {
+            setLoading(true);
+        }
+
         axios.get(`/catalog-service/${userId}/pkgmgt/${packageData.patalogId}`,{
             headers: headers
         })
             .then(res => {
                 setPkgMgtDatas(res.data);
                 console.log(res.data);
+                setLoading(false);
             })
+
+
+        fetchPosts();
     },[packageData])
 
     console.log(pkgMgtDatas);

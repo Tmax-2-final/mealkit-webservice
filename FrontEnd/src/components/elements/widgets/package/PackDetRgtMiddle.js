@@ -7,6 +7,7 @@ import axios from "axios";
 export default function PackDetRgtMiddle({props, packageData}) {
 
     const [ pkgMgtData, setPkgMgtData ] = useState([]);
+    const [ loading, setLoading ] = useState(false);
 
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('userid');
@@ -16,6 +17,11 @@ export default function PackDetRgtMiddle({props, packageData}) {
     }
 
     useEffect(() => {
+
+        const fetchPosts = async () => {
+            setLoading(true);
+        }
+
         console.log("=======패키지 데이터======");
         console.log(packageData);
 
@@ -27,6 +33,7 @@ export default function PackDetRgtMiddle({props, packageData}) {
                 setPkgMgtData(res.data);
                 console.log(res.data);
                 console.log(pkgMgtData);
+                setLoading(false);
             })
     },[packageData]);
 

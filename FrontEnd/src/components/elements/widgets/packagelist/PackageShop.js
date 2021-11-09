@@ -44,6 +44,8 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
                 console.log(res.data);
             });
 
+        fetchPosts();
+
         axios.get(`/user-service/users/preference/{userId}`,{
             headers: {
                 Authorization: `Bearer ${token}`
@@ -53,6 +55,7 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
             .then(res => {
                 setPreferenceData(res.data);
                 console.log(res.data);
+                setLoading(false);
 
             })
 
@@ -65,11 +68,12 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
 
 
         fetchPosts();
-    },[]);
+    },[S]);
 
 
-    const categoryData = categoryName !== "전체메뉴" ? categoryName !== "추천 패키지" ? newData.filter(item => item.category === categoryName ) : catalogData.filter(item => item.age === preferenceData.age ||
+    const categoryData = categoryName !== "전체메뉴" ? categoryName !== "추천 패키지" ? newData && newData.filter(item => item.category === categoryName ) : catalogData && catalogData.filter(item => item.age === preferenceData.age ||
         item.theme === preferenceData.theme || item.flavor === preferenceData.flavor) :newData;
+
     const searchData = search !== null ? newData.filter(item => (item.name.toLowerCase().includes(search)) || (item.category.includes(search))) : newData;
 
     const searchList = searchData.map((item, index) => (

@@ -31,6 +31,18 @@ public class CatalogEntity implements Serializable {
     private String image4;
 
     @Column
+    private Integer age;
+
+    @Column
+    private String theme;
+
+    @Column
+    private String flavor;
+
+    @Column
+    private int cookingtime;
+
+    @Column
     private String summaryImg;
 
     @Column(nullable = false)

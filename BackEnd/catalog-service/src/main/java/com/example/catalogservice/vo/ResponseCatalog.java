@@ -26,6 +26,14 @@ public class ResponseCatalog {
 
     private String image4;
 
+    private Integer age;
+
+    private String theme;
+
+    private String flavor;
+
+    private int cookingtime;
+
     private String summaryImg;
 
     private String detailImg;
