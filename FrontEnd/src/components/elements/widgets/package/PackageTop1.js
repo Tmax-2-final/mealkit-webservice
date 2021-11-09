@@ -14,15 +14,9 @@ import PackageDetailRight from "./PackageDetailRight";
 
 
 export default function PackageTop1({props, packageData}) {
-    useEffect(()=>{
-    },[])
-
     console.log(packageData);
-
-
-
     const [value, setValue] = useState('1');
-
+    const [ loading, setLoading ] = useState(false);
     const [reviewCnt, setReviewCnt] = useState('1324')
     const [reviewDatas, setReviewDatas] = useState([]);
 

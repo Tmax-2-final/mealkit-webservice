@@ -63,7 +63,7 @@
     "sass": "^1.42.1"
   },
   "scripts": {
-    "start": "export PORT=3005 && react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "lint": "eslint \"src/**/*.js\"",
     "test": "react-scripts test",

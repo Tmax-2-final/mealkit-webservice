@@ -9,6 +9,8 @@ export default function CompareTable(props) {
     const [columNumber, setColumNumber] = useState(4);
     const [patalogData, setPatalogData] = useState();
     const [pkgMgtData, setPkgMgtData] = useState([]);
+    const [ loading, setLoading ] = useState(false);
+
     const history = useHistory();
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('userid');
@@ -23,6 +25,11 @@ export default function CompareTable(props) {
     let process = require('../../../../myProcess.json');
 
     useEffect(() => {
+
+        const fetchPosts = async () => {
+            setLoading(true);
+        }
+
         axios.get(`/catalog-service/${userId}/mypackage`, {
             headers : headers
         })
@@ -30,6 +37,7 @@ export default function CompareTable(props) {
                 setMyPackageDatas(res.data);
                 console.log(res.data);
             })
+        fetchPosts();
     },[]);
 
     console.log(myPackageDatas);
@@ -120,72 +128,6 @@ export default function CompareTable(props) {
 
 
     const confirmSubPkgHandler = (e) => {
-
-        let body = {
-            name: userId +"님의 패키지",
-            category: "유저 패키지",
-            rating: "3",
-            image: "01.jpg"
-        }
-
-        console.log(body);
-
-        axios.post(`/catalog-service/${userId}/patalogs`, body,{
-            headers: headers
-        } )
-            .then(res => {
-                console.log(res)
-                if (res.status == 201) {
-                    alert("상품 등록이 완료 되었습니다.");
-                    console.log(res.data);
-                    axios.get(`/catalog-service/${userId}/firstpatalogs`, {
-                        headers : headers
-                    } )
-                        .then(res => {
-                            setPatalogData(res.data);
-                            console.log(res.data);
-                            let jsonArray = new Array();
-                            myPackageDatas.map( item=> {
-                                let jsonObj = new Object();
-                                jsonObj.catalogId = item.catalogEntity.catalogId;
-                                jsonObj.patalogId = res.data.patalogId;
-                                jsonObj = JSON.stringify(jsonObj);
-                                jsonArray.push(JSON.parse(jsonObj));
-                            })
-                            setPkgMgtData(jsonArray);
-                            console.log(jsonArray);
-                            console.log(pkgMgtData);
-                            axios.post(`/catalog-service/${userId}/pkgmgt`, jsonArray, {
-                                headers : headers
-                            })
-                                .then(res => {
-                                    console.log(res)
-                                    if(res.status == 201){
-                                        console.log(res.data);
-                                    }
-                                    else{
-                                        console.log(res);
-                                        alert("오류 발생")
-                                    }
-                                })
-                        })
-
-
-                }
-                else if(res.status === 200) {
-                    alert("장바구니에 동일한 상품이 있어 수량을 변경했습니다.");
-
-                }
-                else {
-                    console.log(res);
-                    alert("오류 발생. 장바구니에 상품이 담기지 않았습니다.")
-                }
-            })
-            .catch(err => {
-                alert("다시 다시 입력해주세요.");
-                console.log(body);
-            });
-
 
         e.preventDefault();
 
