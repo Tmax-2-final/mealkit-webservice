@@ -5,6 +5,7 @@ import com.example.catalogservice.dto.MyPackageDto;
 import com.example.catalogservice.dto.PatalogDto;
 import com.example.catalogservice.dto.PkgMgtDto;
 import com.example.catalogservice.jpa.*;
+import com.example.catalogservice.vo.RequestMyPackage;
 import com.example.catalogservice.vo.ResponseMyPackage;
 import com.example.catalogservice.vo.ResponsePatalog;
 import com.example.catalogservice.vo.ResponsePkgMgt;
@@ -27,6 +28,7 @@ public interface CatalogService {
     Iterable<PackageEntity> getAllPackage();
     CatalogDto createCatalog(CatalogDto catalog);
     List<ResponseMyPackage> createMyPackage(List<MyPackageDto> myPackageDtoList);
+    ResponseMyPackage createMyPkgCatalogs(RequestMyPackage requestMyPackage, String userId);
     List<ResponsePkgMgt> createPkgMgt(List<PkgMgtDto> pkgMgtDtoList);
     PatalogDto createPatalog(PatalogDto patalog);
     MyPackageDto getMyPackageByCatalogId(MyPackageDto myPackageDto);

@@ -10,6 +10,10 @@ export default function AddBuyAndCart({props, productData}) {
 
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('userid');
+
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
     
 
     useEffect(()=>{
@@ -70,27 +74,28 @@ export default function AddBuyAndCart({props, productData}) {
                 unitPrice: productData.unitPrice,
                 qty: count
             }
-    
-            axios.post(`/user-service/1/mypackage`, body, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+            axios.post(`/catalog-service/${userId}/mypackage`, body)
+                .then(res => {
+                    console.log(res)
+                    if (res.status == 201) {
+                        alert("상품 등록이 완료 되었습니다.");
+                        console.log(res.data);
+                        console.log(pkgMgtData);
+
+
                     }
-                })
-                .then((res) => {
-                    if(res.status === 201){
-                        alert("장바구니에 새로운 상품이 담겼습니다.");
-                    }
-                    else if(res.status === 200){
+                    else if(res.status === 200) {
                         alert("장바구니에 동일한 상품이 있어 수량을 변경했습니다.");
+
                     }
                     else {
                         console.log(res);
                         alert("오류 발생. 장바구니에 상품이 담기지 않았습니다.")
                     }
                 })
-                .catch((err) => {
-                    console.log(err.response);
-                    alert("오류 발생. 장바구니에 상품이 담기지 않았습니다.")
+                .catch(err => {
+                    alert("다시 다시 입력해주세요.");
+                    console.log(pkgMgtData);
                 });
         }        
     }
@@ -102,6 +107,31 @@ export default function AddBuyAndCart({props, productData}) {
 
     return(
         <>
+            <div className="pro-details-quality">
+                <div className="cart-plus-minus">
+                    {/*<button className="dec qtybutton" onClick={()=>handleCountDec()}>-</button>*/}
+                    {/*<input className="cart-plus-minus-box" type="text" value={count} onChange={handleCount}  maxlength="3"/>*/}
+
+                    {/*<button className="inc qtybutton" onClick={()=>handleCountAdd()}>+</button>*/}
+                </div>
+                <div className="pro-details-cart btn-hover" style={{display:isDisply}}>
+                    <button onClick={()=> handlePutCartList()}>마이패키지에 담기</button>
+                </div>
+
+                {/*<div className="pro-details-cart btn-hover ml-30"> */}
+                {/*    <Link to={{*/}
+                {/*                pathname: "/payment",*/}
+                {/*                state: {*/}
+                {/*                    data:[productData],*/}
+                {/*                    totalPriceData:count*productData.unitPrice*/}
+                {/*                },*/}
+                {/*    }} */}
+                {/*    onClick={addQty}*/}
+                {/*    style={{backgroundColor:buyBtnColor}}>*/}
+                {/*        {productData.stock !== 0 ? "구매하기" : "품절"}*/}
+                {/*    </Link>*/}
+                {/*</div>                */}
+            </div>
             <div class="pro-details-meta">
                 <span>재고 :</span>
                 <ul>

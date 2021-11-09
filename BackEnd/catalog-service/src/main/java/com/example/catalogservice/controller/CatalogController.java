@@ -133,6 +133,24 @@ public class CatalogController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseMyPackageList);
     }
 
+    @ApiOperation(value = "마이패키지 등록", notes="마이패키지 등록")
+    @PostMapping("/{userId}/mypackage/catalogs")
+    public ResponseEntity<ResponseMyPackage> createMyPkgCatalogs(@RequestBody @Valid RequestMyPackage requestMyPackage, @PathVariable("userId") String userId) {
+        System.out.println(userId);
+        // 1. requestCart + userId => cartDto
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+
+        List<MyPackageDto> myPackageDtoList = new ArrayList<>();
+
+        // 2. service -> jpa -> mariadb 저장 = 카트 등록 서비스
+        List<ResponseMyPackage> responseMyPackage = catalogService.createMyPackage(myPackageDtoList);
+        // 3. responseCart 로 지정
+        //ResponseMyPackage responseMyPackage = mapper.map(myPackageDto, ResponseMyPackage.class);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseMyPackageList);
+    }
+
     @ApiOperation(value = "패키지관리 등록", notes="패키지관리 등록")
     @PostMapping("/{userId}/pkgmgt")
     public ResponseEntity<List<ResponsePkgMgt>> createPkgMgt(@RequestBody @Valid Iterable<RequestPkgMgt> requestPkgMgtList, @PathVariable("userId") String userId) {

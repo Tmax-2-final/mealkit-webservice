@@ -4,7 +4,7 @@ import axios from "axios";
 
 export default function PackageDetailLeft2({packageData}) {
     const [imageCurrentNo, setImageCurrentNo] = useState(0);
-    const [ pkgMgtDatas, setPkgMgtDatas] = useState();
+    const [ pkgMgtDatas, setPkgMgtDatas] = useState([]);
 
     console.log(packageData);
 
@@ -23,7 +23,6 @@ export default function PackageDetailLeft2({packageData}) {
             .then(res => {
                 setPkgMgtDatas(res.data);
                 console.log(res.data);
-
             })
     },[packageData])
 
@@ -49,7 +48,7 @@ export default function PackageDetailLeft2({packageData}) {
                     <div className="navBox">
                         <span>{imageCurrentNo  + 1}</span>
                         <span>/</span>
-                        <span>{images && images.length}</span>
+                        <span>{pkgMgtDatas && pkgMgtDatas.length}</span>
                     </div>
                     <div className="slideBox">
                         <div

@@ -69,22 +69,6 @@ export default function SidePackage({setCategoryName, setSearch}) {
         e.preventDefault();
     }
 
-    //     axios.post("/catalog-service/productlist", body, {
-    //         headers : {
-    //             'Accept' : 'application/json',
-    //             'Content-Type' : 'application/json;charset=UTF-8'
-    //         }
-    //     })
-    //     .then(response => {
-    //         console.log(response.data);
-    //         setCategoryList(response.data);
-    //     })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         })
-    // }
-
-
 
     return(
         <div className="col-lg-3 order-2 order-lg-1">
