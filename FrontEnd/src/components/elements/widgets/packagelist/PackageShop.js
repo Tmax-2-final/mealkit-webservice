@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import ProductView from '../product/ProductView';
 import Pagination from "../../ui/Pagination";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import Rating from "../../ui/Rating";
+import Button from "@mui/material/Button";
 
 export default function PackageShop({search, categoryName, setSearch, props}) {
     console.log(search)
@@ -12,6 +13,7 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
     const [sliceNumber, setSliceNumber] = useState(15);
     const [columNumber, setColumNumber] = useState(4);
     const [onActive, setOnActive] = useState(false);
+    const history = useHistory();
 
     const [newData, setnewData] = useState([]);
     const [preferenceData, setPreferenceData] = useState();
@@ -159,6 +161,8 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
 
     )).slice(indexOfFirstPost, indexOfLastPost);
 
+
+
     const currentNewData = (search == null ? categoryData :searchData);
     const currentList = (categoryName == "유저 패키지"? packageList : categoryList)
 
@@ -171,6 +175,29 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
 
     console.log(postsPerPage)
     console.log(paginate)
+
+    const confirmSubPkgHandler = (e) => {
+
+        let body = {
+            name: userId +"님의 패키지",
+            category: "유저 패키지",
+            rating: "3",
+            image: "01.jpg"
+        }
+
+
+
+        e.preventDefault();
+
+        console.log(props);
+
+        history.push({
+            pathname: "/subscription/confirmusubpkg",
+            state: {
+                myPkgData : categoryData
+            }
+        })
+    }
 
     return(
         <div className="col-lg-9 order-1 order-lg-2">
@@ -193,6 +220,16 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
             <div className="shop-bottom-area mt-35">
                 <div className="row grid three-column">
                     <p>{categoryName}</p>
+                    {categoryName === "추천 패키지" &&
+                    <Button
+                        sx={{width: "12rem", height: "3rem"}}
+                        variant="contained"
+                        size="large"
+                        onClick={confirmSubPkgHandler}
+                    >
+                        추천 패키지 구독
+                    </Button>
+                    }
                     <ProductView
                         sliceNumber = {sliceNumber}
                         columNumber = {columNumber}

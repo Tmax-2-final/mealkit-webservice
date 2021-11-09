@@ -31,10 +31,6 @@ export default function PackageDetailBottom({packageData}) {
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('userid');
 
-
-    console.log(packageData);
-
-
     useEffect(() => {
         axios.get(`/catalog-service/${userId}/pkgmgt/${packageData.patalogId}`)
             .then(res => {
@@ -42,8 +38,6 @@ export default function PackageDetailBottom({packageData}) {
                 console.log(res.data);
 
             })
-
-
 
         axios.get(`/review-service/reviews/${userId}`, {
             headers: {

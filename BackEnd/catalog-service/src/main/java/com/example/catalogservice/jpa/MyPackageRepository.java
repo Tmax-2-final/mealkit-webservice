@@ -9,4 +9,5 @@ public interface MyPackageRepository extends JpaRepository<MyPackageEntity, Long
     Iterable<MyPackageEntity> findAllByUserId(String userId);
     Iterable<MyPackageEntity> findByUserId(String userId);
     Optional<MyPackageEntity> findByCatalogIdAndUserId(Long catalogId, String userId);
+
 }

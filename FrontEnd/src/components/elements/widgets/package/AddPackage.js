@@ -53,33 +53,6 @@ export default function AddPackage({props, packageData, pkgMgtData}) {
     console.log(packageData);
 
     const handlePutCartList = () => {
-        // if(!token){
-        //     alert("장바구니 담기는 로그인 한 후 진행 해주세요.");
-        //     props.history.push("/login");
-        // }
-        // else {
-
-
-            // let body = {
-            //     patalogId: packageData.patalogId,
-            //     name: packageData.name,
-            //     image: packageData.image,
-            //     unitPrice: packageData.unitPrice,
-            //     qty: count
-            // }
-
-
-            // pkgMgtData.map((item) => {
-            //     catalogData.map((subItem) => {
-            //         if(item.catalogId === subItem.catalogId){
-            //             setMyPackageData(subItem);
-            //             console.log(myPackageData);
-            //
-            //
-            //         }
-            //     })
-            //
-            // })
 
         axios.post(`/catalog-service/${userId}/mypackage`, pkgMgtData )
             .then(res => {
@@ -117,10 +90,10 @@ export default function AddPackage({props, packageData, pkgMgtData}) {
         <>
             <div className="pro-details-quality">
                 <div className="cart-plus-minus">
-                    <button className="dec qtybutton" onClick={()=>handleCountDec()}>-</button>
-                    <input className="cart-plus-minus-box" type="text" value={count} onChange={handleCount}  maxlength="3"/>
+                    {/*<button className="dec qtybutton" onClick={()=>handleCountDec()}>-</button>*/}
+                    {/*<input className="cart-plus-minus-box" type="text" value={count} onChange={handleCount}  maxlength="3"/>*/}
                     
-                    <button className="inc qtybutton" onClick={()=>handleCountAdd()}>+</button>
+                    {/*<button className="inc qtybutton" onClick={()=>handleCountAdd()}>+</button>*/}
                 </div>
                 <div className="pro-details-cart btn-hover" style={{display:isDisply}}>
                     <button onClick={()=> handlePutCartList()}>마이패키지에 담기</button>
@@ -140,24 +113,24 @@ export default function AddPackage({props, packageData, pkgMgtData}) {
                 {/*    </Link>*/}
                 {/*</div>                */}
             </div>
-            <div class="pro-details-meta">
-                <span>재고 :</span>
-                <ul>
-                    <li><a href="/shop-grid-standard" style={{color:stockTextColor}}>{packageData.stock !== 0 ? packageData.stock : "품절"}</a></li>
-                </ul>
-            </div>
-            <div class="pro-details-meta">
-            <span>카테고리 :</span>
-            <ul>
-                <li><a href="/shop-grid-standard">{packageData.category}</a></li>
-            </ul>
-            </div>
-            <div class="pro-details-meta">
-                <span>ISBN :</span>
-                <ul>
-                    <li><a href="/shop-grid-standard">{packageData.patalogId}</a></li>
-                </ul>
-            </div>
+            {/*<div class="pro-details-meta">*/}
+            {/*    <span>재고 :</span>*/}
+            {/*    <ul>*/}
+            {/*        <li><a href="/shop-grid-standard" style={{color:stockTextColor}}>{packageData.stock !== 0 ? packageData.stock : "품절"}</a></li>*/}
+            {/*    </ul>*/}
+            {/*</div>*/}
+            {/*<div class="pro-details-meta">*/}
+            {/*<span>카테고리 :</span>*/}
+            {/*<ul>*/}
+            {/*    <li><a href="/shop-grid-standard">{packageData.category}</a></li>*/}
+            {/*</ul>*/}
+            {/*</div>*/}
+            {/*<div class="pro-details-meta">*/}
+            {/*    <span>ISBN :</span>*/}
+            {/*    <ul>*/}
+            {/*        <li><a href="/shop-grid-standard">{packageData.patalogId}</a></li>*/}
+            {/*    </ul>*/}
+            {/*</div>*/}
         </>
     );
 }

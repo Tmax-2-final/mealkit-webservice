@@ -1,4 +1,4 @@
-import { Fragment,useState } from "react";
+import React, { Fragment,useState } from "react";
 import Rating from '../../../ui/Rating';
 
 export default function ProDetRgtTop({name,price,rating,txt}) {
