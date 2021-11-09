@@ -3,9 +3,9 @@ package com.example.subscriptionservice.controller;
 import com.example.subscriptionservice.dto.SubShipDto;
 import com.example.subscriptionservice.dto.SubscriptionDto;
 import com.example.subscriptionservice.dto.SubscriptionGradeDto;
-import com.example.subscriptionservice.entity.SubscriptionEntity;
 import com.example.subscriptionservice.entity.SubscriptionGradeEntity;
 import com.example.subscriptionservice.entity.SubscriptionShipsEntity;
+import com.example.subscriptionservice.querydsl.ShipsSearchParam;
 import com.example.subscriptionservice.querydsl.SubscriptionSearchParam;
 import com.example.subscriptionservice.service.SubscriptionService;
 import com.example.subscriptionservice.vo.*;
@@ -25,14 +25,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Path;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -281,23 +278,52 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.OK).body(existSubscription);
     }
 
-    @ApiOperation(value = "구독배송 등록", notes = "구독확정한 회원의 구독 배송을 등록한다.")
-    @PostMapping(value = "/subscription/ships")
-    public ResponseEntity<ResponseSubShip> createSubscriptionShips(@RequestBody RequestSubShip subships){
-        log.info("구독배송 등록 API START");
+    @ApiOperation(value = "배송 등록", notes = "구독확정한 회원의 배송을 등록한다.")
+    @PostMapping(value = "/ships")
+    public ResponseEntity<ResponseSubShip> createShips(@RequestBody RequestShips subships){
+        log.info("배송 등록 API START");
 
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
         // request -> dto
         SubShipDto subShipDto = mapper.map(subships, SubShipDto.class); // userDto -> userEntity 로 매핑
 
-        subShipDto = subscriptionService.createSubShips(subShipDto);
+        subShipDto = subscriptionService.createShips(subShipDto);
         // dto -> response
         ResponseSubShip responseSubShip = mapper.map(subShipDto, ResponseSubShip.class);
 
-        log.info("구독배송 등록 API END");
+        log.info("배송 등록 API END");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseSubShip);
+    }
+
+    @ApiOperation(value = "배송 상태 변경", notes = "관리자가 배송 상태를 변경한다.")
+    @PutMapping(value = "/ships")
+    public ResponseEntity<String> updateShipsStatus(@RequestBody RequestUpdateShips requestUpdateShips){
+        log.info("배송 상태 변경 API START");
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+
+        List<SubShipDto> subShipDtoList = subscriptionService.updateShipsStatus(requestUpdateShips);
+
+        //  1 : 상품준비중, 2:발송완료, 3 : 배송중, 4 : 배송취소, 5 : 배송완료, 6 : 구매확정
+        // 배송시작 처리 알람발송
+        if(requestUpdateShips.getStatus() == '3'){
+            subShipDtoList.forEach(v -> {
+
+            });
+        }
+        // 배송완료 처리 알람발송
+        else if(requestUpdateShips.getStatus() == '5'){
+            subShipDtoList.forEach(v -> {
+
+            });
+        }
+
+        log.info("배송 상태 변경 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body("배송 상태 변경 완료");
     }
 
     @ApiOperation(value = "특정회원 환불금액 조회", notes = "구독취소하려는 회원의 환불금액을 조회한다.")
@@ -328,28 +354,95 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.OK).body("구독패키지 확정 완료");
     }
 
-    @ApiOperation(value = "전체 구독배송 조회", notes = "전체 구독 배송정보를 조회한다.")
-    @GetMapping(value = "/subscription/ships")
-    public ResponseEntity<List<ResponseSubShip>> getAllSubscriptionShips(){
-        log.info("전체 구독배송 조회 API START");
+//    @ApiOperation(value = "전체 배송 조회", notes = "전체 구독 배송정보를 조회한다.")
+//    @GetMapping(value = "/subscription/ships")
+//    public ResponseEntity<List<ResponseSubShip>> getAllSubscriptionShips(){
+//        log.info("전체 구독배송 조회 API START");
+//
+//        ModelMapper mapper = new ModelMapper();
+//        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+//
+//        Iterable<SubscriptionShipsEntity> subscriptionShipsList = subscriptionService.getAllSubShips();
+//
+//        List<ResponseSubShip> responseSubShipList = new ArrayList<>();
+//
+//        subscriptionShipsList.forEach(v -> {
+//            responseSubShipList.add(new ModelMapper().map(v, ResponseSubShip.class));
+//        });
+//
+//        log.info("전체 구독배송 조회 API END");
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(responseSubShipList);
+//    }
 
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+    @ApiOperation(value = "배송 전체 페이징 조회", notes = "모든 회원들의 배송 정보를 페이지별로 조회한다.")
+    @GetMapping(value = "/ships")
+    public ResponseEntity<Page<ResponseSubShip>> getAllShips(@PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC) Pageable pageRequest){
+        log.info("배송 전체 조회 API START");
 
-        Iterable<SubscriptionShipsEntity> subscriptionShipsList = subscriptionService.getAllSubShips();
+        Page<SubShipDto> shipDtoList = subscriptionService.getAllShips(pageRequest);
+        Page<ResponseSubShip> responseShipList = shipDtoList.map(
+                v -> new ModelMapper().map(v, ResponseSubShip.class)
+        );
 
-        List<ResponseSubShip> responseSubShipList = new ArrayList<>();
+        log.info("배송 전체 페이징 조회 API END");
 
-        subscriptionShipsList.forEach(v -> {
-            responseSubShipList.add(new ModelMapper().map(v, ResponseSubShip.class));
-        });
-
-        log.info("전체 구독배송 조회 API END");
-
-        return ResponseEntity.status(HttpStatus.OK).body(responseSubShipList);
+        return ResponseEntity.status(HttpStatus.OK).body(responseShipList);
     }
 
-    @ApiOperation(value = "구독배송 조회", notes = "특정 회원의 구독배송 정보를 조회한다.")
+    @ApiOperation(value = "배송 상태+기간(시작일) 별 페이징 조회", notes = "모든 회원들의 배송 정보를 상태+기간(시작일) 별로 페이징 조회한다.")
+    @GetMapping(value = "/ships/status/{status}")
+    public ResponseEntity<Page<ResponseSubShip>> getShipsByStatus(@PathVariable("status") Character status,
+                                                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value="startDate", required = false) LocalDate startDate,
+                                                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value="endDate", required = false) LocalDate endDate,
+                                                                              @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC) Pageable pageRequest){
+        log.info("배송 상태+기간(시작일) 별 페이징 조회 API START");
+
+        Page<SubShipDto> subscriptionList = null;
+
+        if(startDate != null && endDate != null) {
+            subscriptionList = subscriptionService.getShipsByStatusAndStartDateBetween(status, startDate, endDate, pageRequest);
+        }
+        else {
+            subscriptionList = subscriptionService.getShipsByStatus(status, pageRequest);
+        }
+
+
+        Page<ResponseSubShip> responseShipList = subscriptionList.map(
+                v -> new ModelMapper().map(v, ResponseSubShip.class)
+        );
+
+        log.info("배송 상태+기간(시작일) 별 페이징 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseShipList);
+    }
+
+    @ApiOperation(value = "배송 기간(배송예정일) 내 키워드 페이징 조회", notes = "모든 회원들의 배송 정보를 구독 기간(배송예정일) 내 키워드 페이징 조회한다.")
+    @GetMapping(value = "/ships/keyword/search")
+    public ResponseEntity<Page<ResponseSubShip>> getShipsByUserIdContaining(@RequestParam(value = "searchType", required = false, defaultValue = "all") String searchType,
+                                                                                        @RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue,
+                                                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "startDate", required = false) LocalDate startDate,
+                                                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "endDate", required = false) LocalDate endDate,
+                                                                                        @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC) Pageable pageRequest){
+        log.info("구독 기간(시작일) 내 키워드 페이징 조회 API START");
+
+        // 검색에 필요한 parameter 세팅 작업
+        ShipsSearchParam shipsSearchParam = new ShipsSearchParam(searchType, searchValue, startDate, endDate);
+
+        Page<SubShipDto> shipDtoList = subscriptionService.getShipsBySearchKeyword(shipsSearchParam, pageRequest);
+
+        Page<ResponseSubShip> responseShipList = shipDtoList.map(
+                v -> new ModelMapper().map(v, ResponseSubShip.class)
+        );
+
+        log.info("구독 기간(시작일) 내 키워드 페이징 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseShipList);
+    }
+
+
+
+    @ApiOperation(value = "배송 조회", notes = "특정 회원의 배송 정보를 조회한다.")
     @GetMapping(value = "/subscription/ships/{userId}")
     public ResponseEntity<List<ResponseSubShip>> getSubscriptionShips(@PathVariable("userId") String userId){
         log.info("구독배송 조회 API START");

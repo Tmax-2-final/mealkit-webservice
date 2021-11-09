@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-public class RequestSubShip {
+public class RequestShips {
     private Long id;
     private String userId;
     private Long pkgId;
