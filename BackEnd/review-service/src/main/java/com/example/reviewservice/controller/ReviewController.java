@@ -13,6 +13,10 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -142,6 +146,69 @@ public class ReviewController {
         ResponseReview responseReview = mapper.map(reviewDto, ResponseReview.class);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseReview);
+    }
+
+    @ApiOperation(value = "리뷰 전체 페이징 조회", notes = "모든 회원들의 리뷰 정보를 페이지별로 조회한다.")
+    @GetMapping(value = "/reviews/page")
+    public ResponseEntity<Page<ResponseReview>> getAllPageReviews(@PageableDefault(size = 8, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest){
+        log.info("구독 전체 조회 API START");
+
+        Page<ReviewEntity> reviewList = reviewService.getAllPageReviews(pageRequest);
+        Page<ResponseReview> responseReviewList = reviewList.map(
+                v -> new ModelMapper().map(v, ResponseReview.class)
+        );
+
+        log.info("리뷰 전체 페이징 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseReviewList);
+    }
+
+    @ApiOperation(value = "회원별 리뷰 페이징 조회", notes = "회원별 리뷰 정보를 페이지별로 조회한다.")
+    @GetMapping(value = "/reviews/page/{userId}")
+    public ResponseEntity<Page<ResponseReview>> getPageReviewsByUserId(@PathVariable("userId") String userId,
+                                                                       @PageableDefault(size = 8, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest){
+        log.info("리뷰 조회 API START");
+
+        Page<ReviewEntity> reviewList = reviewService.getPageReviewsByUserId(userId, pageRequest);
+        Page<ResponseReview> responseReviewList = reviewList.map(
+                v -> new ModelMapper().map(v, ResponseReview.class)
+        );
+
+        log.info("리뷰 페이징 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseReviewList);
+    }
+
+    @ApiOperation(value = "상품별 리뷰 페이징 조회", notes = "상품별 리뷰 정보를 페이지별로 조회한다.")
+    @GetMapping(value = "/reviews/page/product/{productId}")
+    public ResponseEntity<Page<ResponseReview>> getPageReviewsByProductId(@PathVariable("productId") Long productId,
+                                                                          @PageableDefault(size = 8, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest){
+        log.info("구독 조회 API START");
+
+        Page<ReviewEntity> reviewList = reviewService.getPageReviewsByProductId(productId, pageRequest);
+        Page<ResponseReview> responseReviewList = reviewList.map(
+                v -> new ModelMapper().map(v, ResponseReview.class)
+        );
+
+        log.info("리뷰 페이징 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseReviewList);
+    }
+
+    @ApiOperation(value = "패키지별 리뷰 페이징 조회", notes = "패키지별 리뷰 정보를 페이지별로 조회한다.")
+    @GetMapping(value = "/reviews/page/pkg/{pkgId}")
+    public ResponseEntity<Page<ResponseReview>> getPageReviewsByPkgId(@PathVariable("pkgId") Long pkgId,
+                                                                      @PageableDefault(size = 8, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest){
+        log.info("리뷰 조회 API START");
+
+        Page<ReviewEntity> reviewList = reviewService.getPageReviewsByPkgId(pkgId, pageRequest);
+        Page<ResponseReview> responseReviewList = reviewList.map(
+                v -> new ModelMapper().map(v, ResponseReview.class)
+        );
+
+        log.info("리뷰 페이징 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseReviewList);
     }
 
 }
