@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 
 function ConfirmSubPkg(props) {
-    const {myPkgData, pkgId, pkgName} = props.location.state;
+    const {myPkgData} = props.location.state;
 
     const userId = localStorage.getItem('userid');
     const token = localStorage.getItem('token');
@@ -29,13 +29,12 @@ function ConfirmSubPkg(props) {
     const [monthlyFee, setMonthlyFee] = useState(0);
     const [shipType, setShipType] = useState(0);
 
+    const [patalogData ,setPatalogData] = useState([]);
+    const [pkgMgtData ,setPkgMgtData] = useState([]);
+
     const headers = {
         Authorization: `Bearer ${token}`
     }
-
-    console.log("=== 마이패키지 데이터 ===");
-    console.log(myPkgData)
-    console.log("========================");
 
     useEffect(() => {
         if(address.split(" ")[0] === '서울' || address.split(" ")[0] === '경기'|| address.split(" ")[0] === '인천'){
@@ -182,6 +181,8 @@ function ConfirmSubPkg(props) {
 
 
     const myPkgList = myPkgData.map((item) => {
+        if(item.catalogEntity != null) item = item.catalogEntity;
+
         return(
             <tr key={item.myPkgId}>
                 <td style={{width:"15%"}}>
@@ -235,9 +236,7 @@ function ConfirmSubPkg(props) {
         return d;
     }
 
-    const cofirmSubPkgHandler = (e) => {
-        e.preventDefault();
-
+    const registerPkg = () => {
         let body = {
             name: userId +"님의 패키지",
             category: "유저 패키지",
@@ -253,41 +252,42 @@ function ConfirmSubPkg(props) {
             .then(res => {
                 console.log(res)
                 if (res.status == 201) {
-                    alert("상품 등록이 완료 되었습니다.");
+                    //alert("상품 등록이 완료 되었습니다.");
                     console.log(res.data);
                     axios.get(`/catalog-service/${userId}/firstpatalogs`, {
                         headers : headers
                     } )
-                        .then(res => {
-                            setPatalogData(res.data);
-                            console.log(res.data);
-                            let jsonArray = new Array();
-                            myPackageDatas.map( item=> {
-                                let jsonObj = new Object();
-                                jsonObj.catalogId = item.catalogEntity.catalogId;
-                                jsonObj.patalogId = res.data.patalogId;
-                                jsonObj = JSON.stringify(jsonObj);
-                                jsonArray.push(JSON.parse(jsonObj));
-                            })
-                            setPkgMgtData(jsonArray);
-                            console.log(jsonArray);
-                            console.log(pkgMgtData);
-                            axios.post(`/catalog-service/${userId}/pkgmgt`, jsonArray, {
-                                headers : headers
-                            })
-                                .then(res => {
-                                    console.log(res)
-                                    if(res.status == 201){
-                                        console.log(res.data);
-                                    }
-                                    else{
-                                        console.log(res);
-                                        alert("오류 발생")
-                                    }
-                                })
+                    .then(res => {
+                        setPatalogData(res.data);
+                        console.log(res.data);
+
+                        confirmSubpkg(res.data);
+
+                        let jsonArray = new Array();
+                        myPkgData.map( item=> {
+                            let jsonObj = new Object();
+                            jsonObj.catalogId = item.catalogEntity.catalogId;
+                            jsonObj.patalogId = res.data.patalogId;
+                            jsonObj = JSON.stringify(jsonObj);
+                            jsonArray.push(JSON.parse(jsonObj));
                         })
-
-
+                        setPkgMgtData(jsonArray);
+                        console.log(jsonArray);
+                        console.log(pkgMgtData);
+                        axios.post(`/catalog-service/${userId}/pkgmgt`, jsonArray, {
+                            headers : headers
+                        })
+                            .then(res => {
+                                console.log(res)
+                                if(res.status == 201){
+                                    console.log(res.data);
+                                }
+                                else{
+                                    console.log(res);
+                                    alert("오류 발생")
+                                }
+                            })
+                    })
                 }
                 else if(res.status === 200) {
                     alert("장바구니에 동일한 상품이 있어 수량을 변경했습니다.");
@@ -302,6 +302,81 @@ function ConfirmSubPkg(props) {
                 alert("다시 다시 입력해주세요.");
                 console.log(body);
             });
+    }
+    
+    const confirmSubpkg = (patalogData) => {
+        const params = {
+            userId : userId,
+            pkgId : patalogData.patalogId
+        }
+
+        const apiName = "구독패키지 확정"
+
+        console.log(`====== ${apiName} API PARAMS ======`);
+        console.log(params);
+        console.log("==================================");
+
+        axios.put(`/subscription-service/subscription/confirmsubpkg`,null , {
+            params : params
+        })
+        .then(res => {
+            console.log(`====== ${apiName} 응답 데이터 ======`);
+            console.log(res.data);
+            console.log("===================================");
+
+            const body = {
+                userId : userId,
+                pkgId: patalogData.patalogId,
+                pkgName: patalogData.name,
+                address: address,
+                addressDetail: addressDetail,
+                postcode: postcode,
+                type: shipType,
+                dueDate: selDate,
+                price: monthlyFee / 4,
+                requestCatalogList: myPkgData
+            }
+
+            const apiName2 = "구독배송 등록"
+
+            console.log(`====== ${apiName2} API BODY ======`);
+            console.log(body);
+            console.log("=================================");
+
+            axios.post(`/subscription-service/ships`, body)
+            .then(res => {
+                
+                if(res.status === 201){
+                    console.log(`====== ${apiName2} 응답 데이터 ======`);
+                    console.log(res.data);
+                    console.log("===================================");
+                    
+                    props.history.push({
+                        pathname: "/subscription/confirmSubPkgcomplete",
+                        state: {
+
+                        }
+                    })
+                } else {
+                    alert(`${apiName2} 응답상태코드 에러 (응답 상태코드 : ${res.status})`)
+                }
+            })
+            .catch(error => {
+                alert(`${apiName2}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+                console.log(error.response);
+            })
+        })
+        .catch(error => {
+            alert(`${apiName}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+            console.log(error.response);
+        })
+    }
+
+    const cofirmSubPkgHandler = (e) => {
+        e.preventDefault();
+
+        
+
 
         if(postcode === "" || address === "" || addressDetail === ""){
             alert("배송 정보를 입력해주세요!");
@@ -314,71 +389,13 @@ function ConfirmSubPkg(props) {
         }
 
         if (window.confirm(`해당 패키지구성 및 배송지 정보로 구독패키지 확정 및 배송 시작을 하시겠습니까?`)) {
-            const params = {
-                userId : userId,
-                pkgId : pkgId
-            }
-
-            const apiName = "구독패키지 확정"
-
-            console.log(`====== ${apiName} API PARAMS ======`);
-            console.log(params);
-            console.log("==================================");
-
-            axios.put(`/subscription-service/subscription/confirmsubpkg`,null , {
-                params : params
-            })
-            .then(res => {
-                console.log(`====== ${apiName} 응답 데이터 ======`);
-                console.log(res.data);
-                console.log("===================================");
-
-                const body = {
-                    userId : userId,
-                    pkgId: pkgId,
-                    pkgName: pkgName,
-                    address: address,
-                    addressDetail: addressDetail,
-                    postcode: postcode,
-                    type: shipType,
-                    dueDate: selDate,
-                    price: monthlyFee / 4,
-                }
-    
-                const apiName2 = "구독배송 등록"
-    
-                console.log(`====== ${apiName2} API BODY ======`);
-                console.log(body);
-                console.log("=================================");
-
-                axios.post(`/subscription-service/ships`, body)
-                .then(res => {
-                    
-                    if(res.status === 201){
-                        console.log(`====== ${apiName2} 응답 데이터 ======`);
-                        console.log(res.data);
-                        console.log("===================================");
-                        
-                        props.history.push({
-                            pathname: "/subscription/confirmSubPkgcomplete",
-                            state: {
-
-                            }
-                        })
-                    } else {
-                        alert(`${apiName2} 응답상태코드 에러 (응답 상태코드 : ${res.status})`)
-                    }
-                })
-                .catch(error => {
-                    alert(`${apiName2}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
-                    console.log(error.response);
-                })
-            })
-            .catch(error => {
-                alert(`${apiName}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
-                console.log(error.response);
-            })
+            // 패키지 등록
+            registerPkg();
         }
+    }
+
+    const test = () => {
+        console.log(patalogData);
     }
 
     return (

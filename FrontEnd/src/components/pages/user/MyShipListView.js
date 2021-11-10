@@ -4,9 +4,9 @@ import { withRouter } from 'react-router';
 import axios from 'axios';
 
 function MyShipListView(props) {
-    const {shipData} = props;
-    const [patalogData, setPatalogData] = useState([]);
+    const {key, shipData} = props;
     const [loading, setLoading] = useState(true);
+    const [patalogData, setPatalogData] = useState([]);
 
     function popupWindow(url, windowName, win, w, h) {
         const y = win.top.outerHeight / 2 + win.top.screenY - ( h / 2);
@@ -98,25 +98,28 @@ function MyShipListView(props) {
             pathname: "/mypage/mysubpkgdetail",
             state: {
                 pkgId: shipData.pkgId,
-                shipStatus: shipData.status
+                shipStatus: shipData.status,
+                patalogData: patalogData
             }
         })
     }
+
+    
 
     return (
         <>
             {loading ?
                 <div></div>
                 :
-                <div class="card col-10 mb-30">
-                    <div class="card-header row justify-content-between" style={{cursor:"pointer"}}
+                <div className="card col-10 mb-30">
+                    <div className="card-header row justify-content-between" style={{cursor:"pointer"}}
                         onClick={viewPkgDetailHandler}
                     >
                         {/* patalogData.pkgMgt && patalogData.pkgMgt.length */}
-                        <div className="col-10" style={{fontWeight:"bold", fontSize:"1.4rem"}}>{`${shipData.pkgName} (${patalogData.pkgMgt && patalogData.pkgMgt[0].catalogEntity.name}${patalogData.pkgMgt.length > 1 ? " 외 " + patalogData.pkgMgt.length + "개의 상품)" : ")" }`}</div>
-                        <div className="col-2 text-right"><i class="fas fa-chevron-right"></i></div>
+                        <div className="col-10" style={{fontWeight:"bold", fontSize:"1.4rem"}}>{`${shipData.pkgName} (${patalogData.pkgMgt && patalogData.pkgMgt[0].catalogEntity.name}${patalogData.pkgMgt && patalogData.pkgMgt.length > 1 ? " 외 " + patalogData.pkgMgt.length + "개의 상품)" : ")" }`}</div>
+                        <div className="col-2 text-right"><i className="fas fa-chevron-right"></i></div>
                     </div>
-                    <div class="card-body row justify-content-between">
+                    <div className="card-body row justify-content-between">
                         <div className="col-1 my-auto m-0 p-0">
                             <img src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${patalogData.pkgMgt && patalogData.pkgMgt[0].catalogEntity.image1}`} 
                                 className="img-fluid mx-auto" alt="" 

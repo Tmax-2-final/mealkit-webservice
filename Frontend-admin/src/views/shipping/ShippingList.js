@@ -59,7 +59,7 @@ function ShippingList(props) {
             <CTableDataCell>{shipData.address + " " + shipData.addressDetail}</CTableDataCell>
             <CTableDataCell>{getShipTypeText(shipData.type)}</CTableDataCell>
             <CTableDataCell>{getShipStatusText(shipData.status)}</CTableDataCell>
-            <CTableDataCell>{shipData.startDate === null ? "-" : new Date(Date.parse(shipData.startDate)).toLocaleString()}</CTableDataCell>
+            {/* <CTableDataCell>{shipData.startDate === null ? "-" : new Date(Date.parse(shipData.startDate)).toLocaleString()}</CTableDataCell> */}
             <CTableDataCell>{shipData.dueDate}</CTableDataCell>
         </CTableRow>
     );
