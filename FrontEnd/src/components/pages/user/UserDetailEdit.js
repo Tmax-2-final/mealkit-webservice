@@ -7,7 +7,6 @@ import Footer from '../../layout/Footer';
 import Header from '../../layout/Header';
 import SideBar from '../../elements/ui/Sidebar';
 import axios from 'axios';
-import Card from 'react-bootstrap/Card'
 
 export default function UserDetailEdit() {
 
@@ -172,7 +171,7 @@ export default function UserDetailEdit() {
                                                         placeholder="이름을 입력해주세요"
                                                         value={name}
                                                         onChange={nameHandler}
-                                                        readOnly
+                                                        
                                                     />
                                                     
                                                     

@@ -8,6 +8,7 @@ import Rating from '../../elements/ui/Rating';
 export default function ReviewListView({ data, setReviewDatas }) {
     console.log(data);
 
+
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('userid');
 
@@ -20,7 +21,7 @@ export default function ReviewListView({ data, setReviewDatas }) {
             }
         })
             .then(
-                alert("해당 상품이 삭제 되었습니다!"),
+                alert("해당 리뷰가 삭제 되었습니다!"),
                 axios.get(`/review-service/reviews/${userId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -47,7 +48,7 @@ export default function ReviewListView({ data, setReviewDatas }) {
                 <span>{data.title}</span>
             </td>
             <td className="product-name">
-                <span>{data.productId}</span>
+                <span>{data.orderType === 1 ? data.pkgName : data.productName}</span>
             </td>
             <td className="product-name">
                 <span>{data.content}</span>
