@@ -6,12 +6,13 @@ import Footer from '../../layout/Footer';
 import Header from '../../layout/Header';
 import SideBar from '../../elements/ui/Sidebar';
 import axios from 'axios';
-import Card from 'react-bootstrap/Card'
 import { Link } from "react-router-dom";
 
 
 
 function MyPage(props) {
+
+    
 
 
     const userId = localStorage.getItem('userid');
@@ -31,7 +32,7 @@ function MyPage(props) {
             const userId = localStorage.getItem('userid');
             const token = localStorage.getItem('token');
 
-            axios.delete(`/user-service/${userId}/users`, {
+            axios.delete(`/user-service/users/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -175,8 +176,8 @@ function MyPage(props) {
                                                 <p style={{ color: "grey" }}>{data.name}</p>
                                                 <p style={{ color: "grey" }}>{data.userId}</p>
                                                 <p style={{ color: "grey" }}>{data.email}</p>
-                                                <p style={{ color: "grey" }}>{data.birth}</p>
-                                                <p style={{ color: "grey" }}>{data.gender}</p>
+                                                <p style={{ color: "grey" }}>{new Date(Date.parse(data.birth)).toLocaleString().split("오")[0]}</p>
+                                                <p style={{ color: "grey" }}>{data.gender === 1 ? "남성" : "여성"}</p>
                                                 <p style={{ color: "grey" }}>{new Date(Date.parse(data.createdAt)).toLocaleString().split("오")[0]}</p>
 
                                             </div>

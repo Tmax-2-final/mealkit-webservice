@@ -35,7 +35,7 @@ export default function UserReviewList(props) {
             <Header />
             <Bread
                 productId={`test`}
-                productName={`주문서`}
+                productName={`작성한 후기 조회`}
                 productUrl={`test3`}
             />
             <section id="mypage">
@@ -44,9 +44,8 @@ export default function UserReviewList(props) {
                         <div className="col-2 offset-1">
                             <Sidebar />
                         </div>
-                        <div className="col-8 offset-1">
+                    <div className={`col-8 ml-40`}>
                             <div className="row">
-                                {/* <div className="col-lg-7 col-md-12 ml-auto mr-auto"> */}
                                 <div className="login-register-wrapper">
                                     <div className="container" defaultActiveKey="login">
 
