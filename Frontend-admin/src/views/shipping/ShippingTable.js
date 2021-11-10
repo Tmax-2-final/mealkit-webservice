@@ -159,7 +159,7 @@ export default function ShippingTable({ subscriptionDatas, setSubscriptionDatas,
                                             <CTableHeaderCell scope="col">배송지</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">배송구분</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">배송상태</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">배송시작시간</CTableHeaderCell>
+                                            {/* <CTableHeaderCell scope="col">배송시작시간</CTableHeaderCell> */}
                                             <CTableHeaderCell scope="col">배송예정일</CTableHeaderCell>
                                         </CTableRow>
                                     </CTableHead>

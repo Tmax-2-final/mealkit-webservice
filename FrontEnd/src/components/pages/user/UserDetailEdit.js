@@ -7,7 +7,7 @@ import Footer from '../../layout/Footer';
 import Header from '../../layout/Header';
 import SideBar from '../../elements/ui/Sidebar';
 import axios from 'axios';
-import Card from 'react-bootstrap/Card'
+// import Card from 'react-bootstrap/Card'
 
 export default function UserDetailEdit() {
 
