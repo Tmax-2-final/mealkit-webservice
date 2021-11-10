@@ -3,6 +3,8 @@ package com.example.reviewservice.service;
 import com.example.reviewservice.dto.ReviewDto;
 import com.example.reviewservice.entity.ReviewEntity;
 import com.example.reviewservice.vo.RequestDate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ReviewService {
     /* 전체 리뷰 조회 */
@@ -28,5 +30,17 @@ public interface ReviewService {
 
     /* 날짜 리뷰 조회 */
     Iterable<ReviewEntity> getReviewsAllBetween(RequestDate requestDate);
+
+    /* 전체 리뷰 페이지 */
+    Page<ReviewEntity> getAllPageReviews(Pageable pageRequest);
+
+    /* 특정 회원의 리뷰 조회 */
+    Page<ReviewEntity> getPageReviewsByUserId(String userId, Pageable pageRequest);
+
+    /* 특정 패키지별 리뷰 조회 */
+    Page<ReviewEntity> getPageReviewsByPkgId(Long pkgId, Pageable pageRequest);
+
+    /* 특정 상품별 리뷰 조회 */
+    Page<ReviewEntity> getPageReviewsByProductId(Long productId, Pageable pageRequest);
 
 }

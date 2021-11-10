@@ -6,7 +6,6 @@ import Bread from "../../elements/ui/Bread";
 import axios from 'axios';
 import S3 from 'react-aws-s3';
 import Rating from '@mui/material/Rating';
-
     
 export default function ReviewForm(props) {
     const {pkgId, productId, orderType, pkgName, productName} = props.location.state;
@@ -26,13 +25,6 @@ export default function ReviewForm(props) {
     let newFileName = '';
     const ACCESS_KEY = '';
     const SECRET_ACCESS_KEY = '';
-
-
-
-    // const pkgNameHandler = (e) => {
-    //     e.preventDefault();
-    //     setTitle(e.target.value);
-    // }
 
     const titleHandler = (e) => {
         e.preventDefault();
@@ -144,10 +136,10 @@ export default function ReviewForm(props) {
                                                             <input
                                                                 type="text"
                                                                 name="Name"
-                                                                value={orderType ===1 ? pkgName : productName}
+                                                                value={orderType === 1 ? pkgName : productName}
                                                                 readOnly
-                                                            />
-                                                            
+                                                            /> 
+
                                                             <label>제목</label>
 
                                                             <input
@@ -195,6 +187,7 @@ export default function ReviewForm(props) {
                                                             />
 
                                                             <br /><br />
+
 
                                                             <div>
                                                                 <div className="billing-info">
