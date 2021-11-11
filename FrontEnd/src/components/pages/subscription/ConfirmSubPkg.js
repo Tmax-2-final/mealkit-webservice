@@ -261,7 +261,7 @@ function ConfirmSubPkg(props) {
                         setPatalogData(res.data);
                         console.log(res.data);
 
-                        confirmSubpkg(res.data);
+                        registerShip(res.data);
 
                         let jsonArray = new Array();
                         myPkgData.map( item=> {
@@ -323,48 +323,6 @@ function ConfirmSubPkg(props) {
             console.log(`====== ${apiName} 응답 데이터 ======`);
             console.log(res.data);
             console.log("===================================");
-
-            const body = {
-                userId : userId,
-                pkgId: patalogData.patalogId,
-                pkgName: patalogData.name,
-                address: address,
-                addressDetail: addressDetail,
-                postcode: postcode,
-                type: shipType,
-                dueDate: selDate,
-                price: monthlyFee / 4,
-                requestCatalogList: myPkgData
-            }
-
-            const apiName2 = "구독배송 등록"
-
-            console.log(`====== ${apiName2} API BODY ======`);
-            console.log(body);
-            console.log("=================================");
-
-            axios.post(`/subscription-service/ships`, body)
-            .then(res => {
-                
-                if(res.status === 201){
-                    console.log(`====== ${apiName2} 응답 데이터 ======`);
-                    console.log(res.data);
-                    console.log("===================================");
-                    
-                    props.history.push({
-                        pathname: "/subscription/confirmSubPkgcomplete",
-                        state: {
-
-                        }
-                    })
-                } else {
-                    alert(`${apiName2} 응답상태코드 에러 (응답 상태코드 : ${res.status})`)
-                }
-            })
-            .catch(error => {
-                alert(`${apiName2}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
-                console.log(error.response);
-            })
         })
         .catch(error => {
             alert(`${apiName}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
@@ -372,11 +330,55 @@ function ConfirmSubPkg(props) {
         })
     }
 
+    const registerShip = (patalogData) => {
+        const body = {
+            userId : userId,
+            pkgId: patalogData.patalogId,
+            pkgName: patalogData.name,
+            address: address,
+            addressDetail: addressDetail,
+            postcode: postcode,
+            type: shipType,
+            dueDate: selDate,
+            price: monthlyFee / 4,
+            requestCatalogList: myPkgData
+        }
+
+        const apiName2 = "구독배송 등록"
+
+        console.log(`====== ${apiName2} API BODY ======`);
+        console.log(body);
+        console.log("=================================");
+
+        axios.post(`/subscription-service/ships`, body)
+        .then(res => {
+            
+            if(res.status === 201){
+                console.log(`====== ${apiName2} 응답 데이터 ======`);
+                console.log(res.data);
+                console.log("===================================");
+                
+                confirmSubpkg(patalogData);
+
+                props.history.push({
+                    pathname: "/subscription/confirmSubPkgcomplete",
+                    state: {
+
+                    }
+                })
+            } else {
+                alert(`${apiName2} 응답상태코드 에러 (응답 상태코드 : ${res.status})`)
+            }
+        })
+        .catch(error => {
+            alert(error.response.data);
+            //alert(`${apiName2}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+            console.log(error.response);
+        })
+    }
+
     const cofirmSubPkgHandler = (e) => {
         e.preventDefault();
-
-        
-
 
         if(postcode === "" || address === "" || addressDetail === ""){
             alert("배송 정보를 입력해주세요!");
@@ -392,10 +394,6 @@ function ConfirmSubPkg(props) {
             // 패키지 등록
             registerPkg();
         }
-    }
-
-    const test = () => {
-        console.log(patalogData);
     }
 
     return (
