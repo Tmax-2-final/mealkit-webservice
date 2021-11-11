@@ -148,6 +148,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         SubscriptionDto subscriptionDto = getSubscription(requestCancelSubscription.getUserId());
         subscriptionDto.setCancelContent(requestCancelSubscription.getCancelContent());
         subscriptionDto.setStatus(cancelStatus);
+        subscriptionDto.setEndDate(LocalDateTime.of(LocalDate.now(), LocalTime.now()));
+        subscriptionDto.setChangeSubGradeId(null);
 
         SubscriptionEntity deleteSubscriptionEntity = modelMapper.map(subscriptionDto, SubscriptionEntity.class);
 
