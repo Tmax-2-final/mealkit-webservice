@@ -89,7 +89,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void restartSubscription(RequestUpdateSubscription requestUpdateSubscription) {
+    public SubscriptionDto restartSubscription(RequestUpdateSubscription requestUpdateSubscription) {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
 
@@ -113,23 +113,31 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         SubscriptionEntity restartSubscriptionEntity = modelMapper.map(subscriptionDto, SubscriptionEntity.class);
 
-        subscriptionRepository.save(restartSubscriptionEntity);
+        Object obj = subscriptionRepository.save(restartSubscriptionEntity);
+
+        SubscriptionDto returnValue = modelMapper.map(obj, SubscriptionDto.class);
+
+        return returnValue;
     }
 
     @Transactional
     @Override
-    public void updateSubscription(SubscriptionDto subscriptionDto) {
+    public SubscriptionDto updateSubscription(SubscriptionDto subscriptionDto) {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         SubscriptionEntity updatedSubscriptionEntity = modelMapper.map(subscriptionDto, SubscriptionEntity.class);
 
-        subscriptionRepository.save(updatedSubscriptionEntity);
+        Object obj = subscriptionRepository.save(updatedSubscriptionEntity);
+
+        SubscriptionDto returnValue = modelMapper.map(obj, SubscriptionDto.class);
+
+        return returnValue;
     }
 
     @Transactional
     @Override
-    public void cancelSubscription(RequestCancelSubscription requestCancelSubscription) {
+    public SubscriptionDto cancelSubscription(RequestCancelSubscription requestCancelSubscription) {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
@@ -143,7 +151,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         SubscriptionEntity deleteSubscriptionEntity = modelMapper.map(subscriptionDto, SubscriptionEntity.class);
 
-        subscriptionRepository.save(deleteSubscriptionEntity);
+        Object obj = subscriptionRepository.save(deleteSubscriptionEntity);
+
+        SubscriptionDto returnValue = modelMapper.map(obj, SubscriptionDto.class);
 
         Iterable<SubscriptionShipsEntity> subscriptionShipsEntities = getSubShips(requestCancelSubscription.getUserId());
 
@@ -153,6 +163,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
 
         subscriptionShipsRepository.saveAll(subscriptionShipsEntities);
+
+        return returnValue;
     }
 
     @Override
@@ -161,7 +173,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         Page<SubscriptionEntity> subscriptionList = subscriptionRepository.findAll(pageRequest);
-
 
         Page<SubscriptionDto> subscriptionDtoList = subscriptionList.map(
                     v -> {
@@ -419,6 +430,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public Iterable<SubscriptionShipsEntity> getSubShips(String userId) {
         return subscriptionShipsRepository.findByUserId(userId);
+    }
+
+    @Override
+    public Page<SubShipDto> getSubPagingShips(String userId, Pageable pageRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Page<SubscriptionShipsEntity> shipList = subscriptionShipsRepository.findByUserId(userId, pageRequest);
+
+        Page<SubShipDto> shipDtoList = shipList.map(
+                v ->  modelMapper.map(v, SubShipDto.class)
+        );
+
+        return shipDtoList;
     }
 
     @Override

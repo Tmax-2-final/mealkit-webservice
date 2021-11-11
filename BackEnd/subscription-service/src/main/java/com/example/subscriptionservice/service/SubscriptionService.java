@@ -30,13 +30,13 @@ public interface SubscriptionService {
     SubscriptionDto createSubscription(SubscriptionDto subscriptionDto);
 
     /*구독 재시작*/
-    void restartSubscription(RequestUpdateSubscription requestUpdateSubscription);
+    SubscriptionDto restartSubscription(RequestUpdateSubscription requestUpdateSubscription);
 
     /*구독 변경*/
-    void updateSubscription(SubscriptionDto subscriptionDto);
+    SubscriptionDto updateSubscription(SubscriptionDto subscriptionDto);
 
     /*구독 취소*/
-    void cancelSubscription(RequestCancelSubscription requestCancelSubscription);
+    SubscriptionDto cancelSubscription(RequestCancelSubscription requestCancelSubscription);
 
     /*구독 페이징 조회*/
     Page<SubscriptionDto> getAllSubscription(Pageable pageRequest);
@@ -76,6 +76,9 @@ public interface SubscriptionService {
 
     /*구독 배송 조회*/
     Iterable<SubscriptionShipsEntity>  getSubShips(String userId);
+
+    /*구독 배송 페이징 조회*/
+    Page<SubShipDto>  getSubPagingShips(String userId, Pageable pageRequest);
 
     /*구독 배송정보 변경*/
     void  updateSubShip(Long shipId, String postcode, String address, String addressDetail, LocalDate dueDate, Character type);

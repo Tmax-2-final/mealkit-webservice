@@ -22,4 +22,6 @@ public class RequestShips {
     private LocalDateTime startDate;
     private LocalDate dueDate;
     private Long price;
+
+    Iterable<RequestCatalog> requestCatalogList;
 }

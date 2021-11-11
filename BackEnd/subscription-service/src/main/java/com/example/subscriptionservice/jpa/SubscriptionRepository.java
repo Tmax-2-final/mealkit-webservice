@@ -26,4 +26,6 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity
     Page<SubscriptionEntity> findByStatusAndStartDateBetween(Character status, LocalDateTime startDate, LocalDateTime endDate, Pageable pageRequest);
 
     Long countByStartDateBetween(LocalDateTime start, LocalDateTime end);
+
+
 }

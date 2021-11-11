@@ -37,4 +37,6 @@ public interface SubscriptionShipsRepository extends JpaRepository<SubscriptionS
 
     @Query("select s from SubscriptionShipsEntity s where s.id in :idList")
     Iterable<SubscriptionShipsEntity> findShipIn(Long[] idList);
+
+    Page<SubscriptionShipsEntity> findByUserId(String userId, Pageable pageRequest);
 }
