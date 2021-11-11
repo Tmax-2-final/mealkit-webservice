@@ -79,11 +79,12 @@ export default function CompareTable(props) {
         axios.delete(`/catalog-service/${userId}/mypackage`)
             .then(res => {
                 alert("삭제 되었습니다.")
-                axios.get(`catalog-service/mypackage`)
-                    .then(data =>{
-                        console.log(data.data);
-                        setMyPackageDatas(data.data);
-                    })
+                // axios.get(`catalog-service/mypackage`)
+                //     .then(data =>{
+                //         console.log(data.data);
+                //         setMyPackageDatas(data.data);
+                //     })
+                window.location.href = '/mypkg'
             })
     }
 

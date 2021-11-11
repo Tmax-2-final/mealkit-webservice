@@ -501,7 +501,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public Long getRevenueMonth() {
         // 오늘로부터 1달전~오늘 매출액 기간 설정
         LocalDate startDatetime = LocalDate.now().minusMonths(1);
-        LocalDate endDatetime = LocalDate.now();
+        LocalDate endDatetime = LocalDate.now().plusDays(1L);
 
         return subscriptionShipsRepository.getRevenueBetween(startDatetime, endDatetime);
     }
