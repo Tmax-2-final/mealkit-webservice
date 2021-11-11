@@ -73,3 +73,7 @@ logging:
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
+
+kafka:
+  bootstrap-address: localhost:9092
+  group-id: consumerGroupId

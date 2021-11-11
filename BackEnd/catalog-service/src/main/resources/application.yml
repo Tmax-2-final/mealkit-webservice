@@ -44,3 +44,7 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
+kafka:
+  bootstrap-address: localhost:9092
+  group-id: consumerGroupId
