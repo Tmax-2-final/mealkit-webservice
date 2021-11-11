@@ -6,6 +6,8 @@ import SideBar from '../../elements/ui/Sidebar';
 import axios from 'axios';
 import MyShipListView from './MyShipListView';
 import Pagination from "../../elements/ui/Pagination"
+import DatePicker, { registerLocale } from 'react-datepicker';
+import ko from "date-fns/locale/ko"; // the locale you want
 
 function MySubShips(props) {
     let userId = localStorage.getItem('userid');
@@ -32,6 +34,8 @@ function MySubShips(props) {
         weekago = weekago.setHours(0,0,0,0);
         return weekago;
     });
+
+    registerLocale("ko", ko);
 
     const [selDate, setSelDate] = useState(null);
 
@@ -129,7 +133,59 @@ function MySubShips(props) {
                     </div>
                         <div className={`col-8 ml-40`}>
                             <span style={{fontSize:"30px"}}><strong>배송 조회</strong></span>
-                            <br /><br /><br />
+                            <br /><br />
+                            <div className="row mb-4">
+                                <>
+                                    <div className="col-1 my-auto">
+                                        <span>배송일</span>
+                                    </div>
+                                    <div className="col-2 my-auto">
+                                        <DatePicker
+                                            selected={startDate}
+                                            onChange={(date) => setStartDate(date)}
+                                            selectsStart
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            locale="ko"
+                                            dateFormat="yyyy.MM.dd(eee)"
+                                        />
+                                    </div>
+                                    <div className="col-1 my-auto text-center">
+                                        <span>~</span>
+                                    </div>
+                                    <div className="col-2 my-auto">
+                                        <DatePicker
+                                            selected={endDate}
+                                            onChange={(date) => setEndDate(date)}
+                                            selectsEnd
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            minDate={startDate}
+                                            locale="ko"
+                                            dateFormat="yyyy.MM.dd(eee)"
+                                        />
+                                    </div>
+                                </>
+                                <div className="col-3">
+                                    <div className="pro-sidebar-search">
+                                        <form className="pro-sidebar-search-form" 
+                                            //onSubmit={handleSubmit}
+                                        >
+                                            <input
+                                                //onChange={searchChange}
+                                                type="text"
+                                                placeholder="검색할 주문번호"
+                                                //value={search}
+                                            />
+                                            <button 
+                                                //onClick={searchHandler}
+                                            >
+                                                <i className="las la-search" />
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                             {
                                 loading === false ?
                                 subShipData.map((item, index) => (
