@@ -90,7 +90,7 @@ public class UserController {
     @PutMapping("/find/pw")
     public ResponseEntity<Map<String, String>> findPassword(@RequestBody @Valid RequestFindPwUser requestFindPwUser) {
         // 1. 이름, 이메일 정보 활용해 아이디 정보 가져오기
-        UserDto userDto = userService.getUserByUserEmailAndName(requestFindPwUser.getEmail(), requestFindPwUser.getName());
+        UserDto userDto = userService.getUserByUserEmailAndName(requestFindPwUser.getUserId(), requestFindPwUser.getName(), requestFindPwUser.getEmail());
         // 2. 임시 비밀번호로 변경(업데이트) 하기
         String password = userService.updateUserPassword(userDto);
         // 3. 임시 비밀번호 return 해주기

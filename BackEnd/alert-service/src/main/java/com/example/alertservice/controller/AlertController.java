@@ -11,6 +11,7 @@ import com.example.alertservice.service.MailService;
 import com.example.alertservice.util.UtilService;
 import com.example.alertservice.vo.RequestAlert;
 import com.example.alertservice.vo.ResponseAlert;
+import com.example.alertservice.vo.ResponseUser;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -39,16 +40,18 @@ public class AlertController {
     private final AlertService alertService;
     private final KakaoService kakaoService;
     private final Environment env;
+    private final UserServiceClient userServiceClient;
 
     @Autowired
     public AlertController(MailService mailService, UtilService utilService,
                            AlertService alertService, KakaoService kakaoService,
-                           Environment env) {
+                           Environment env, UserServiceClient userServiceClient) {
         this.mailService = mailService;
         this.utilService = utilService;
         this.alertService = alertService;
         this.kakaoService = kakaoService;
         this.env = env;
+        this.userServiceClient = userServiceClient;
     }
 
     @ApiOperation(value = "상태", notes="상태 조회")
@@ -121,8 +124,16 @@ public class AlertController {
     @PostMapping("/alerts")
     public Map<String, String> sendAndSaveAlerts(@RequestBody RequestAlert requestAlert) {
         Map<String, String> result = new HashMap<>();
+        // 유저 id로 유저 정보 불러오기
+        ResponseUser user = userServiceClient.getUser(requestAlert.getUserId());
+        if(user == null) {
+            log.error("유저정보 불러오기 실패");
+            result.put("result", "550");
+            return result;
+        }
+
         // 카카오 알림 발송 코드
-        if(requestAlert.getOauth() != null && requestAlert.getOauth().equals("kakao")) {
+        if(user.getOauth() != null && user.getOauth().equals("kakao")) {
             log.info("카카오 알림 발송 시작");
             // 0. 토큰 만료 기간부터 파악, 만료되었다면 갱신이 먼저 - 불가능함
             // kakaoService.refreshKakaoToken();
@@ -138,7 +149,7 @@ public class AlertController {
         try {
             // 1. 알림 코드로 어떤 메일 알림을 보낼 건지 service layer 에서 파악
             // 2. 메일 알림 폼 제작
-            MailEntity mailEntity = mailService.createMailForm(requestAlert);
+            MailEntity mailEntity = mailService.createMailForm(requestAlert, user.getEmail());
             // 3. 알림 발송
             mailService.sendMail(mailEntity);
             // 4. 알림 전송 성공 코드
