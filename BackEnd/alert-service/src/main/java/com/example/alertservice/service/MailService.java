@@ -155,8 +155,8 @@ public class MailService {
             msg.append("</td></tr>");
             msg.append("</tbody></table>");
 
-            msg.append("<ul><li>자세한 내용은 <a href=\"http://localhost:3000/mypage/myDeliOrder\" style=\"color:#222;\" target=\"_blank\" rel=\"noreferrer noopener\">" +
-                    "배송내역</a>에서 확인하세요</li></ul><br/><br/>");
+            msg.append("<ul><li>자세한 내용은 <a href=\"http://localhost:3000/mypage/myShip\" style=\"color:#222;\" target=\"_blank\" rel=\"noreferrer noopener\">" +
+                    "배송조회</a>에서 확인하세요</li></ul><br/><br/>");
         }
         // 배송 완료
         else if(requestAlert.getType() == 302) {
@@ -183,8 +183,8 @@ public class MailService {
             msg.append("</tbody></table>");
 
             msg.append("주문하신 상품은 잘 받으셨나요? 상품이 고객님 마음에 들었으면 좋겠습니다.<br /> 마음에 드셨다면 " +
-                    "<a href=\"http://localhost:3000/mypage/reviews\" style=\"color:#222;\" target=\"_blank\" rel=\"noreferrer noopener\">리뷰작성</a>" +
-                    "과 함께 구매확정 부탁드려요! <br/><br/><br/>");
+                    "<a href=\"http://localhost:3000/mypage/myShip\" style=\"color:#222;\" target=\"_blank\" rel=\"noreferrer noopener\">리뷰작성</a>" +
+                    "부탁드려요! <br/><br/><br/>");
         }
         msg.append("<p>본 메일은 발신전용 메일이므로, 회신을 통한 문의는 처리되지 않습니다.</p>" +
                 "<p>문의사항은 <b>고객센터(1588–3820)</b>를 이용해 주세요.</p><br />"+
