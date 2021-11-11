@@ -202,7 +202,6 @@ public class SubscriptionController {
         Page<SubscriptionDto> subscriptionList = null;
 
         if(startDate != null && endDate != null) {
-            // 날짜 타입 변경 LocalDate -> Date
             subscriptionList = subscriptionService.getSubscriptionByStatusAndStartDateBetween(status, startDate, endDate, pageRequest);
         }
         else {

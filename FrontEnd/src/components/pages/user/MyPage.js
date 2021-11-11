@@ -189,7 +189,15 @@ function MyPage(props) {
                         <div className="col-lg-9 col-md-9 mb-5">
                             <div className="card">
                                 <div className="card-header" style={{ backgroundColor: "white" }}>
-                                    <h5 className="card-title mt-2">구독 내역</h5>
+                                <div className="row">
+                                    <div className="col-7">
+                                        <h5 className="card-title mt-2">구독 내역</h5>
+                                    </div>
+                                    <div className="col-5 text-right">
+                                        <button className="btn btn-outline-primary btn-sm mr-3" onClick={subChangeHandler} ><span>구독변경</span></button>
+                                        <button className="btn btn-outline-primary btn-sm" onClick={subCancelHandler}><span>구독취소</span></button>
+                                    </div>
+                                </div>
                                 </div>
                                 <div className="card-body">
                                     <div className="user-detail ml-3">
