@@ -46,6 +46,9 @@ public class UserEntity {
     @Column
     private String oauth;
 
+    @Column
+    private Integer subscribeYn;
+
     @Column(nullable = false, unique = true)
     private String encryptedPwd;
 
