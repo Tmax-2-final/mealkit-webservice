@@ -43,16 +43,10 @@ public class KafkaProducer {
     }
 
     public void send(String topic, SubscriptionDto subDto){
-        ObjectMapper mapper= new ObjectMapper();
-        JavaTimeModule javaTimeModule=new JavaTimeModule();
-        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ISO_DATE_TIME));
-        mapper.registerModule(javaTimeModule);
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
         String jsonInString = "";
 
         try {
-            jsonInString = mapper.writeValueAsString(subDto);
+            jsonInString = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(subDto);
         } catch (JsonProcessingException e) {
             log.info(e.getMessage());
         }
