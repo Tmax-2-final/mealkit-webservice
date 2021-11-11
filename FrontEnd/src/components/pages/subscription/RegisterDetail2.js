@@ -145,6 +145,7 @@ function RegisterDetail2(props) {
                         const body = {
                             subGradeId: props.chkedGradeData.subGradeId,
                             userId: userId,
+                            status: '1'
                         }
 
                         axios.put(`/subscription-service/subscription/restart`, body, {
@@ -189,6 +190,7 @@ function RegisterDetail2(props) {
                         const body = {
                             subGradeId: props.chkedGradeData.subGradeId,
                             userId: userId,
+                            status: '1'
                         }
         
                         console.log("====== 구독 등록 API BODY ======");
