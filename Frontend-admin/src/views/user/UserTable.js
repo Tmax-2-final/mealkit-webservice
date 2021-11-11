@@ -4,6 +4,7 @@ import React from 'react';
 import { CPagination, CPaginationItem } from '@coreui/react';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 
 export default function UserTable({ userDatas, setUserDatas, loading}){
@@ -54,6 +55,33 @@ export default function UserTable({ userDatas, setUserDatas, loading}){
     const deleteHandler = (userId, e) => {
         e.preventDefault();
         console.log(userId);
+        if (window.confirm('정말 삭제하시겠습니까?')) {
+            alert(`${userId} 고객님을 삭제합니다.`)
+
+            const token = localStorage.getItem('token')
+
+            const result = axios.delete(`/user-service/users/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+                .then((res) => {
+                    console.log(res);
+                    if (res.status === 200) {
+                        alert('고객님을 정상적으로 삭제했습니다.')
+                        history.push({
+                            pathname: '/users/list'
+                        })
+                    }
+                    else {
+                        alert('오류 발생')
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                    alert('오류 발생')
+                })
+        }
     }
 
     return (
@@ -87,7 +115,14 @@ export default function UserTable({ userDatas, setUserDatas, loading}){
                                                     <CTableDataCell onClick={(e) => userDetailHandler(item, e)}>{item.name}</CTableDataCell>
                                                     <CTableDataCell onClick={(e) => userDetailHandler(item, e)}>{item.userId}</CTableDataCell>
                                                     <CTableDataCell onClick={(e) => userDetailHandler(item, e)}>{item.email}</CTableDataCell>
-                                                    <CTableDataCell>N</CTableDataCell>
+                                                    <CTableDataCell>
+                                                    {
+                                                        item.subscribeYn === 0 ?
+                                                        <p>N</p>
+                                                        :
+                                                        <p>Y</p>
+                                                    }
+                                                    </CTableDataCell>
                                                     <CTableDataCell>{new Date(Date.parse(item.createdAt)).toLocaleString().split("오")[0]}</CTableDataCell>
                                                     <CTableDataCell><Link onClick={(e) => deleteHandler(item.userId, e)}><i className="far fa-trash-alt"></i></Link></CTableDataCell>
                                                 </CTableRow>
