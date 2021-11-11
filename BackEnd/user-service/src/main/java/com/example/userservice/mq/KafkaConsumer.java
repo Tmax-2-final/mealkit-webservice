@@ -26,7 +26,7 @@ public class KafkaConsumer {
     }
 
     @Transactional
-    @KafkaListener(topics = "user-subscription-topic")
+    @KafkaListener(topics = "subscription-topic")
     public void updateSubsribeOrNot(String kafkaMessage) {
         log.info("회원의 구독 정보를 불러옵니다: " + kafkaMessage);
 
@@ -41,12 +41,13 @@ public class KafkaConsumer {
 
         // 회원 구독 여부 업데이트
         UserEntity user = userRepository.findByUserId(map.get("userId").toString());
+        log.info(user.getSubscribeYn().toString());
         if (user != null) {
-            Integer updateSubscribeStatus = (Integer)map.get("status");
+            String updateSubscribeStatus = map.get("status").toString();
             // 1이면 1 3이면 0
-            if(updateSubscribeStatus == 1)
+            if(updateSubscribeStatus.equals("1"))
                 user.setSubscribeYn(1); // 구독 가입했다
-            else if(updateSubscribeStatus == 3)
+            else if(updateSubscribeStatus.equals("3"))
                 user.setSubscribeYn(0); // 구독 취소했다
 
             userRepository.save(user);
