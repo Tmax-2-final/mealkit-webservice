@@ -8,7 +8,7 @@ import axios from "axios";
 import Header from "../../layout/Header";
 import Sidebar from '../../elements/ui/Sidebar';
 import Footer from "../../layout/Footer";
-
+import Pagination from "../../elements/ui/Pagination";
 
 export default function UserReviewList(props) {
 
@@ -17,17 +17,53 @@ export default function UserReviewList(props) {
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('userid');
 
-    useEffect(() => {
-        axios.get(`/review-service/reviews/${userId}`, {
+    // 페이징
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPosts, setTotalPosts] = useState(0);
+    const [postsPerPage, setPostsPerPage] = useState(0);
+    const [loading, setLoading] = useState(true);
+
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+        getReviews(pageNumber);
+    }
+
+    const getReviewOrderType = (orderType, page) => {
+        axios.get(`/review-service/reviews/${userId}/${orderType}?page=${page}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
-            .then(data => {
-                console.log(data);
-                setReviewDatas(data.data);
-            });
+            .then(res => {
+
+                console.log(res.data.content);
+                console.log('=======================');
+
+                setReviewDatas(res.data.content);
+                setTotalPosts(res.data.totalElements);
+                setPostsPerPage(res.data.size);
+                setLoading(false);
+
+            })
+    }
+
+    useEffect((e) => {
+        getReviewOrderType(1,1)  
     }, []);
+
+    const orderTypeHandler = (pageFlag, e) => {
+        e.preventDefault();
+        console.log(pageFlag);
+        setLoading(true);
+        // setCurrentPages(pageNum);
+        let token = localStorage.getItem('token');
+        if (pageFlag === 1) {
+            getReviewOrderType(1, 1)
+        }
+        else if (pageFlag === 2) {
+            getReviewOrderType(2, 1)
+        }
+    }
    
     return (
         <Fragment>
@@ -45,13 +81,17 @@ export default function UserReviewList(props) {
                             <Sidebar />
                         </div>
                     <div className={`col-8 ml-40`}>
-                            <div className="row">
+                        <div className="row">
+                            
                                 <div className="login-register-wrapper">
                                     <div className="container" defaultActiveKey="login">
-
+                                    <ul style={{ listStyle: "none", textAlign: "right", marginTop: "10px", marginBottom: "-50px" }}>
+                                        <li style={{ display: "inline", marginRight: "20px", fontSize: "15px" }}> <Link onClick={(e) => orderTypeHandler(1, e)}>패키지</Link></li>
+                                        <li style={{ display: "inline", marginRight: "20px", fontSize: "15px" }}> | </li>
+                                        <li style={{ display: "inline", marginRight: "60px", fontSize: "15px" }}> <Link onClick={(e) => orderTypeHandler(2, e)}>상품</Link></li>
+                                    </ul>
+                                    
                                         <div>
-
-
                                             <ReviewTable
                                                 reviewDatas={reviewDatas}
                                                 setReviewDatas={setReviewDatas}
@@ -62,9 +102,21 @@ export default function UserReviewList(props) {
                                     </div>
                                 </div>
                                 {/* </div> */}
-                            </div>
+                        </div>
+                        <div className="row">
+                            {
+                                loading === false ?
+                                    <Pagination postsPerPage={postsPerPage} totalPosts={totalPosts}
+                                        paginate={paginate} />
+                                    :
+                                    ""
+                            }
+
                         </div>
                     </div>
+                    
+                </div>
+                   
                 
                 <br /><br /><br />
             </section>

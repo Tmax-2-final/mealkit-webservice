@@ -43,4 +43,7 @@ public interface ReviewService {
     /* 특정 상품별 리뷰 조회 */
     Page<ReviewEntity> getPageReviewsByProductId(Long productId, Pageable pageRequest);
 
+    /* 특정 회원의 패키지와 상품별 리뷰 조회 */
+    Page<ReviewEntity> getReviewsByUserIdAndOrderType(String userId, Integer orderType, Pageable pageRequest);
+
 }

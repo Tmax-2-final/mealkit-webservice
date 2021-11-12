@@ -113,5 +113,10 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
+    @Override
+    public Page<ReviewEntity> getReviewsByUserIdAndOrderType(String userId, Integer orderType, Pageable pageRequest) {
+        return reviewRepository.findAllByUserIdAndOrderType(userId, orderType, pageRequest);
+    }
+
 
 }
