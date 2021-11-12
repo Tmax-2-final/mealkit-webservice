@@ -39,43 +39,19 @@ function MyPage(props) {
                     }
                 }
             })
-        axios.get((`/subscription-service/subscription/${userId}`, { headers: headers }))
-            .then((subResult) => {
-                if (subResult.status === 200) {
-                    console.log(subResult.data)
-                    setUserSubInfo(subResult.data)
-                }
-            })
+        axios.get(`/subscription-service/subscription/${userId}`, { headers: headers })
+        .then((subResult) => {
+            if (subResult.status === 200) {
+                console.log(subResult.data)
+                setUserSubInfo(subResult.data)
+            }
+        })
+        
     }, []);
 
-    const deleteHandler = (e) => {
-        e.preventDefault();
-
-        if (window.confirm("정말 탈퇴하시겠습니까?")) {
-            const userId = localStorage.getItem('userid');
-            const token = localStorage.getItem('token');
-
-            axios.delete(`/user-service/users/${userId}`, {headers: headers})
-                .then((response) => {
-                    if (response.status === 200) {
-                        console.log(response);
-                        alert('정상적으로 탈퇴되었습니다. 이용해주셔서 감사합니다.');
-                        localStorage.removeItem('userId');
-                        localStorage.removeItem('token');
-                        localStorage.removeItem('role');
-                        window.location.href = "/";
-                    }
-                    else {
-                        console.log(response);
-                        alert('탈퇴 실패');
-                    }
-                })
-                .catch((err) => {
-                    console.log(err)
-                    alert('탈퇴 실패')
-                })
-
-        }
+    // 3자리마다 ,(콤마) 붙이기 (8000000 => 8,000,000)
+    function numberToCommasNumber(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
     const getUserBirthText = (birth) => {
@@ -100,16 +76,51 @@ function MyPage(props) {
         }
     }
 
-    const subCancelHandler = (e) => {
-        if(!userId){
-            alert("로그인 후 진행해주세요.");
-            props.history.push({
-                pathname: '/login',
-                state: {
-                }
-            })
+    const getSubscribeStatusText = (subscribeGrade) => {
+        switch (subscribeGrade) {
+            case 1:
+                return "베이직"
+            case 2:
+                return "스탠다드"
+            case 3:
+                return "프리미엄"
+            default:
+                return "-"
         }
-        else {
+    }
+
+    const deleteHandler = (e) => {
+        e.preventDefault();
+
+        if (window.confirm("정말 탈퇴하시겠습니까?")) {
+            const userId = localStorage.getItem('userid');
+            const token = localStorage.getItem('token');
+
+            axios.delete(`/user-service/users/${userId}`, { headers: headers })
+                .then((response) => {
+                    if (response.status === 200) {
+                        console.log(response);
+                        alert('정상적으로 탈퇴되었습니다. 이용해주셔서 감사합니다.');
+                        localStorage.removeItem('userId');
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('role');
+                        window.location.href = "/";
+                    }
+                    else {
+                        console.log(response);
+                        alert('탈퇴 실패');
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                    alert('탈퇴 실패')
+                })
+
+        }
+    }
+
+    const subCancelHandler = (e) => {
+        {
             props.history.push({
                 pathname: '/subscription/cancel',
                 state: {
@@ -119,15 +130,7 @@ function MyPage(props) {
     }
 
     const subChangeHandler = () => {
-        if(!userId){
-            alert("로그인 후 진행해주세요.");
-            props.history.push({
-                pathname: '/login',
-                state: {
-                }
-            })
-        }
-        else {
+        {
             props.history.push({
                 pathname: '/subscription/editgrade',
                 state: {
@@ -238,13 +241,15 @@ function MyPage(props) {
                                                             <div>
                                                                 {
                                                                     userSubInfo.status === "1" || userSubInfo.status === "2" ?
-                                                                        <p style={{ color: "grey" }}>Y</p>
+                                                                        <>
+                                                                            <p style={{ color: "grey" }}>Y</p>
+                                                                            <p style={{ color: "grey" }}>{userSubInfo.subscriptionGradeDto.name}</p>
+                                                                            <p style={{ color: "grey" }}>{getSubscribeStatusText(userSubInfo.changeSubGradeId)}</p>
+                                                                            <p style={{ color: "grey" }}>{numberToCommasNumber(userSubInfo.subscriptionGradeDto.monthlyFee)} 원</p>
+                                                                        </>
                                                                         :
                                                                         <p style={{ color: "grey" }}>N</p>
                                                                 }
-                                                                {/* <p style={{ color: "grey" }}>{userSubInfo.subscriptionGradeDto.name}</p>
-                                                                <p style={{ color: "grey" }}>{getSubscribeStatusText(userSubInfo.changeSubGradeId)}</p>
-                                                                <p style={{ color: "grey" }}>{numberToCommasNumber(userSubInfo.subscriptionGradeDto.monthlyFee)} 원</p> */}
                                                             </div>
                                                         )
                                                 }
