@@ -46,7 +46,7 @@ public class UserEntity {
     @Column
     private String oauth;
 
-    @Column
+    @Column(insertable = false)
     private Integer subscribeYn;
 
     @Column(nullable = false, unique = true)

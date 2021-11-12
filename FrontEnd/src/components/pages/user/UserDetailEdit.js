@@ -38,6 +38,8 @@ export default function UserDetailEdit() {
                 console.log(response);
                 setEmail(response.data.email);
                 setName(response.data.name);
+                setGender(response.data.gender);
+                setBirth(response.data.birth);
             })
     }, []);
 
@@ -184,16 +186,6 @@ export default function UserDetailEdit() {
                                                         onChange={emailHandler}
                                                         readOnly
                                                     />
-                                        
-
-                                                    <label>비밀번호 </label>
-                                                    <input
-                                                        type="password"
-                                                        name="pwd"
-                                                        placeholder="비밀번호를 입력해주세요"
-                                                        value={pwd}
-                                                        onChange={pwdHandler}
-                                                    />
 
                                                     <label>성별</label>
                                                     <select style={{ marginBottom: "20px", border: "1px solid LightGray" }}
@@ -215,6 +207,15 @@ export default function UserDetailEdit() {
                                                         type="date"
                                                         value={birth}
                                                         onChange={birthHandler}
+                                                    />
+
+                                                    <label>비밀번호 </label>
+                                                    <input
+                                                        type="password"
+                                                        name="pwd"
+                                                        placeholder="비밀번호를 입력해주세요"
+                                                        value={pwd}
+                                                        onChange={pwdHandler}
                                                     />
 
                                                     <div className="button-box" style={{ float: "right" }}>

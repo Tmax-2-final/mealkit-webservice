@@ -167,6 +167,35 @@ const UserDetail = (props) => {
         })
     }
 
+    const getShipStatusText = (shipStatus) => {
+        switch (shipStatus) {
+            case "1":
+                return "상품 준비중"
+            case "2":
+                return "발송완료"
+            case "3":
+                return "배송중"
+            case "4":
+                return "배송취소"
+            case "5":
+                return "배송완료"
+            default:
+                return "에러"
+        }
+    }
+    const getSubscribeStatusText = (subscribeGrade) => {
+        switch (subscribeGrade) {
+            case 1:
+                return "베이직"
+            case 2:
+                return "스탠다드"
+            case 3:
+                return "프리미엄"
+            default:
+                return "-"
+        }
+    }
+
     return (
         <Fragment>
             {
@@ -326,12 +355,7 @@ const UserDetail = (props) => {
                                                                                         <p style={{ color: "grey" }}>N</p>
                                                                                 }
                                                                                 <p style={{ color: "grey" }}>{userSubInfo.subscriptionGradeDto.name}</p>
-                                                                                {
-                                                                                    userSubInfo.status === "3" ?
-                                                                                        <p style={{ color: "grey" }}>해지 예정</p>
-                                                                                        :
-                                                                                        <p style={{ color: "grey" }}>{userSubInfo.subscriptionGradeDto.name}</p>
-                                                                                }
+                                                                                <p style={{ color: "grey" }}>{getSubscribeStatusText(userSubInfo.changeSubGradeId)}</p>
                                                                                 <p style={{ color: "grey" }}>{numberToCommasNumber(userSubInfo.subscriptionGradeDto.monthlyFee)} 원</p>
                                                                             </div>
                                                                         )
@@ -371,17 +395,7 @@ const UserDetail = (props) => {
                                                                             <CTableRow key={index}>
                                                                                 <CTableHeaderCell scope="row">#{item.id}</CTableHeaderCell>
                                                                                 <CTableDataCell>{item.pkgId}({item.pkgName})</CTableDataCell>
-                                                                                <CTableDataCell>
-                                                                                    {
-                                                                                        item.status === "1" ?
-                                                                                        <p>배송 준비중</p>
-                                                                                        :
-                                                                                        item.status === "5" ?
-                                                                                        <p>배송 완료</p>
-                                                                                        :
-                                                                                        <p>배송 중</p>
-                                                                                    }
-                                                                                </CTableDataCell>
+                                                                                <CTableDataCell>{getShipStatusText(item.status)}</CTableDataCell>
                                                                                 <CTableDataCell>{new Date(Date.parse(userDetailInfo.createdAt)).toLocaleString().split("오")[0]}</CTableDataCell>
                                                                                 <CTableDataCell>{new Date(Date.parse(item.dueDate)).toLocaleString().split("오")[0]}</CTableDataCell>
                                                                             </CTableRow>

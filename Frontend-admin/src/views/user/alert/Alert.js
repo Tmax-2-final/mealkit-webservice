@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
+import ko from "date-fns/locale/ko"; // the locale you want
+import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AlertTable from "../alert/AlertTable";
 import axios from 'axios';
@@ -25,6 +26,9 @@ const Alert = (props) => {
     const [whatPages, setWhatPages] = useState(0); // 0: 전체 조회 1: 타입별 조회 2: 검색 조회
 
     const totalFindUrl = `/alert-service/alerts?page=`;
+
+    // datepicker 한국어 설정
+    registerLocale("ko", ko);
 
     useEffect(() => {
 
@@ -249,6 +253,8 @@ const Alert = (props) => {
                             selectsStart
                             startDate={startDate}
                             endDate={endDate}
+                            locale="ko"
+                            dateFormat="yyyy.MM.dd(eee)"
                         />
                     </div>
                     <div className="col-12 col-lg-1 mt-1" style={{textAlign:"center"}}>
@@ -262,6 +268,8 @@ const Alert = (props) => {
                             startDate={startDate}
                             endDate={endDate}
                             minDate={startDate}
+                            locale="ko"
+                            dateFormat="yyyy.MM.dd(eee)"
                         />
                     </div>
                     <div className="col-12 col-lg-2">

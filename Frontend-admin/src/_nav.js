@@ -57,23 +57,6 @@ const _nav = [
   },
   {
     component: CNavGroup,
-    name: '주문 관리',
-    icon: <CIcon icon={cilCash} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: '주문 전체 내역',
-        to: '/orders/orderlist',
-      },
-      {
-        component: CNavItem,
-        name: '전체 결제 내역',
-        to: '/orders/paylist',
-      }
-    ]
-  },
-  {
-    component: CNavGroup,
     name: '구독 관리',
     icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
     items: [

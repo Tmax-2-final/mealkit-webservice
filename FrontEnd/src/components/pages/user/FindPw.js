@@ -10,6 +10,7 @@ import axios from 'axios';
 export default function FindPw(props) {
     const [email, setEamil] = useState("");
     const [name, setName] = useState("");
+    const [userId, setUserId] = useState("");
 
     const emailHandler = (e) => {
         e.preventDefault();
@@ -21,23 +22,29 @@ export default function FindPw(props) {
         setName(e.target.value);
     };
 
+    const userIdHandler = (e) => {
+        e.preventDefault();
+        setUserId(e.target.value);
+    }
+
     const submitHandler = (e) => {
         e.preventDefault();
 
+        if (userId === "") {
+            alert("아이디를 입력해주세요.")
+            return;
+        }
         if(name === "") {
             alert("이름을 입력해주세요.");
             return ;
         }
         if(email === "") {
-            alert("아이디를 입력해주세요.");
+            alert("이메일을 입력해주세요.");
             return ;
         }
-        
-        console.log(email);
-        console.log(name);
-
 
         let body = {
+            userId: userId,
             email: email,
             name: name
         };
@@ -82,26 +89,39 @@ export default function FindPw(props) {
                                         <div className="content">
                                             <div className="pane" eventKey="login">
                                                 <div className="login-form-container">
+                                                    <div className="login-form-title" style={{ textAlign: "center"}}>
+                                                        <span style={{ color: "grey", }}>회원가입 시 작성한 정보를 입력해주세요.</span>
+                                                    </div>
                                                     <div className="login-register-form">
                                                         <form onSubmit={submitHandler}>
+                                                            <label>아이디</label>
+                                                            <input
+                                                                type="text"
+                                                                name="userId"
+                                                                placeholder="아이디를 입력해주세요"
+                                                                value={userId}
+                                                                onChange={userIdHandler}
+                                                            />
+                                                            <label>이름</label>
                                                             <input
                                                                 type="text"
                                                                 name="name"
-                                                                placeholder="name"
+                                                                placeholder="이름을 입력해주세요"
                                                                 value={name}
                                                                 onChange={nameHandler}
                                                             />
+                                                            <label>이메일</label>
                                                             <input
                                                                 name="email"
-                                                                placeholder="Email"
+                                                                placeholder="이메일을 입력해주세요"
                                                                 type="email"
                                                                 value={email}
                                                                 onChange={emailHandler}
 
                                                             />
                                                             
-                                                            <div className="button-box">
-                                                                <button type="submit">
+                                                            <div className="button-box" >
+                                                                <button type="submit" style={{ borderRadius: "30px", float: "right"}}>
                                                                     <span>임시 비밀번호 발급</span>
                                                                 </button>
                                                             </div>

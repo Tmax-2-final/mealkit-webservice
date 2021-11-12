@@ -68,7 +68,7 @@ function App() {
       {/* <ToTop> */}
         <Switch>
           <Route exact path="/"><Home /></Route>
-          <Route exact path="/compare" component={Compare}></Route>
+          <Route exact path="/mypkg" component={Compare}></Route>
           <Route exact path="/cart" component={Cart}></Route>
           <Route exact path="/wishlist"><Wishlist /></Route>
           <Route exact path="/features"><Features /></Route>

@@ -10,7 +10,7 @@ const Home = () => {
     const [prevMonthMoney, setPrevMonthMoney] = useState(0); // 이전 달 매출 액
     const [currentMonthMoney, setCurrentMonthMoney] = useState(0); // 현재 달 매출 액
     const [totalMoney, setTotalMony] = useState(200); // 총 매출 액
-    const [newSubscribe, setNewSubscribe] = useState(0); // 한달간 구독 주문 건수
+    const [newSubscribe, setNewSubscribe] = useState(0); // 오늘 구독 주문 건수
     const [totalSubscribe, setTotalSubscribe] = useState(0); // 전체 구독 주문 건수
     const [newUser, setNewUser] = useState(0); // 구독 확정 후 배송 전 상태
     const [totalUser, setTotalUser] = useState(0); // 전체 배송 완료된 건수
@@ -27,21 +27,21 @@ const Home = () => {
                 Authorization: `Bearer ${token}`
             }
             // 1. 매출액
-            await axios.get(`subscription-service/subscription/revenue/total`, { headers : headers})
+            await axios.get(`/subscription-service/subscription/revenue/total`, { headers : headers})
             .then((res) => {
                 console.log(res.data)
                 if(res.status === 200) {
                     setTotalMony(res.data)
                 }
             })
-            await axios.get(`subscription-service/subscription/revenue/past`, { headers: headers })
+            await axios.get(`/subscription-service/subscription/revenue/past`, { headers: headers })
                 .then((res) => {
                     console.log(res)
                     if (res.status === 200) {
                         setPrevMonthMoney(res.data)
                     }
                 })
-            await axios.get(`subscription-service/subscription/revenue/recent`, { headers: headers })
+            await axios.get(`/subscription-service/subscription/revenue/recent`, { headers: headers })
                 .then((res) => {
                     console.log(res)
                     if (res.status === 200) {
@@ -49,6 +49,18 @@ const Home = () => {
                     }
                 })
             // 2. 구독 건수(신규, 전체)
+            await axios.get(`/subscription-service/subscription/count/total`, {headers: headers})
+                .then((res) => {
+                    if(res.status === 200){
+                        setTotalSubscribe(res.data)
+                    }
+                })
+            await axios.get(`/subscription-service/subscription/count/new`, { headers: headers })
+                .then((res) => {
+                    if(res.status === 200) {
+                        setNewSubscribe(res.data)
+                    }
+                })
 
             // 3. 유저 수(신규, 전체)
             const resultByUser = await axios.get(`/user-service/users/count`, { headers: headers })
@@ -90,7 +102,7 @@ const Home = () => {
                                                         {
                                                             label: '영업 이익(원)',
                                                             backgroundColor: '#f87979',
-                                                            data: [{prevMonthMoney}, {currentMonthMoney}],
+                                                            data: [prevMonthMoney, currentMonthMoney],
                                                         },
                                                     ],
                                                 }}

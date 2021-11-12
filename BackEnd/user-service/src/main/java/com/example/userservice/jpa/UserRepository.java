@@ -13,6 +13,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     UserEntity findByUserId(String userId);
     UserEntity findByEmail(String email);
     UserEntity findByEmailAndName(String email, String username);
+    UserEntity findByUserIdAndNameAndEmail(String userId, String username, String email);
     Page<UserEntity> findAllByNameContainingAndCreatedAtBetween(String username, Date startDate, Date endDate, Pageable pageable);
 
     @Query(value = "select u.email from UserEntity u where u.userId = ?1")
