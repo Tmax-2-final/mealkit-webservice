@@ -18,6 +18,7 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
     Iterable<ReviewEntity> findAllByProductId(Long productId);
 
     ReviewEntity findByUserIdAndReviewId(String userId, Long reviewId);
+    Page<ReviewEntity> findAllByUserIdAndOrderType(String userId, Integer orderType,  Pageable pageRequest);
 
     @Transactional
     void deleteByUserIdAndReviewId(String userId, Long reviewId);

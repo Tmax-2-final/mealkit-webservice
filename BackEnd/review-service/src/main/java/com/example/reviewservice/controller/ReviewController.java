@@ -211,4 +211,23 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(responseReviewList);
     }
 
+    @ApiOperation(value = "회원 리뷰 분류", notes = "특정 회원의 패키지와 상품별 리뷰 조회")
+    @GetMapping("/reviews/{userId}/{orderType}")
+    public ResponseEntity<Page<ResponseReview>> getReviewsByUserIdAndOrderType(@PathVariable("userId") String userId,
+                                                                               @PathVariable("orderType") Integer orderType,
+                                                                               @PageableDefault(size = 8, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest
+                                                                               ){
+        log.info("리뷰 조회 API START");
+
+        Page<ReviewEntity> reviewList = reviewService.getReviewsByUserIdAndOrderType(userId, orderType, pageRequest);
+        Page<ResponseReview> responseReviewList = reviewList.map(
+                v -> new ModelMapper().map(v, ResponseReview.class)
+        );
+
+        log.info("리뷰 페이징 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseReviewList);
+    }
+
+
 }
