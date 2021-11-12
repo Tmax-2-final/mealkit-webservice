@@ -124,7 +124,7 @@ export default function UserTable({ userDatas, setUserDatas, loading}){
                                                     }
                                                     </CTableDataCell>
                                                     <CTableDataCell>{new Date(Date.parse(item.createdAt)).toLocaleString().split("오")[0]}</CTableDataCell>
-                                                    <CTableDataCell><Link onClick={(e) => deleteHandler(item.userId, e)}><i className="far fa-trash-alt"></i></Link></CTableDataCell>
+                                                    <CTableDataCell><Link to='#' onClick={(e) => deleteHandler(item.userId, e)}><i className="far fa-trash-alt"></i></Link></CTableDataCell>
                                                 </CTableRow>
                                             ))
                                             )
