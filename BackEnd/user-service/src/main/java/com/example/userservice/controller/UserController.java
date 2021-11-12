@@ -6,6 +6,8 @@ import com.example.userservice.entity.PrfrEntity;
 import com.example.userservice.entity.UserEntity;
 import com.example.userservice.service.UserService;
 import com.example.userservice.vo.*;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -16,8 +18,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,11 +36,13 @@ public class UserController {
 
     private final Environment env;
     private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserController(Environment env, UserService userService) {
+    public UserController(Environment env, UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.env = env;
         this.userService = userService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
     @ApiOperation(value = "상태", notes="상태 조회")
     @GetMapping("/health_check")
@@ -256,6 +262,44 @@ public class UserController {
         Boolean data = userService.getUserPrfrDone(userId);
         result.put("result", data);
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @ApiOperation(value = "관리자 로그인", notes = "관리자 계정 로그인 전용")
+    @PostMapping("/admin/login")
+    public ResponseEntity<String> adminLoginByRole(@RequestBody RequestLogin requestLogin) {
+        // 디비 찾기
+        UserDto user = userService.getUserByUserId(requestLogin.getUserId());
+        // 아이디 존재 여부 파악
+        if(user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("아이디를 찾을 수 없습니다");
+        }
+        // 관리자 아이디인지 존재 여부 파악
+        if(!user.getUserId().equals(env.getProperty("admin.id"))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 아이디가 아닙니다.");
+        }
+        // 관리자 권한 여부 파악
+        if(!user.getRole().equals(env.getProperty("admin.role"))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 아닙니다.");
+        }
+        // 관리자 비밀번호 파악
+        if(!(bCryptPasswordEncoder.matches(requestLogin.getPassword(), user.getEncryptedPwd()))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 비밀번호가 아닙니다.");
+        }
+
+        // 관리자 로그인 성공 처리 //
+        // 토근 생성
+        String token = Jwts.builder()
+                .setSubject(user.getUserId()) // 어떤 정보를 가지고 토큰을 만들 것인가 - userId
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time")))) // 토큰 만료 기간은 얼마인가. 현재 시간 + 토큰 시간
+                .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret")) // 서명 - 암호화에 사용된 키 종류와 키 값
+                .compact();
+        // 헤더에 삽입
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("token", token);
+        headers.set("userId", user.getUserId());
+        headers.set("role", user.getRole());
+        // 리턴
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(null);
     }
 
 }

@@ -1,6 +1,8 @@
 package com.example.apigatewayservice.config;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -70,7 +72,19 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                     .parseClaimsJws(jwt).getBody()
                     //.parseClamisJwt(jwt).getBody() -> 서명안된 토큰 정보로 파싱할때
                     .getSubject();
+        } catch (ExpiredJwtException ex) {
+            log.error("토큰이 만료된 토큰입니다.");
+            returnValue = false;
+        } catch (UnsupportedJwtException ex) {
+            log.error("지원되지 않는 토큰입니다.");
+            returnValue = false;
+        } catch (IllegalArgumentException ex) {
+            log.error("토큰 형식이 잘못되었습니다.");
+            returnValue = false;
         } catch (Exception ex) {
+            // io.jsonwebtoken.security.SecurityException | MalformedJwtException e
+            log.error("잘못된 토큰 서명입니다.");
+            ex.printStackTrace();
             returnValue = false;
         }
 

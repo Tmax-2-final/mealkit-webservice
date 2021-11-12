@@ -163,7 +163,7 @@ const Home = () => {
                             <ClipLoader
                                 color="gray"
                                 loading={loading}
-                                size="50" />
+                                size="50px" />
                         </div>
                     )
             }
