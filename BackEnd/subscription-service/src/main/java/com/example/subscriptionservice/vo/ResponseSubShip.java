@@ -18,6 +18,7 @@ public class ResponseSubShip {
     private Character type;
     private Character status;
     private LocalDateTime startDate;
+    private LocalDateTime completeDate;
     private LocalDate dueDate;
     private Long price;
 }

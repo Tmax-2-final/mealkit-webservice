@@ -42,6 +42,9 @@ public class SubscriptionShipsEntity {
     @Column
     private LocalDateTime startDate;
 
+    @Column
+    private LocalDateTime completeDate;
+
     @Column(nullable = false)
     private LocalDate dueDate;
 
