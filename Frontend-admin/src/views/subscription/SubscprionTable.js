@@ -1,7 +1,7 @@
 import { CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
 import React from 'react';
 
-export default function SubscprionTable({ subscriptionDatas, setSubscriptionDatas, loading }) {
+export default function SubscprionTable({ subscriptionDatas, setSubscriptionDatas, loading, codeType }) {
 
     const getStatusText = (status) => {
         switch (status) {
@@ -21,6 +21,8 @@ export default function SubscprionTable({ subscriptionDatas, setSubscriptionData
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
+
+
     return (
         <div className="cart-main-area pt-20 pb-2">
             <div className="container">
@@ -38,8 +40,18 @@ export default function SubscprionTable({ subscriptionDatas, setSubscriptionData
                                             <CTableHeaderCell scope="col">구독등급</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">금액</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">시작일</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">최근결제일</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">다음결제일</CTableHeaderCell>
+                                            {
+                                                codeType !== '3' ?
+                                                <>
+                                                <CTableHeaderCell scope="col">최근결제일</CTableHeaderCell>
+                                                <CTableHeaderCell scope="col">다음결제일</CTableHeaderCell>
+                                                </>
+                                                :
+                                                <>
+                                                <CTableHeaderCell scope="col">구독종료일</CTableHeaderCell>
+                                                <CTableHeaderCell scope="col">구독취소사유</CTableHeaderCell>
+                                                </>
+                                            }   
                                         </CTableRow>
                                     </CTableHead>
                                     <CTableBody>
@@ -54,8 +66,20 @@ export default function SubscprionTable({ subscriptionDatas, setSubscriptionData
                                                             <CTableDataCell>{item.subscriptionGradeDto.name}</CTableDataCell>
                                                             <CTableDataCell>{numberToCommasNumber(item.subscriptionGradeDto.monthlyFee)}</CTableDataCell>
                                                             <CTableDataCell>{item.startDate.split('T')[0]}</CTableDataCell>
-                                                            <CTableDataCell>{item.lastPaymentDate.split('T')[0]}</CTableDataCell>
-                                                            <CTableDataCell>{item.nextPaymentDate.split('T')[0]}</CTableDataCell>
+                                                            {
+                                                                codeType !== '3' ?
+                                                                <>
+                                                                <CTableDataCell>{item.lastPaymentDate.split('T')[0]}</CTableDataCell>
+                                                                <CTableDataCell>{item.nextPaymentDate.split('T')[0]}</CTableDataCell>
+                                                                </>
+                                                                :
+                                                                <>
+                                                                <CTableDataCell>{item.endDate.split('T')[0]}</CTableDataCell>
+                                                                <CTableDataCell>{item.cancelContent}</CTableDataCell>
+                                                                </>
+                                                            }
+
+                                                            
                                                         </CTableRow>
                                                     ))
                                                 )
