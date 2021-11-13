@@ -113,6 +113,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         SubscriptionEntity restartSubscriptionEntity = modelMapper.map(subscriptionDto, SubscriptionEntity.class);
 
+        SubscriptionGradeDto subscriptionGradeDto = modelMapper.map(subscriptionDto.getSubscriptionGradeDto(), SubscriptionGradeDto.class);
+        subscriptionDto.setSubscriptionGradeDto(subscriptionGradeDto);
+
         Object obj = subscriptionRepository.save(restartSubscriptionEntity);
 
         SubscriptionDto returnValue = modelMapper.map(obj, SubscriptionDto.class);
@@ -131,6 +134,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         Object obj = subscriptionRepository.save(updatedSubscriptionEntity);
 
         SubscriptionDto returnValue = modelMapper.map(obj, SubscriptionDto.class);
+        returnValue.setSubscriptionGradeDto(subscriptionDto.getSubscriptionGradeDto());
 
         return returnValue;
     }
@@ -164,7 +168,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         subscriptionShipsRepository.saveAll(subscriptionShipsEntities);
 
-        return returnValue;
+        return subscriptionDto;
     }
 
     @Override

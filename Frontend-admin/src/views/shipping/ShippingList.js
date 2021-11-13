@@ -8,7 +8,7 @@ function ShippingList(props) {
 
     const checkHandler = ({ target }) => {
         setChecked(!bChecked);
-        checkedItemHandler(shipData.id, target.checked);
+        checkedItemHandler(shipData, target.checked);
     };
 
     const getShipTypeText = (type) => {

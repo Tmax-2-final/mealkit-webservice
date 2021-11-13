@@ -12,6 +12,8 @@ import com.example.subscriptionservice.querydsl.ShipsSearchParam;
 import com.example.subscriptionservice.querydsl.SubscriptionSearchParam;
 import com.example.subscriptionservice.service.SubscriptionService;
 import com.example.subscriptionservice.status.ShipStatus;
+import com.example.subscriptionservice.status.SubGrade;
+import com.example.subscriptionservice.status.SubStatus;
 import com.example.subscriptionservice.vo.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -118,6 +120,7 @@ public class SubscriptionController {
 
         subscriptionDto = subscriptionService.createSubscription(subscriptionDto);
 
+        // 카프카 구독 토픽에 구독 등록 정보 전송
         kafkaProducer.send("subscription-topic", subscriptionDto);
 
         // dto -> response
@@ -135,6 +138,7 @@ public class SubscriptionController {
 
         SubscriptionDto subscriptionDto = subscriptionService.restartSubscription(requestUpdateSubscription);
 
+        // 카프카 구독 토픽에 구독 재시작 정보 전송
         kafkaProducer.send("subscription-topic", subscriptionDto);
 
         log.info("구독 재시작 API END");
@@ -154,8 +158,9 @@ public class SubscriptionController {
 
         subscriptionDto.setChangeSubGradeId(requestUpdateSubscription.getSubGradeId());
 
-        subscriptionDto = subscriptionService.updateSubscription(subscriptionDto);
+        subscriptionService.updateSubscription(subscriptionDto);
 
+        // 카프카 구독 토픽에 구독 변경 정보 전송
         kafkaProducer.send("subscription-topic", subscriptionDto);
 
         log.info("구독 변경 API END");
@@ -170,6 +175,7 @@ public class SubscriptionController {
 
         SubscriptionDto subscriptionDto = subscriptionService.cancelSubscription(requestCancelSubscription);
 
+        // 카프카 구독 토픽에 구독 취소 정보 전송
         kafkaProducer.send("subscription-topic", subscriptionDto);
 
         log.info("구독 변경 API END");
@@ -365,30 +371,30 @@ public class SubscriptionController {
 
         //  1 : 상품준비중, 2:발송완료, 3 : 배송중, 4 : 배송취소, 5 : 배송완료, 6 : 구매확정
         // 배송시작 처리 알람발송
-        if(requestUpdateShips.getStatus() == ShipStatus.SHIPPING.getValue()){
-            subShipDtoList.forEach(v -> {
-                RequestAlert requestAlert = new RequestAlert();
-                requestAlert.setType(301);
-                requestAlert.setUserId(v.getUserId());
-                requestAlert.setDeliveryId(v.getId());
-                requestAlert.setDeliveryDate(java.sql.Date.valueOf(v.getDueDate()));
-
-                // 구독 결제 메일 알람 발송 API
-                alertServiceClient.sendAndSaveAlerts(requestAlert);
-            });
-        }
-        // 배송완료 처리 알람발송
-        else if(requestUpdateShips.getStatus() == ShipStatus.COMPLETE.getValue()){
-            subShipDtoList.forEach(v -> {
-                RequestAlert requestAlert = new RequestAlert();
-                requestAlert.setType(302);
-                requestAlert.setUserId(v.getUserId());
-                requestAlert.setDeliveryId(v.getId());
-
-                // 구독 결제 메일 알람 발송 API
-                alertServiceClient.sendAndSaveAlerts(requestAlert);
-            });
-        }
+//        if(requestUpdateShips.getStatus() == ShipStatus.SHIPPING.getValue()){
+//            subShipDtoList.forEach(v -> {
+//                RequestAlert requestAlert = new RequestAlert();
+//                requestAlert.setType(301);
+//                requestAlert.setUserId(v.getUserId());
+//                requestAlert.setDeliveryId(v.getId());
+//                requestAlert.setDeliveryDate(java.sql.Date.valueOf(v.getDueDate()));
+//
+//                // 구독 결제 메일 알람 발송 API
+//                alertServiceClient.sendAndSaveAlerts(requestAlert);
+//            });
+//        }
+//        // 배송완료 처리 알람발송
+//        else if(requestUpdateShips.getStatus() == ShipStatus.COMPLETE.getValue()){
+//            subShipDtoList.forEach(v -> {
+//                RequestAlert requestAlert = new RequestAlert();
+//                requestAlert.setType(302);
+//                requestAlert.setUserId(v.getUserId());
+//                requestAlert.setDeliveryId(v.getId());
+//
+//                // 구독 결제 메일 알람 발송 API
+//                alertServiceClient.sendAndSaveAlerts(requestAlert);
+//            });
+//        }
 
         log.info("배송 상태 변경 API END");
 

@@ -48,7 +48,7 @@ function CancelDetail(props) {
                 )
             }
         }
-    }, [])
+    }, [subscriptionData])
 
     const textareaRef = useRef();
 
@@ -90,6 +90,7 @@ function CancelDetail(props) {
             const body = {
                 cancelContent: textareaRef.current.value,
                 userId: userId,
+                refundPrice: refundAmount,
             }
             
             const headers = {
@@ -108,6 +109,17 @@ function CancelDetail(props) {
                 console.log(res);
                 if(res.status === 200){
                     //alert("구독 취소가 완료되었습니다.")
+
+                    let now = new Date();
+                    let body = {
+                        type: 205,
+                        userId: userId,
+                        oauth: localStorage.getItem('oauth'),
+                        refundPrice: numberToCommasNumber(refundAmount),
+                        cancelDate: now,
+                    }
+                    
+                    axios.post(`/alert-service/alerts`, body)
 
                     props.history.push({
                         pathname: '/subscription/cancelcomplete',
