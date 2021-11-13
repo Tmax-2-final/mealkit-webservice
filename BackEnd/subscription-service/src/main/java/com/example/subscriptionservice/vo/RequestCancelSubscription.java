@@ -6,4 +6,5 @@ import lombok.Data;
 public class RequestCancelSubscription {
     private String userId;
     private String cancelContent;
+    private String refundPrice;
 }
