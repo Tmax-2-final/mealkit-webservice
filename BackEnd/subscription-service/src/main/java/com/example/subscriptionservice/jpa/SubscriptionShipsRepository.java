@@ -24,8 +24,8 @@ public interface SubscriptionShipsRepository extends JpaRepository<SubscriptionS
     Iterable<SubscriptionShipsEntity> findByUserId(String userId);
 
     // 배송완료(5)만 매출액에 포함
-    @Query("SELECT COALESCE(sum(s.price), 0) from SubscriptionShipsEntity s where s.status = '5' and s.dueDate between ?1 and ?2")
-    Long getRevenueBetween(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    @Query("SELECT COALESCE(sum(s.price), 0) from SubscriptionShipsEntity s where s.status = '5' and s.completeDate between ?1 and ?2")
+    Long getRevenueBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     // 배송완료(5)만 매출액에 포함
     @Query("SELECT COALESCE(sum(s.price), 0) from SubscriptionShipsEntity s where s.status = '5'")
