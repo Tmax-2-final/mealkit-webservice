@@ -126,6 +126,7 @@ const Subscrption = (props) => {
         e.preventDefault();
         console.log(pageNum);
         setLoading(true);
+        setCodeType('0')
 
         let token = localStorage.getItem('token');
 
@@ -315,6 +316,7 @@ const Subscrption = (props) => {
                                 subscriptionDatas={subscriptionDatas}
                                 setSubscriptionDatas={setSubscriptionDatas}
                                 loading={loading}
+                                codeType={codeType}
                             />
                             <CPagination className="pb-40" aria-label="Page navigation example">
                                 {rendering()}

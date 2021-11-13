@@ -248,9 +248,9 @@ const AdminShipping = (props) => {
                 </div>
 
                 <div className="row">
-                    <div className="col-12 col-lg-1 text-center ml-1 mt-12 p-0">
+                    {/* <div className="col-12 col-lg-1 text-center ml-1 mt-12 p-0">
                         배송예정일
-                    </div>
+                    </div> */}
                     <div className="col-12 col-lg-2" >
                         <DatePicker
                             style={{textAlign:"center"}}

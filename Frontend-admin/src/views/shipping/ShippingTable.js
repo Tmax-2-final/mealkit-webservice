@@ -28,7 +28,7 @@ export default function ShippingTable({ subscriptionDatas, setSubscriptionDatas,
     // 체크박스 전체 선택 이벤트 핸들러
     const allCheckedHandler = (isChecked) => {
         if (isChecked) {
-            setCheckedItems(new Set(subscriptionDatas.map(({ id }) => id)));
+            setCheckedItems(new Set(subscriptionDatas));
             setIsAllChecked(true);
         } else {
             checkedItems.clear();
@@ -53,8 +53,8 @@ export default function ShippingTable({ subscriptionDatas, setSubscriptionDatas,
             // 체크된 id 값을 넣을 jsonArray
             var jsonArray = new Array();
     
-            checkedItems.forEach(function (value) {
-                jsonArray.push(value);
+            checkedItems.forEach(function (shipData) {
+                jsonArray.push(shipData.id);
             });
     
             // 다음 상태 처리
@@ -92,6 +92,30 @@ export default function ShippingTable({ subscriptionDatas, setSubscriptionDatas,
                     console.log(`====== ${apiName} API DATA ======`);
                     console.log(res.data); 
                     console.log("==================================");
+
+                    checkedItems.forEach(function (shipData) {
+                        let now = new Date();
+                        let deliveryDate = new Date();
+                        let body = {
+                            // 현재 선택한 상태가 상품준비중(1)이면 배송시작 알람타입(301)
+                            // 현재 선택한 상태가 상품준비중(1)이면 배송완료 알람타입(302)
+                            type: status === '1' ? 301 : 302 ,
+                            userId: shipData.userId,
+                            oauth: localStorage.getItem('oauth'),
+                            deliveryId: shipData.id,
+                            deliveryDate : now.setDate(now.getDate() + (shipData.type === '1' ? 1 : 3))
+
+                        }
+
+                        console.log("=== 알람 전송 API BODY ===");
+                        console.log(body);
+                        console.log("========================");
+
+                        axios.post(`/alert-service/alerts`, body)
+                    });
+
+                    
+                    
 
                     alert(`${updateButtonText(status)} 완료`);
 
