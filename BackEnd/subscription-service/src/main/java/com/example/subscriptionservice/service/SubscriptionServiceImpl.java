@@ -449,6 +449,28 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    public Page<SubShipDto> getSubPagingByStatusShips(String userId, String status, LocalDate startDate, LocalDate endDate, Pageable pageRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Page<SubscriptionShipsEntity> shipList = null;
+
+        // 전체 조회일 경우 상태 조건 X
+        if(status.equals("all")){
+            shipList = subscriptionShipsRepository.findByUserIdAndDueDateBetween(userId, startDate, endDate, pageRequest);
+        }
+        else {
+            shipList = subscriptionShipsRepository.findByUserIdAndStatusAndDueDateBetween(userId, status.charAt(0), startDate, endDate, pageRequest);
+        }
+
+        Page<SubShipDto> shipDtoList = shipList.map(
+                v ->  modelMapper.map(v, SubShipDto.class)
+        );
+
+        return shipDtoList;
+    }
+
+    @Override
     public void updateSubShip(Long shipId, String postcode, String address, String addressDetail, LocalDate dueDate, Character type) {
         Optional<SubscriptionShipsEntity> subscriptionEntity = subscriptionShipsRepository.findById(shipId);
         subscriptionEntity.get().setAddress(address);

@@ -11,6 +11,7 @@ import com.example.subscriptionservice.mq.KafkaProducer;
 import com.example.subscriptionservice.querydsl.ShipsSearchParam;
 import com.example.subscriptionservice.querydsl.SubscriptionSearchParam;
 import com.example.subscriptionservice.service.SubscriptionService;
+import com.example.subscriptionservice.status.ShipStatus;
 import com.example.subscriptionservice.vo.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -364,7 +365,7 @@ public class SubscriptionController {
 
         //  1 : 상품준비중, 2:발송완료, 3 : 배송중, 4 : 배송취소, 5 : 배송완료, 6 : 구매확정
         // 배송시작 처리 알람발송
-        if(requestUpdateShips.getStatus() == '3'){
+        if(requestUpdateShips.getStatus() == ShipStatus.SHIPPING.getValue()){
             subShipDtoList.forEach(v -> {
                 RequestAlert requestAlert = new RequestAlert();
                 requestAlert.setType(301);
@@ -377,7 +378,7 @@ public class SubscriptionController {
             });
         }
         // 배송완료 처리 알람발송
-        else if(requestUpdateShips.getStatus() == '5'){
+        else if(requestUpdateShips.getStatus() == ShipStatus.COMPLETE.getValue()){
             subShipDtoList.forEach(v -> {
                 RequestAlert requestAlert = new RequestAlert();
                 requestAlert.setType(302);
@@ -547,6 +548,29 @@ public class SubscriptionController {
         );
 
         log.info("배송 페이징 조회 API END");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseShipList);
+    }
+
+    @ApiOperation(value = "배송 날짜+상태별 페이징 조회", notes = "특정 회원의 배송 정보를 상태별 페이징 조회한다.")
+    @GetMapping(value = "/ships/{userId}/{status}")
+    public ResponseEntity<Page<ResponseSubShip>> getPagingByStatusShips(@PathVariable("userId") String userId,
+                                                                        @PathVariable("status") String status,
+                                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "startDate", required = false) LocalDate startDate,
+                                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "endDate", required = false) LocalDate endDate,
+                                                                @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageRequest){
+        log.info("배송 상태별 페이징 조회 API START");
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
+
+        Page<SubShipDto> shipsDtoList = subscriptionService.getSubPagingByStatusShips(userId, status, startDate, endDate, pageRequest);
+
+        Page<ResponseSubShip> responseShipList = shipsDtoList.map(
+                v -> new ModelMapper().map(v, ResponseSubShip.class)
+        );
+
+        log.info("배송 상태별 페이징 조회 API END");
 
         return ResponseEntity.status(HttpStatus.OK).body(responseShipList);
     }

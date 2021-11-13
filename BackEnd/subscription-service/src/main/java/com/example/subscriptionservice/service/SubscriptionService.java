@@ -80,6 +80,9 @@ public interface SubscriptionService {
     /*구독 배송 페이징 조회*/
     Page<SubShipDto>  getSubPagingShips(String userId, Pageable pageRequest);
 
+    /*배송 날짜+상태별 페이징 조회*/
+    Page<SubShipDto>  getSubPagingByStatusShips(String userId, String status, LocalDate startDate, LocalDate endDate, Pageable pageRequest);
+
     /*구독 배송정보 변경*/
     void  updateSubShip(Long shipId, String postcode, String address, String addressDetail, LocalDate dueDate, Character type);
 

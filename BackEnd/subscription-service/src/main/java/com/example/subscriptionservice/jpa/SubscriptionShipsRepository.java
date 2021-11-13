@@ -39,4 +39,8 @@ public interface SubscriptionShipsRepository extends JpaRepository<SubscriptionS
     Iterable<SubscriptionShipsEntity> findShipIn(Long[] idList);
 
     Page<SubscriptionShipsEntity> findByUserId(String userId, Pageable pageRequest);
+
+    Page<SubscriptionShipsEntity> findByUserIdAndDueDateBetween(String userId, LocalDate startDate, LocalDate endDate, Pageable pageRequest);
+
+    Page<SubscriptionShipsEntity> findByUserIdAndStatusAndDueDateBetween(String userId, Character status, LocalDate startDate, LocalDate endDate, Pageable pageRequest);
 }
