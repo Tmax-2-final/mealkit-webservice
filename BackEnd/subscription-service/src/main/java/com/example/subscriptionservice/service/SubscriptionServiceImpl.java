@@ -11,6 +11,8 @@ import com.example.subscriptionservice.jpa.SubscriptionRepository;
 import com.example.subscriptionservice.jpa.SubscriptionShipsRepository;
 import com.example.subscriptionservice.querydsl.ShipsSearchParam;
 import com.example.subscriptionservice.querydsl.SubscriptionSearchParam;
+import com.example.subscriptionservice.status.ShipStatus;
+import com.example.subscriptionservice.status.SubStatus;
 import com.example.subscriptionservice.vo.RequestCancelSubscription;
 import com.example.subscriptionservice.vo.RequestUpdateShips;
 import com.example.subscriptionservice.vo.RequestUpdateSubscription;
@@ -93,12 +95,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 엄격한 매칭
 
-        Character subscribingAndBeforeConfirmedPkgStatus = '1';
-
         SubscriptionDto subscriptionDto = getSubscription(requestUpdateSubscription.getUserId());
 
         subscriptionDto.setSubGradeId(requestUpdateSubscription.getSubGradeId());
-        subscriptionDto.setStatus(subscribingAndBeforeConfirmedPkgStatus);
+        subscriptionDto.setStatus(SubStatus.BEFORE_PKG_CONFIRMATION.getValue());
         subscriptionDto.setStartDate(LocalDateTime.now());
         subscriptionDto.setEndDate(null);
         subscriptionDto.setCancelContent(null);
@@ -141,13 +141,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        Character cancelStatus = '3';
-
         // 요청 userId 로 구독정보 조회
         // 구독취소 사유(cancelContent), 구독취소 상태(status:3) 설정
         SubscriptionDto subscriptionDto = getSubscription(requestCancelSubscription.getUserId());
         subscriptionDto.setCancelContent(requestCancelSubscription.getCancelContent());
-        subscriptionDto.setStatus(cancelStatus);
+        subscriptionDto.setStatus(SubStatus.CACNEL.getValue());
         subscriptionDto.setEndDate(LocalDateTime.of(LocalDate.now(), LocalTime.now()));
         subscriptionDto.setChangeSubGradeId(null);
 
@@ -161,7 +159,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         for (SubscriptionShipsEntity subscriptionShipsEntity : subscriptionShipsEntities) {
             // 환불 가능한 상품준비중(1)인 배송건에 대해서만 배송취소(4) 처리
-            if(subscriptionShipsEntity.getStatus() == '1') subscriptionShipsEntity.setStatus('4');
+            if(subscriptionShipsEntity.getStatus() == ShipStatus.PREPARED.getValue()) subscriptionShipsEntity.setStatus(ShipStatus.CANCEL.getValue());
         }
 
         subscriptionShipsRepository.saveAll(subscriptionShipsEntities);
@@ -344,8 +342,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         Iterable<SubscriptionShipsEntity> subscriptionShipsEntityList = subscriptionShipsRepository.findShipIn(requestUpdateShips.getIds());
 
         subscriptionShipsEntityList.forEach(v -> {
-            // 배송 시작(3)인 경우
-            if(requestUpdateShips.getStatus() == '3') v.setStartDate(LocalDateTime.of(LocalDate.now(), LocalTime.now()));
+            // 배송 시작(3)인 경우 배송 시작일 세팅
+            if(requestUpdateShips.getStatus() == ShipStatus.SHIPPING.getValue()) v.setStartDate(LocalDateTime.of(LocalDate.now(), LocalTime.now()));
+
+            // 배송 완료(5) 인 경우 배송 완료시간 세팅
+            if(requestUpdateShips.getStatus() == ShipStatus.COMPLETE.getValue()) v.setCompleteDate(LocalDateTime.of(LocalDate.now(), LocalTime.now()));
+
             v.setStatus(requestUpdateShips.getStatus());
         });
 
