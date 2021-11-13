@@ -515,19 +515,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public Long getRevenueMonthAgo() {
         // 오늘로부터 2달전~1달전 매출액 기간 설정
-        LocalDate startDatetime = LocalDate.now().minusMonths(2);
-        LocalDate endDatetime = LocalDate.now().minusMonths(1);
+        LocalDateTime startDateTime = LocalDate.now().minusMonths(2).atStartOfDay();
+        LocalDateTime endDateTime = LocalDate.now().minusMonths(1).plusDays(1).atStartOfDay();
 
-        return subscriptionShipsRepository.getRevenueBetween(startDatetime, endDatetime);
+        return subscriptionShipsRepository.getRevenueBetween(startDateTime, endDateTime);
     }
 
     @Override
     public Long getRevenueMonth() {
         // 오늘로부터 1달전~오늘 매출액 기간 설정
-        LocalDate startDatetime = LocalDate.now().minusMonths(1);
-        LocalDate endDatetime = LocalDate.now().plusDays(1L);
+        LocalDateTime startDateTime = LocalDate.now().minusMonths(1).atStartOfDay();
+        LocalDateTime endDateTime = LocalDate.now().plusDays(1).atStartOfDay();
 
-        return subscriptionShipsRepository.getRevenueBetween(startDatetime, endDatetime);
+        return subscriptionShipsRepository.getRevenueBetween(startDateTime, endDateTime);
     }
 
     @Override
