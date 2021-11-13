@@ -8,6 +8,7 @@ import MyShipListView from './MyShipListView';
 import Pagination from "../../elements/ui/Pagination"
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ko from "date-fns/locale/ko"; // the locale you want
+import * as moment from 'moment';
 
 function MySubShips(props) {
     let userId = localStorage.getItem('userid');
@@ -20,18 +21,19 @@ function MySubShips(props) {
     const [ addressDetail, setAddressDetail ] = useState('');
     const [ fullAddress, setFullAddress ] = useState('');
     const [subShipData, setSubShipData] = useState([]);
+    const [selStatus, setSelStatus] = useState('all');
 
     // 캘린더
     const [startDate, setStartDate] = useState(() => {
         let date = new Date();
-        let weekago = new Date(date.setDate(date.getDate() + 2));
-        weekago = weekago.setHours(0,0,0,0);
+        let weekago = new Date(date.setDate(date.getDate() - 30));
+        //weekago = weekago.setHours(0,0,0,0);
         return weekago;
     });
     const [endDate, setEndDate] = useState(() => {
         let date = new Date();
-        let weekago = new Date(date.setDate(date.getDate() + 8));
-        weekago = weekago.setHours(0,0,0,0);
+        let weekago = new Date(date.setDate(date.getDate() + 30));
+        //weekago = weekago.setHours(0,0,0,0);
         return weekago;
     });
 
@@ -58,14 +60,25 @@ function MySubShips(props) {
     const getShips = (page) => {
         const apiName = "구독배송 조회";
 
+        const start = moment(startDate, 'YYYY-MM-DD').format().split('T')[0];
+        const end = moment(endDate, 'YYYY-MM-DD').format().split('T')[0];
+
+        const params = {
+            page: page,
+            startDate: start,
+            endDate: end,
+        }
+
+        console.log(`=== ${apiName} PARAMS ===`);
+        console.log(params);
+        console.log('=======================');
+
         // axios.get(`/subscription-service/subscription/ships/${userId}`, {
-        axios.get(`/subscription-service/ships/${userId}`, {
+        axios.get(`/subscription-service/ships/${userId}/${selStatus}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
-            params: {
-                page: page
-            }
+            params: params
         })
             .then(res => {
                 console.log(`=== ${apiName} DATA ===`);
@@ -117,8 +130,13 @@ function MySubShips(props) {
         openModal(true);
     }
 
-    
-    
+    const statusChangeHandler = e => {
+        setSelStatus(e.target.value);
+    }
+
+    const searchHandler = e => {
+        getShips(1);
+    }
 
     return (
         <Fragment>
@@ -134,11 +152,11 @@ function MySubShips(props) {
                         <div className={`col-8 ml-40`}>
                             <span style={{fontSize:"30px"}}><strong>배송 조회</strong></span>
                             <br /><br />
-                            <div className="row mb-4">
+                            <div className="row mt-12 mb-4">
                                 <>
-                                    <div className="col-1 my-auto">
+                                    {/* <div className="col-1 my-auto">
                                         <span>배송일</span>
-                                    </div>
+                                    </div> */}
                                     <div className="col-2 my-auto">
                                         <DatePicker
                                             selected={startDate}
@@ -166,8 +184,17 @@ function MySubShips(props) {
                                         />
                                     </div>
                                 </>
-                                <div className="col-3">
-                                    <div className="pro-sidebar-search">
+                                <div className="col-2 my-auto ml-20">
+                                <select class="form-select" aria-label="Default select example" onChange={statusChangeHandler}>
+                                    <option selected value="all">전체상태</option>
+                                    <option value="1">상품준비중</option>
+                                    <option value="3">배송중</option>
+                                    <option value="5">배송완료</option>
+                                </select>
+                                </div>
+                                <div className="col-2 my-auto">
+                                <button class="btn btn-primary" onClick={searchHandler}>조회<i className="las la-search ml-2" /></button>
+                                    {/* <div className="pro-sidebar-search">
                                         <form className="pro-sidebar-search-form" 
                                             //onSubmit={handleSubmit}
                                         >
@@ -183,7 +210,7 @@ function MySubShips(props) {
                                                 <i className="las la-search" />
                                             </button>
                                         </form>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                             {
@@ -202,7 +229,7 @@ function MySubShips(props) {
                     <div className="row">
                         {
                             loading === false ?
-                            <Pagination postsPerPage={postsPerPage} totalPosts={totalPosts}
+                            <Pagination postsPerPage={postsPerPage} totalPosts={totalPosts} currentPage={currentPage}
                             paginate={paginate} />
                             :
                             ""

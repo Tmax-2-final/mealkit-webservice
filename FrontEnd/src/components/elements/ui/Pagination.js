@@ -1,5 +1,5 @@
 import React from "react";
-    const Pagination = ({ postsPerPage, totalPosts, paginate }) => {
+    const Pagination = ({ postsPerPage, totalPosts, paginate, currentPage }) => {
         console.log(postsPerPage);
         console.log(totalPosts)
         const pageNumber = [];
@@ -17,7 +17,7 @@ import React from "react";
                 {pageNumber.map((pageNum) => (
                     <li
                         key={pageNum}
-                        className="pagination"
+                        className={`pagination ${currentPage === pageNum ? "active" : ""}`}
                         onClick={() => paginate(pageNum)}
                     >
                         <button className="page-link">{pageNum}</button>
