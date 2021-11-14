@@ -198,7 +198,9 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
         history.push({
             pathname: "/subscription/confirmusubpkg",
             state: {
-                myPkgData : categoryData
+                myPkgData : categoryData,
+                pkgId : 1,
+                pkgName : "테스트 패키지 이름"
             }
         })
     }

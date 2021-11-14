@@ -57,7 +57,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 //                .hasIpAddress(env.getProperty("gateway.ip")) // 172.18.0.5
                 .and()
                 .addFilter(getAuthenticationFilter());
-//        http.authorizeRequests().antMatchers("/welcome/**").hasRole("ADMIN");
 //        http.authorizeRequests().anyRequest().permitAll();
         http.headers().frameOptions().disable();
     }

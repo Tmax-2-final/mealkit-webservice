@@ -90,9 +90,10 @@ export default function AddBuyAndCart({props, productData}) {
                         alert("오류 발생. 장바구니에 상품이 담기지 않았습니다.")
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     alert("다시 다시 입력해주세요.");
-                    console.log(body);
+
+                    console.log(err);
                 });
         }        
     }

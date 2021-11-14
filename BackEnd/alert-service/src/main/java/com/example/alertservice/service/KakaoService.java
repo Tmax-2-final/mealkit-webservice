@@ -51,6 +51,14 @@ public class KakaoService {
 		else if(requestAlert.getType() == 203) {
 			kakaoEntity.setTemplate_id("64552");
 		}
+		// 구독 변경
+		else if(requestAlert.getType() == 204) {
+			kakaoEntity.setTemplate_id("65131");
+		}
+		// 구독 취소
+		else if(requestAlert.getType() == 205) {
+			kakaoEntity.setTemplate_id("65132");
+		}
 		// 배송 시작
 		else if(requestAlert.getType() == 301) {
 			kakaoEntity.setTemplate_id("63882");

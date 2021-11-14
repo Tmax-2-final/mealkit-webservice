@@ -1,12 +1,11 @@
 import PropTypes from "prop-types";
-import React, { Fragment, useState, useRef } from "react";
+import React, { Fragment, useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import LayoutOne from "../user/LayoutOne";
 import Bread from "../../elements/ui/Bread";
 import axios from 'axios';
 import S3 from 'react-aws-s3';
 import Rating from '@mui/material/Rating';
-import Typography from '@mui/material/Typography';
     
 export default function ReviewForm(props) {
     const {pkgId, productId, orderType, pkgName, productName} = props.location.state;
@@ -17,6 +16,8 @@ export default function ReviewForm(props) {
     const [content, setContent] = useState("");
     const [rating, setRating] = useState(0);
     const [image, setImage] = useState();
+    const [accessKey, setAccessKey] = useState('');
+    const [secretAccessKey, setSecretAccessKey] = useState('');
     
     let userId = localStorage.getItem('userid');
     let token = localStorage.getItem('token');
@@ -24,8 +25,18 @@ export default function ReviewForm(props) {
     const S3_BUCKET = 'tmax-2';
     const REGION = 'ap-northeast-2';
     let newFileName = '';
-    const ACCESS_KEY = '';
-    const SECRET_ACCESS_KEY = '';
+
+    useEffect(() => {
+        axios.get(`/config-service/s3-accesskey/default`)
+        .then((res) => {
+            console.log(res.data.propertySources[0]);
+            setAccessKey(res.data.propertySources[0].source.ACCESS_KEY);
+            setSecretAccessKey(res.data.propertySources[0].source.SECRET_ACCESS_KEY);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }, [])
 
     const titleHandler = (e) => {
         e.preventDefault();
@@ -58,8 +69,8 @@ export default function ReviewForm(props) {
         const config = {
             bucketName: S3_BUCKET,
             region: REGION,
-            accessKeyId: ACCESS_KEY,
-            secretAccessKey: SECRET_ACCESS_KEY
+            accessKeyId: accessKey,
+            secretAccessKey: secretAccessKey
         };
         
         const ReactS3Client = new S3(config);
@@ -133,14 +144,13 @@ export default function ReviewForm(props) {
                                                     <div className="login-register-form">
                                                         <form onSubmit={submitHandler}>
 
-                                                            {/* <label>상품명</label>
+                                                            <label>{orderType === 1 ? "패키지명" : "상품명"} </label>
                                                             <input
                                                                 type="text"
-                                                                name="productName"
-                                                                value={productName}
-                                                                onChange={productHandler}
+                                                                name="Name"
+                                                                value={orderType === 1 ? pkgName : productName}
                                                                 readOnly
-                                                            /> */}
+                                                            /> 
 
                                                             <label>제목</label>
 
@@ -188,9 +198,10 @@ export default function ReviewForm(props) {
                                                                 style={{ height: "100px" }}
                                                             />
 
+                                                            <br /><br />
 
 
-                                                            <div className="col-lg-12 col-md-12">
+                                                            <div>
                                                                 <div className="billing-info">
                                                                     <label>이미지</label>
                                                                     <input

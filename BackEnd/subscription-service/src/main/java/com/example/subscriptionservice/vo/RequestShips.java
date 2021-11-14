@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-public class RequestSubShip {
+public class RequestShips {
     private Long id;
     private String userId;
     private Long pkgId;
@@ -20,6 +20,9 @@ public class RequestSubShip {
     private Character type;
     private Character status;
     private LocalDateTime startDate;
+    private LocalDateTime completeDate;
     private LocalDate dueDate;
     private Long price;
+
+    Iterable<RequestCatalog> requestCatalogList;
 }

@@ -11,17 +11,16 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.text.SimpleDateFormat;
 
 @Service
 public class MailService {
 
     private final JavaMailSender mailSender;
-    private final UserServiceClient userServiceClient;
 
     @Autowired
-    public MailService (JavaMailSender mailSender, UserServiceClient userServiceClient) {
+    public MailService (JavaMailSender mailSender) {
         this.mailSender = mailSender;
-        this.userServiceClient = userServiceClient;
     }
 
     /*
@@ -30,13 +29,14 @@ public class MailService {
     Date:           2021.10.24(일)
     Writer:         김남곤
      */
-    public MailEntity createMailForm(RequestAlert requestAlert) {
+    public MailEntity createMailForm(RequestAlert requestAlert, String email) {
         MailEntity mailEntity = new MailEntity();
         // 유저 이메일 확보
-        String email = userServiceClient.getUserEmailByUserId(requestAlert.getUserId());
+        // String email = userServiceClient.getUserEmailByUserId(requestAlert.getUserId());
         // 제목 및 메세지 작성을 위한 초기 세팅
         StringBuilder title = new StringBuilder();
         StringBuilder msg = new StringBuilder();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd a HH:mm:ss");
         msg.append("<h1>매일(mail)키트 알림</h1>");
         msg.append("<h2><span style=\"color:#03c75a\">" + requestAlert.getUserId() + "</span>");
 
@@ -56,14 +56,14 @@ public class MailService {
                     "</td></tr><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7;border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
                     "결제일</td>" +
                     "<td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000;\">");
-            msg.append(requestAlert.getPayDate());
+            msg.append(simpleDateFormat.format(requestAlert.getPayDate()));
             msg.append("</td></tr><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7;border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
                     "결제금액" +
-                    "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000; font-weight:bold;\">");
+                    "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000; \">");
             msg.append(requestAlert.getPayPrice() + "원 (VAT 포함)");
 //            msg.append("</td></tr><tr><td style=\"padding:14px 12px;background:#f7f7f7; color:#000; vertical-align:top;\">" +
 //                    "다음 결제 예정일" +
-//                    "</td><td style=\"padding:11px 0 11px 12px;color:#000; font-weight:bold;\">");
+//                    "</td><td style=\"padding:11px 0 11px 12px;color:#000; \">");
 //            msg.append(requestAlert.getNextPayDate());
             msg.append("</td></tr>");
             msg.append("</tbody></table>");
@@ -89,19 +89,19 @@ public class MailService {
                     "</td></tr><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7;border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
                     "결제일</td>" +
                     "<td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000;\">");
-            msg.append(requestAlert.getPayDate());
+            msg.append(simpleDateFormat.format(requestAlert.getPayDate()));
             msg.append("</td></tr><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7;border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
                     "결제금액" +
-                    "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000; font-weight:bold;\">");
+                    "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000; \">");
             msg.append(requestAlert.getPayPrice() + "원 (VAT 포함)");
             msg.append("</td></tr><tr><td style=\"padding:14px 12px;background:#f7f7f7; color:#000; vertical-align:top;\">" +
                     "다음 결제 예정일" +
-                    "</td><td style=\"padding:11px 0 11px 12px;color:#000; font-weight:bold;\">");
-            msg.append(requestAlert.getNextPayDate());
+                    "</td><td style=\"padding:11px 0 11px 12px;color:#000; \">");
+            msg.append(simpleDateFormat.format(requestAlert.getNextPayDate()));
             msg.append("</td></tr>");
             msg.append("</tbody></table>");
 
-            msg.append("<ul><li>자세한 내용은 <a href=\"http://localhost:3000/mypage/mySubOrder\" style=\"color:#222;\" target=\"_blank\" rel=\"noreferrer noopener\">" +
+            msg.append("<ul><li>자세한 내용은 <a href=\"http://localhost:3000/mypage\" style=\"color:#222;\" target=\"_blank\" rel=\"noreferrer noopener\">" +
                     "구독내역</a>에서 확인하세요</li></ul><br/><br/>");
         }
         // 구독 확정
@@ -123,13 +123,62 @@ public class MailService {
             msg.append(requestAlert.getSubOrderId());
             msg.append("</td></tr><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7;border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
                     "배송상태" +
-                    "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000; font-weight:bold;\">");
+                    "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000; \">");
             msg.append("구독 상품 준비중");
             msg.append("</td></tr>");
             msg.append("</tbody></table>");
 
-            msg.append("<ul><li>자세한 내용은 <a href=\"http://localhost:3000/mypage/mySubOrder\" style=\"color:#222;\" target=\"_blank\" rel=\"noreferrer noopener\">" +
+            msg.append("<ul><li>자세한 내용은 <a href=\"http://localhost:3000/mypage\" style=\"color:#222;\" target=\"_blank\" rel=\"noreferrer noopener\">" +
                     "구독내역</a>에서 확인하세요</li></ul><br/><br/>");
+        }
+        // 구독 변경
+        else if(requestAlert.getType() == 204) {
+            // 메일 제목 생성 및 주입
+            title.append("[매일(mail)키트] 회원님의 구독이 변경되었습니다.");
+            // 메일 메시지 생성
+            msg.append("회원님의 구독 변경 내역</h2>");
+            msg.append("<table cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%;margin:0;padding:0;border-top:1px solid #000;border-bottom:1px solid #000;font-size:14px;line-height:20px\">" +
+                    "<tbody><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7; border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
+                    "현재구독등급" +
+                    "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000;line-height:20px;\">" +
+                    "<span style=\"margin-right:11px;\">");
+            msg.append(requestAlert.getSubGradeName());
+            msg.append("</span>" +
+                    "</td></tr><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7;border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
+                    "변경구독등급</td>" +
+                    "<td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000;\">");
+            msg.append(requestAlert.getSubChangeGradeName());
+            msg.append("</td></tr><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7;border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
+                    "변경 예정일" +
+                    "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000; \">");
+            msg.append(simpleDateFormat.format(requestAlert.getChangeDate()));
+            msg.append("</td></tr>");
+            msg.append("</tbody></table>");
+
+            msg.append("<ul><li>자세한 내용은 <a href=\"http://localhost:3000/mypage\" style=\"color:#222;\" target=\"_blank\" rel=\"noreferrer noopener\">" +
+                    "구독내역</a>에서 확인하세요</li></ul><br/><br/>");
+        }
+        // 구독 취소
+        else if(requestAlert.getType() == 205) {
+            // 메일 제목 생성 및 주입
+            title.append("[매일(mail)키트] 회원님의 구독이 취소되었습니다.");
+            // 메일 메시지 생성
+            msg.append("회원님의 구독 취소 내역</h2>");
+            msg.append("<table cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%;margin:0;padding:0;border-top:1px solid #000;border-bottom:1px solid #000;font-size:14px;line-height:20px\">" +
+                    "<tbody><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7; border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
+                    "취소 날짜" +
+                    "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000;line-height:20px;\">" +
+                    "<span style=\"margin-right:11px;\">");
+            msg.append(simpleDateFormat.format(requestAlert.getCancelDate()));
+            msg.append("</span>" +
+                    "</td></tr><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7;border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
+                    "환불금액</td>" +
+                    "<td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000;\">");
+            msg.append(requestAlert.getRefundPrice() + "원 (VAT 포함)");
+            msg.append("</td></tr>");
+            msg.append("</tbody></table>");
+
+            msg.append("<ul><li>그동안 저희 서비스를 이용해 주셔서 감사합니다. 다시 돌아오리라 믿고 있을게요!</li></ul><br/><br/>");
         }
         // 배송 시작
         else if(requestAlert.getType() == 301) {
@@ -150,13 +199,13 @@ public class MailService {
             msg.append("CJ 대한통운");
             msg.append("</td></tr><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7;border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
                     "배송도착 예정일" +
-                    "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000; font-weight:bold;\">");
-            msg.append(requestAlert.getDeliveryDate());
+                    "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000; \">");
+            msg.append(simpleDateFormat.format(requestAlert.getDeliveryDate()));
             msg.append("</td></tr>");
             msg.append("</tbody></table>");
 
-            msg.append("<ul><li>자세한 내용은 <a href=\"http://localhost:3000/mypage/myDeliOrder\" style=\"color:#222;\" target=\"_blank\" rel=\"noreferrer noopener\">" +
-                    "배송내역</a>에서 확인하세요</li></ul><br/><br/>");
+            msg.append("<ul><li>자세한 내용은 <a href=\"http://localhost:3000/mypage/myShip\" style=\"color:#222;\" target=\"_blank\" rel=\"noreferrer noopener\">" +
+                    "배송조회</a>에서 확인하세요</li></ul><br/><br/>");
         }
         // 배송 완료
         else if(requestAlert.getType() == 302) {
@@ -177,14 +226,14 @@ public class MailService {
             msg.append("CJ 대한통운");
             msg.append("</td></tr><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7;border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
                     "배송상태" +
-                    "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000; font-weight:bold;\">");
+                    "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000; \">");
             msg.append("배송 완료");
             msg.append("</td></tr>");
             msg.append("</tbody></table>");
 
             msg.append("주문하신 상품은 잘 받으셨나요? 상품이 고객님 마음에 들었으면 좋겠습니다.<br /> 마음에 드셨다면 " +
-                    "<a href=\"http://localhost:3000/mypage/reviews\" style=\"color:#222;\" target=\"_blank\" rel=\"noreferrer noopener\">리뷰작성</a>" +
-                    "과 함께 구매확정 부탁드려요! <br/><br/><br/>");
+                    "<a href=\"http://localhost:3000/mypage/myShip\" style=\"color:#222;\" target=\"_blank\" rel=\"noreferrer noopener\">리뷰작성</a>" +
+                    "부탁드려요! <br/><br/><br/>");
         }
         msg.append("<p>본 메일은 발신전용 메일이므로, 회신을 통한 문의는 처리되지 않습니다.</p>" +
                 "<p>문의사항은 <b>고객센터(1588–3820)</b>를 이용해 주세요.</p><br />"+

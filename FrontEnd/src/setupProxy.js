@@ -41,6 +41,9 @@ module.exports = function (app) {
         createProxyMiddleware('/config-service', {
             target: 'http://localhost:8888',
             changeOrigin: true,
+            pathRewrite: {
+                '^/config-service': '' // URL ^/api -> 공백 변경
+            }
         })
     );
 }

@@ -18,19 +18,19 @@ function MySubPkgDetailView(props) {
     // }
 
     const subShipStatusText = (subShipStatus) => {
-        switch (subShipStatus) {
+        switch (shipStatus) {
             case "1":
-                return <span>상품 준비중</span>
+                return "상품 준비중"
             case "2":
-                return <span>배송중</span>
+                return "발송완료"
             case "3":
-                return <span>배송완료</span>
+                return "배송중"
             case "4":
-                return <span>배송취소</span>
+                return "배송취소"
             case "5":
-                return <span>구매확정</span>
+                return "배송완료"
             default:
-                return <span>에러</span>
+                return "에러"
         }
     }
 

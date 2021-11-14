@@ -27,7 +27,7 @@ export default function PackageList(props) {
     },[selCategoryName]);
 
     if(categoryName === "패키지 직접 제작"){
-        window.location.href="/compare";
+        window.location.href="/mypkg";
     }
 
     

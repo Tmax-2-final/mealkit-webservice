@@ -21,15 +21,39 @@ function EditGradeView2(props) {
 
     const [isDisabled, setIsDisabled] = useState(false);
 
+    const [textClolr, setTextColor] = useState('');
+    const [btnClolr, setBtnColor] = useState('');
+
     const headers = {
         Authorization: `Bearer ${token}`
     }
 
     useEffect(() => {
 
-        if(userSubData.subGradeId === subGradeId){
-            setIsDisabled(true);
+        // 구독변경 요청한 회원인 경우 구독 변경할 등급을 선택하지 못하도록 막음
+        if(userSubData.changeSubGradeId !== null ){
+            // 현재 구독 변경등급과 해당 컴포넌트 등급과 같은경우
+            if(userSubData.changeSubGradeId === subGradeId){
+                setIsDisabled(true);
+                setTextColor('#ba3838');
+                setBtnColor('rgba(0,0,0,0.3)');
+                
+            }else {
+                setTextColor('#fff');
+                setBtnColor('');
+            }
+        }else {
+            if(userSubData.subGradeId === subGradeId){
+                setIsDisabled(true);
+                setTextColor('#ba3838');
+                setBtnColor('rgba(0,0,0,0.3)');
+            } else {
+                setTextColor('#fff');
+                setBtnColor('');
+            }
         }
+
+        
     }, []);
 
     // 구독신청 버튼클릭 이벤트 핸들러
@@ -40,7 +64,7 @@ function EditGradeView2(props) {
         
 
         if (window.confirm(`구독등급을 "${name}" 등급으로 변경하시겠습니까? \r\n(현재 구독등급 : ${props.userSubData.subscriptionGradeDto.name})\r\n다음 결제일부터 변경된 구독으로 시작됩니다.`)) {
-            setIsDisabled(true);
+            //setIsDisabled(true);
             
             const apiName = "구독변경";
 
@@ -57,6 +81,17 @@ function EditGradeView2(props) {
                 if (res.status === 200) {
                     //alert(`${apiName} 완료되었습니다.`);
                     
+                    let changeDate = new Date(userSubData.nextPaymentDate);
+                    let body = {
+                        type: 204,
+                        userId: userId,
+                        oauth: localStorage.getItem('oauth'),
+                        subGradeName: userSubData.subscriptionGradeDto.name,
+                        subChangeGradeName: name,
+                        changeDate: changeDate
+                    }
+                    axios.post(`/alert-service/alerts`, body)
+
                     props.history.push({
                         pathname: '/subscription/updatecomplete',
                         state: {
@@ -140,7 +175,7 @@ function EditGradeView2(props) {
                         <Button sx={{
                             px:"0.6rem", 
                             py:"0.4rem", 
-                            backgroundColor: userSubData.subGradeId === subGradeId ? "rgba(0,0,0,0.3)" : ""
+                            backgroundColor: btnClolr
                         }} 
                             size="large" variant="contained"  >
                         <Typography 
@@ -161,8 +196,8 @@ function EditGradeView2(props) {
                         </Typography>
                         </Button>
                     </CardContent>
-                    <CardContent sx={{textAlign:"center", pb:"2rem" , fontSize:"1.4rem",  color: subGradeId === userSubData.subGradeId ? "#ba3838" : "#fff"}}>
-                        <strong>구독중</strong>
+                    <CardContent sx={{textAlign:"center", pb:"2rem" , fontSize:"1.4rem",  color: textClolr}}>
+                        <strong>{userSubData.changeSubGradeId !== null ? "구독변경예정" : "구독중"}</strong>
                     </CardContent>
                 </CardActionArea>
             </Card>

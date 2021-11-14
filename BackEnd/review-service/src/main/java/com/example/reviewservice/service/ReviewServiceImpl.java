@@ -9,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -89,5 +91,32 @@ public class ReviewServiceImpl implements ReviewService {
     public Iterable<ReviewEntity> getReviewsAllBetween(RequestDate requestDate) {
         return null;
     }
+
+    @Override
+    public Page<ReviewEntity> getAllPageReviews(Pageable pageRequest) {
+        return reviewRepository.findAll(pageRequest);
+    }
+
+    @Override
+    public Page<ReviewEntity> getPageReviewsByUserId(String userId, Pageable pageRequest) {
+        return reviewRepository.findAllByUserId(userId, pageRequest);
+    }
+
+    @Override
+    public Page<ReviewEntity> getPageReviewsByPkgId(Long pkgId, Pageable pageRequest) {
+        return reviewRepository.findAllByPkgId(pkgId, pageRequest);
+    }
+
+    @Override
+    public Page<ReviewEntity> getPageReviewsByProductId(Long productId, Pageable pageRequest) {
+        return reviewRepository.findAllByProductId(productId, pageRequest);
+    }
+
+
+    @Override
+    public Page<ReviewEntity> getReviewsByUserIdAndOrderType(String userId, Integer orderType, Pageable pageRequest) {
+        return reviewRepository.findAllByUserIdAndOrderType(userId, orderType, pageRequest);
+    }
+
 
 }

@@ -126,6 +126,7 @@ const Subscrption = (props) => {
         e.preventDefault();
         console.log(pageNum);
         setLoading(true);
+        setCodeType('0')
 
         let token = localStorage.getItem('token');
 
@@ -253,6 +254,7 @@ const Subscrption = (props) => {
                             startDate={startDate}
                             endDate={endDate}
                             locale="ko"
+                            dateFormat="yyyy.MM.dd(eee)"
                         />
                     </div>
                     <div className="col-12 col-lg-1 mt-1" style={{textAlign:"center"}}>
@@ -267,6 +269,7 @@ const Subscrption = (props) => {
                             endDate={endDate}
                             minDate={startDate}
                             locale="ko"
+                            dateFormat="yyyy.MM.dd(eee)"
                         />
                     </div>
                     <div className="col-12 col-lg-2">
@@ -313,6 +316,7 @@ const Subscrption = (props) => {
                                 subscriptionDatas={subscriptionDatas}
                                 setSubscriptionDatas={setSubscriptionDatas}
                                 loading={loading}
+                                codeType={codeType}
                             />
                             <CPagination className="pb-40" aria-label="Page navigation example">
                                 {rendering()}

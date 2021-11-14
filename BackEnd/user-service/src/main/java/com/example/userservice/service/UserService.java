@@ -24,7 +24,7 @@ public interface UserService extends UserDetailsService {
     UserDto getUserDetailsByUserId(String email);
 
     /* 비밀번호 찾기(이메일, 이름) */
-    UserDto getUserByUserEmailAndName(String email, String username);
+    UserDto getUserByUserEmailAndName(String userId, String username, String email);
 
     /* 전체 사용자 목록 반환 */
     Page<UserEntity> getUserByAll(Pageable pageRequest);

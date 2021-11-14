@@ -23,7 +23,7 @@ public class KafkaConsumer {
         this.repository = repository;
     }
 
-    @KafkaListener(topics = "example-catalog-topic")
+    @KafkaListener(topics = "catalog-topic")
     public void updateQty(String kafkaMessage) { // {"productId":"CATALOG-0001", "qty":40, "unitPrice":1000 ... }
         log.info("Kafka Message -> " + kafkaMessage);
 
@@ -39,7 +39,8 @@ public class KafkaConsumer {
         // 재고 수량 업데이트
         CatalogEntity entity = repository.findByCatalogId(((Number) map.get("catalogId")).longValue());
         if (entity != null) {
-            entity.setStock(entity.getStock() - (Integer) map.get("qty"));
+            //entity.setStock(entity.getStock() - (Integer) map.get("qty"));
+            entity.setStock(entity.getStock() - 1);
             repository.save(entity);
         }
     }

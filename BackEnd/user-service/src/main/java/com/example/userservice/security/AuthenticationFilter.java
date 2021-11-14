@@ -1,6 +1,7 @@
 package com.example.userservice.security;
 
 import com.example.userservice.dto.UserDto;
+import com.example.userservice.entity.UserEntity;
 import com.example.userservice.service.UserService;
 import com.example.userservice.vo.RequestLogin;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,6 +13,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -21,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 @Slf4j
@@ -58,14 +62,21 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         System.out.println(userName);
         // 토큰 생성을 위해 userDto로 가져온다.
         UserDto userDetails = userService.getUserDetailsByUserId(userName);
-        // 토근 생성
+        // 토근 생성 30분
         String token = Jwts.builder()
                 .setSubject(userDetails.getUserId()) // 어떤 정보를 가지고 토큰을 만들 것인가 - userId
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time")))) // 토큰 만료 기간은 얼마인가. 현재 시간 + 토큰 시간
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret")) // 서명 - 암호화에 사용된 키 종류와 키 값
                 .compact();
 
+        // 리프레시 토큰 생성 10일
+        String refresh_token = Jwts.builder()
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.refresh_expiration_time"))))
+                .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
+                .compact();
+
         response.addHeader("token", token);
+        response.addHeader("refresh_token", refresh_token);
         response.addHeader("userId", userDetails.getUserId());
         response.addHeader("role", userDetails.getRole());
 

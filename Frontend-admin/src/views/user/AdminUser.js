@@ -3,10 +3,11 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import UserTable from './UserTable.js'
 import { Link } from 'react-router-dom';
-import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { CPagination, CPaginationItem } from '@coreui/react';
 import { ClipLoader } from "react-spinners";
+import ko from "date-fns/locale/ko"; // the locale you want
+import DatePicker, { registerLocale } from "react-datepicker";
 
 const AdminUser = (props) => {
 
@@ -21,6 +22,9 @@ const AdminUser = (props) => {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPages, setCurrentPages] = useState(1);
   const [whatPages, setWhatPages] = useState(0); // 0 전체 회원 페이지, 1 검색 회원 페이지
+
+  // datepicker 한국어 설정
+  registerLocale("ko", ko);
 
   useEffect(() => {
 
@@ -148,6 +152,8 @@ const AdminUser = (props) => {
               selectsStart
               startDate={startDate}
               endDate={endDate}
+              locale="ko"
+              dateFormat="yyyy.MM.dd(eee)"
             />
           </div>
           <div className="col-12 col-lg-1 mt-1" style={{ textAlign: "center" }}>
@@ -161,6 +167,8 @@ const AdminUser = (props) => {
               startDate={startDate}
               endDate={endDate}
               minDate={startDate}
+              locale="ko"
+              dateFormat="yyyy.MM.dd(eee)"
             />
           </div>
           <div className="col-12 col-lg-5">

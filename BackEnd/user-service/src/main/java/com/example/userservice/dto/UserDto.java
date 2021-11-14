@@ -2,6 +2,7 @@ package com.example.userservice.dto;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import java.util.Date;
 
 /*
@@ -19,6 +20,7 @@ public class UserDto {
 
     private String role;
     private String oauth;
+    private Integer subscribeYn;
 
     private Date createdAt;
     private Date modifiedAt;

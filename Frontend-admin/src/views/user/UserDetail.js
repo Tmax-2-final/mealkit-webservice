@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useHistory } from 'react-router';
 import { ClipLoader } from "react-spinners";
+import { CPagination, CPaginationItem } from '@coreui/react';
 
 const UserDetail = (props) => {
 
     const [loading, setLoading] = useState(true);
+    const [shipLoading, setShipLoading] = useState(true);
     const [visible, setVisible] = useState(false); // 수정을 위한 모달 창
 
     const [userDetailInfo, setUserDetailInfo] = useState([]);
@@ -22,6 +24,12 @@ const UserDetail = (props) => {
     const [userIsSub, setUserIsSub] = useState('N'); // 구독 가입 존재 여부
     const [userShipInfo, setUserShipInfo] = useState([]); // 구독 배송 현황 객체
     const [userIsShip, setUserIsShip] = useState('N'); // 구독 배송 존재 여부
+    
+    const [totalPages, setTotalPages] = useState(0);
+    const [currentPages, setCurrentPages] = useState(1);
+
+    // 한 페이지에 보여 row 수 설정
+    const [pageSize, setPageSize] = useState(8);
 
     const history = useHistory();
 
@@ -59,14 +67,22 @@ const UserDetail = (props) => {
                 }
             })
 
-        let result2 = axios.get(`/subscription-service/subscription/ships/${props.location.state.userId}`, { headers: headers })
+        let result2 = axios.get(`/subscription-service/ships/${props.location.state.userId}`, { 
+            headers: headers,
+            params: {
+                size : pageSize
+            } 
+        })
             .then((res) => {
                 console.log(res.data);
                 if (res.status === 200) {
-                    setUserShipInfo(res.data)
-                    if(res.data.length !== 0) {
+                    setUserShipInfo(res.data.content)
+                    if(res.data.content.length !== 0) {
                         console.log('구독 배송 내역이 존재합니다.')
                         setUserIsShip('Y')
+                        setTotalPages(res.data.totalPages);
+                        setCurrentPages(res.data.number + 1);
+                        setShipLoading(false);
                     }
                 }
             })
@@ -164,6 +180,100 @@ const UserDetail = (props) => {
         .catch((err) => {
             console.log(err)
             alert('오류 발생')
+        })
+    }
+
+    const getShipStatusText = (shipStatus) => {
+        switch (shipStatus) {
+            case "1":
+                return "상품 준비중"
+            case "2":
+                return "발송완료"
+            case "3":
+                return "배송중"
+            case "4":
+                return "배송취소"
+            case "5":
+                return "배송완료"
+            default:
+                return "에러"
+        }
+    }
+    const getSubscribeStatusText = (subscribeGrade) => {
+        switch (subscribeGrade) {
+            case 1:
+                return "베이직"
+            case 2:
+                return "스탠다드"
+            case 3:
+                return "프리미엄"
+            default:
+                return "-"
+        }
+    }
+
+    const rendering = () => {
+        const result = [];
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === currentPages) {
+            result.push(
+                <CPaginationItem
+                active
+                onClick={(e) => { pageHandler(i, e) }}
+                >{i}</CPaginationItem>
+            )
+            }
+            else {
+            result.push(
+                <CPaginationItem
+                onClick={(e) => { pageHandler(i, e) }}
+                >{i}</CPaginationItem>
+            )
+            }
+
+        }
+        return result;
+    }
+
+    const pageHandler = (pageNum, e) => {
+        e.preventDefault();
+        console.log(pageNum)
+        setShipLoading(true);
+        setCurrentPages(pageNum)
+        let token = localStorage.getItem('token')
+
+        // axios.get(`/subscription-service/ships/${props.location.state.userId}`, { headers: headers })
+        // .then((res) => {
+        //     console.log(res.data);
+        //     if (res.status === 200) {
+        //         setUserShipInfo(res.data.content)
+        //         if(res.data.content.length !== 0) {
+        //             console.log('구독 배송 내역이 존재합니다.')
+        //             setUserIsShip('Y')
+        //         }
+        //     }
+        // })
+
+        const reuslt = axios.get(`/subscription-service/ships/${props.location.state.userId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        params: {
+            page: pageNum,
+            size: pageSize,
+        }
+        })
+        .then((res) => {
+        console.log(res.data)
+        if(res.status === 200) {
+            setUserShipInfo(res.data.content);
+            setTotalPages(res.data.totalPages);
+            setCurrentPages(res.data.number + 1);
+            setShipLoading(false);
+        }
+        })
+        .catch((err) => {
+        console.log(err)
         })
     }
 
@@ -326,12 +436,7 @@ const UserDetail = (props) => {
                                                                                         <p style={{ color: "grey" }}>N</p>
                                                                                 }
                                                                                 <p style={{ color: "grey" }}>{userSubInfo.subscriptionGradeDto.name}</p>
-                                                                                {
-                                                                                    userSubInfo.status === "3" ?
-                                                                                        <p style={{ color: "grey" }}>해지 예정</p>
-                                                                                        :
-                                                                                        <p style={{ color: "grey" }}>{userSubInfo.subscriptionGradeDto.name}</p>
-                                                                                }
+                                                                                <p style={{ color: "grey" }}>{getSubscribeStatusText(userSubInfo.changeSubGradeId)}</p>
                                                                                 <p style={{ color: "grey" }}>{numberToCommasNumber(userSubInfo.subscriptionGradeDto.monthlyFee)} 원</p>
                                                                             </div>
                                                                         )
@@ -348,50 +453,55 @@ const UserDetail = (props) => {
                                                     <h5 className="card-title mt-2">구독 배송 현황</h5>
                                                 </div>
                                                 <div className="card-body">
-                                                    <CTable style={{ marginTop: "-21px" }}>
-                                                        <CTableHead>
-                                                            <CTableRow>
-                                                                <CTableHeaderCell scope="col">주문번호</CTableHeaderCell>
-                                                                <CTableHeaderCell scope="col">패키지명</CTableHeaderCell>
-                                                                <CTableHeaderCell scope="col">배송상태</CTableHeaderCell>
-                                                                <CTableHeaderCell scope="col">결제일</CTableHeaderCell>
-                                                                <CTableHeaderCell scope="col">배송예정일</CTableHeaderCell>
-                                                            </CTableRow>
-                                                        </CTableHead>
-                                                        <CTableBody>
-                                                            {
-                                                                userIsShip === 'N' ?
-                                                                    (
-                                                                        null
-                                                                    )
-                                                                    :
-                                                                    (
-
+                                                    {
+                                                        shipLoading ? (
+                                                            <div className="kako-login-loading-box" style={{ textAlign: "center", paddingTop: "250px", paddingBottom: "250px" }}>
+                                                                <ClipLoader
+                                                                color="gray"
+                                                                loading={shipLoading}
+                                                                size="50px" />
+                                                            </div>
+                                                        )
+                                                        :
+                                                        (
+                                                            <>
+                                                            <CTable style={{ marginTop: "-21px"}}>
+                                                            <CTableHead>
+                                                                <CTableRow>
+                                                                    <CTableHeaderCell scope="col">주문번호</CTableHeaderCell>
+                                                                    <CTableHeaderCell scope="col">패키지명</CTableHeaderCell>
+                                                                    <CTableHeaderCell scope="col">배송상태</CTableHeaderCell>
+                                                                    <CTableHeaderCell scope="col">결제일</CTableHeaderCell>
+                                                                    <CTableHeaderCell scope="col">배송예정일</CTableHeaderCell>
+                                                                </CTableRow>
+                                                            </CTableHead>
+                                                            <CTableBody className="text-center">
+                                                                {
+                                                                    userIsShip === 'N' ?
+                                                                        (
+                                                                            null
+                                                                        )
+                                                                        :
+                                                                        (
                                                                         userShipInfo.map((item, index) => (
                                                                             <CTableRow key={index}>
                                                                                 <CTableHeaderCell scope="row">#{item.id}</CTableHeaderCell>
                                                                                 <CTableDataCell>{item.pkgId}({item.pkgName})</CTableDataCell>
-                                                                                <CTableDataCell>
-                                                                                    {
-                                                                                        item.status === "1" ?
-                                                                                        <p>배송 준비중</p>
-                                                                                        :
-                                                                                        item.status === "5" ?
-                                                                                        <p>배송 완료</p>
-                                                                                        :
-                                                                                        <p>배송 중</p>
-                                                                                    }
-                                                                                </CTableDataCell>
+                                                                                <CTableDataCell>{getShipStatusText(item.status)}</CTableDataCell>
                                                                                 <CTableDataCell>{new Date(Date.parse(userDetailInfo.createdAt)).toLocaleString().split("오")[0]}</CTableDataCell>
                                                                                 <CTableDataCell>{new Date(Date.parse(item.dueDate)).toLocaleString().split("오")[0]}</CTableDataCell>
                                                                             </CTableRow>
-
-                                                                        ))
-
-                                                                    )
-                                                            }
-                                                        </CTableBody>
-                                                    </CTable>
+                                                                            ))
+                                                                        )
+                                                                }
+                                                            </CTableBody>
+                                                            </CTable>
+                                                            <CPagination className="pb-40" aria-label="Page navigation example">
+                                                                {rendering()}
+                                                            </CPagination>
+                                                            </>
+                                                        )
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -401,8 +511,6 @@ const UserDetail = (props) => {
                         </div>
                     )
             }
-
-
         </Fragment>
     );
 }

@@ -8,38 +8,38 @@ import MyShipListView from './MyShipListView';
 import MySubPkgDetailView from './MySubPkgDetailView';
 
 function MySubPkgDetail(props) {
-    const {pkgId, shipStatus} = props.location.state;
-    const [patalogData, setPatalogData] = useState([]);
+    const {pkgId, shipStatus, patalogData} = props.location.state;
+    //const [patalogData, setPatalogData] = useState([]);
 
     useEffect(() => {
-        let userId = localStorage.getItem('userid');
-        let token = localStorage.getItem('token');
+        // let userId = localStorage.getItem('userid');
+        // let token = localStorage.getItem('token');
 
-        if (!userId || userId === 'undefined') {
-            window.location.href = "/login";
-        }
-        if (!token || token === 'undefined') {
-            window.location.href = "/login";
-        }
+        // if (!userId || userId === 'undefined') {
+        //     window.location.href = "/login";
+        // }
+        // if (!token || token === 'undefined') {
+        //     window.location.href = "/login";
+        // }
 
-        const apiName = "구독패키지 조회";
+        // const apiName = "구독패키지 조회";
 
-        axios.get(`/catalog-service/patalogs/${pkgId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-            .then(res => {
-                console.log(`=== ${apiName} DATA ===`);
-                console.log(res.data);
-                console.log('=======================');
+        // axios.get(`/catalog-service/patalogs/${pkgId}`, {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // })
+        //     .then(res => {
+        //         console.log(`=== ${apiName} DATA ===`);
+        //         console.log(res.data);
+        //         console.log('=======================');
 
-                setPatalogData(res.data);
-            })
-            .catch(error => {
-                alert(`${apiName}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
-                console.log(error.response);
-            })
+        //         setPatalogData(res.data);
+        //     })
+        //     .catch(error => {
+        //         alert(`${apiName}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);
+        //         console.log(error.response);
+        //     })
     }, []);
 
     return (

@@ -94,11 +94,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDto createUser(UserDto userDto) {
         /* 권한 부여 */
-        if(userDto.getUserId().contains("admin")){
-            userDto.setRole("ROLE_ADMIN");
-        } else {
-            userDto.setRole("ROLE_USER");
-        }
+        userDto.setRole("ROLE_USER");
 
         // requestUser -> userDto -> userEntity -> jpa -> h2 DB
         ModelMapper mapper = new ModelMapper();
@@ -178,8 +174,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDto getUserByUserEmailAndName(String email, String username) {
-        UserEntity userEntity = userRepository.findByEmailAndName(email, username);
+    public UserDto getUserByUserEmailAndName(String userId, String username, String email) {
+        UserEntity userEntity = userRepository.findByUserIdAndNameAndEmail(userId, username, email);
         if(userEntity == null)
             throw new UsernameNotFoundException(email);
 

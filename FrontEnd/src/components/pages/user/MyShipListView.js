@@ -4,9 +4,9 @@ import { withRouter } from 'react-router';
 import axios from 'axios';
 
 function MyShipListView(props) {
-    const {shipData} = props;
-    const [patalogData, setPatalogData] = useState([]);
+    const {key, shipData} = props;
     const [loading, setLoading] = useState(true);
+    const [patalogData, setPatalogData] = useState([]);
 
     function popupWindow(url, windowName, win, w, h) {
         const y = win.top.outerHeight / 2 + win.top.screenY - ( h / 2);
@@ -15,6 +15,12 @@ function MyShipListView(props) {
     }
 
     const openShipInfoHandler = e => {
+        // 상품 준비상태인 경우만 배송정보 변경 가능
+        if(shipData.status !== '1'){
+            alert("상품 준비중인 상태만 배송정보 변경이 가능합니다.");
+            return;
+        }
+
         popupWindow(`/subscription/ChangeAddressAndDueDate/${shipData.id}/${shipData.postcode}/${shipData.address}/${shipData.addressDetail}/${shipData.dueDate}`, '배송정보 변경', window, 600, 500);  
 
     }
@@ -56,13 +62,13 @@ function MyShipListView(props) {
             case "1":
                 return <span>상품 준비중</span>
             case "2":
-                return <span>배송중</span>
+                return <span>발송완료</span>
             case "3":
-                return <span>배송완료</span>
+                return <span>배송중</span>
             case "4":
                 return <span>배송취소</span>
             case "5":
-                return <span>구매확정</span>
+                return <span>배송완료</span>
             default:
                 return <span>에러</span>
         }
@@ -81,42 +87,39 @@ function MyShipListView(props) {
                 orderType: 1,
                 pkgId: shipData.pkgId,
                 productId: null,
-                pkgName: shipData.name,
+                pkgName: shipData.pkgName,
                 productName: null,
             }
         })
     }
 
     const viewPkgDetailHandler = e => {
-        // 상품 준비상태인 경우만 배송정보 변경 가능
-        if(shipData.status !== '1'){
-            alert("상품 준비중인 상태만 배송정보 변경이 가능합니다.");
-            return;
-        }
-        
         props.history.push({
             pathname: "/mypage/mysubpkgdetail",
             state: {
                 pkgId: shipData.pkgId,
-                shipStatus: shipData.status
+                shipStatus: shipData.status,
+                patalogData: patalogData
             }
         })
     }
+
+    
 
     return (
         <>
             {loading ?
                 <div></div>
                 :
-                <div class="card col-10 mb-30">
-                    <div class="card-header row justify-content-between" style={{cursor:"pointer"}}
+                <div className="card col-10 mb-30">
+                    <div className="card-header row justify-content-between" style={{cursor:"pointer"}}
                         onClick={viewPkgDetailHandler}
                     >
                         {/* patalogData.pkgMgt && patalogData.pkgMgt.length */}
-                        <div className="col-10" style={{fontWeight:"bold", fontSize:"1.4rem"}}>{`${shipData.pkgName} (${patalogData.pkgMgt && patalogData.pkgMgt[0].catalogEntity.name}${patalogData.pkgMgt.length > 1 ? " 외 " + patalogData.pkgMgt.length + "개의 상품)" : ")" }`}</div>
-                        <div className="col-2 text-right"><i class="fas fa-chevron-right"></i></div>
+                        <div className="col-10" style={{fontWeight:"bold", fontSize:"1.4rem"}}>{`${shipData.pkgName} (${patalogData.pkgMgt && patalogData.pkgMgt[0].catalogEntity.name}${patalogData.pkgMgt && patalogData.pkgMgt.length > 1 ? " 외 " + patalogData.pkgMgt.length + "개의 상품)" : ")" }`}</div>
+                        <div className="col-2 text-right"><i className="fas fa-chevron-right"></i></div>
                     </div>
-                    <div class="card-body row justify-content-between">
+                    <div className="card-body row justify-content-between">
                         <div className="col-1 my-auto m-0 p-0">
                             <img src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${patalogData.pkgMgt && patalogData.pkgMgt[0].catalogEntity.image1}`} 
                                 className="img-fluid mx-auto" alt="" 
