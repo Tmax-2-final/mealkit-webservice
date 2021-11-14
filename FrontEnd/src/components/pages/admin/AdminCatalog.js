@@ -25,10 +25,10 @@ export default function AdminCatalog(props) {
 
     useEffect(() => {
 
-        if (localStorage.getItem('role') !== "ROLE_ADMIN") {
-            alert("접근 권한이 없습니다!")
-            window.location.href = "/"
-        }
+        // if (localStorage.getItem('role') !== "ROLE_ADMIN") {
+        //     alert("접근 권한이 없습니다!")
+        //     window.location.href = "/"
+        // }
 
         setInputData(inputData);
         console.log("테스트");

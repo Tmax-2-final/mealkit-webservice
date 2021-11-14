@@ -117,6 +117,7 @@ function App() {
           <Route exact path="/subscription/updatecomplete" component={UpdateComplete} />
           <Route exact path="/subscription/confirmSubPkgcomplete" component={ConfirmSubPkgComplete} />
           <Route exact path="/subscription/ChangeAddressAndDueDate/:id/:postcode/:address/:addressDetail/:dueDate" component={ChangeAddressAndDueDate} />
+          <Route exact path="/test" component={AdminCatalog}></Route>
         </Switch>
       {/* </ToTop> */}
     </BrowserRouter>

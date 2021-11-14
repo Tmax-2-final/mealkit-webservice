@@ -68,13 +68,10 @@ export default function AddBuyAndCart({props, productData}) {
         }
         else {
             let body = {
-                patalogId: productData.patalogId,
-                name: productData.name,
-                image: productData.image,
-                unitPrice: productData.unitPrice,
-                qty: count
+                catalogId: productData.catalogId,
+                userId: userId
             }
-            axios.post(`/catalog-service/${userId}/mypackage`, body)
+            axios.post(`/catalog-service/${userId}/mypackage/catalogs`, body)
                 .then(res => {
                     console.log(res)
                     if (res.status == 201) {
@@ -95,6 +92,7 @@ export default function AddBuyAndCart({props, productData}) {
                 })
                 .catch((err) => {
                     alert("다시 다시 입력해주세요.");
+
                     console.log(err);
                 });
         }        

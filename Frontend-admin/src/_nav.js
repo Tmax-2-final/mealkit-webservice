@@ -52,6 +52,11 @@ const _nav = [
         component: CNavItem,
         name: '상품 등록',
         to: '/products/manage',
+      },
+      {
+        component: CNavItem,
+        name: '패키지 조회',
+        to: '/products/package',
       }
     ]
   },
