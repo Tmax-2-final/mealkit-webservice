@@ -9,6 +9,7 @@ import "./assets/css/googlefont.css";
 import "./assets/icons8/css/line-awesome.min.css";
 import './assets/css/pagination.css'
 
+
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>

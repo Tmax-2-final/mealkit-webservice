@@ -68,7 +68,7 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
 
 
         fetchPosts();
-    },[S]);
+    },[]);
 
 
     const categoryData = categoryName !== "전체메뉴" ? categoryName !== "추천 패키지" ? newData && newData.filter(item => item.category === categoryName ) : catalogData && catalogData.filter(item => item.age === preferenceData.age ||

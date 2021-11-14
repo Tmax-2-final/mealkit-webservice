@@ -11,6 +11,9 @@ const AdminUser = React.lazy(() => import('./views/user/AdminUser'))
 const AdminAlert = React.lazy(() => import('./views/user/alert/Alert'))
 
 const Subscrption = React.lazy(() => import('./views/subscription/Subscrption'))
+const Product = React.lazy(() => import(`./views/productlist/Product`))
+const ProductRegForm = React.lazy(() => import(`./views/productlist/ProductRegForm`))
+const Package = React.lazy(()=> import(`./views/packagelist/Package`))
 
 // theme
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -70,8 +73,9 @@ const routes = [
   { path: '/users/detail', name: '회원 상세', component: UserDetail },
 
   { path: '/products', name: '상품 관리' },
-  { path: '/products/list', name: '상품 전체 내역', component: Home},
-  { path: '/products/manage', name: '상품 전체 내역', component: Home},
+  { path: '/products/list', name: '상품 전체 내역', component: Product},
+  { path: '/products/manage', name: '상품 등록', component: ProductRegForm},
+  { path: '/products/package', name: '패키지 조회', component: Package},
 
   { path: '/orders', name: '주문 관리' },
   { path: '/orders/orderlist', name: '주문 전체 내역', component: Home},

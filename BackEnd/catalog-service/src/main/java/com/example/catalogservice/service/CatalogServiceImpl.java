@@ -207,6 +207,11 @@ public class CatalogServiceImpl implements CatalogService{
     }
 
     @Override
+    public void deletePatalog(Long patalogId) { patalogRepository.deleteById(patalogId);
+
+    }
+
+    @Override
     public void deleteMyPackage(Long myPkgId) { myPackageRepository.deleteById(myPkgId);}
 
     @Override
