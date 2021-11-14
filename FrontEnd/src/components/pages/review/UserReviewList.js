@@ -22,10 +22,13 @@ export default function UserReviewList(props) {
     const [totalPosts, setTotalPosts] = useState(0);
     const [postsPerPage, setPostsPerPage] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [orderType, setOrderType] = useState(1);
+
+    const firstPage = 1;
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
-        getReviews(pageNumber);
+        getReviewOrderType(orderType, pageNumber);
     }
 
     const getReviewOrderType = (orderType, page) => {
@@ -48,23 +51,18 @@ export default function UserReviewList(props) {
     }
 
     useEffect((e) => {
-        getReviewOrderType(1,1)  
+        getReviewOrderType(orderType, firstPage)  
     }, []);
 
-    const orderTypeHandler = (pageFlag, e) => {
+    const orderTypeHandler = (orderType, e) => {
         e.preventDefault();
-        console.log(pageFlag);
+        console.log(orderType);
         setLoading(true);
-        // setCurrentPages(pageNum);
-        let token = localStorage.getItem('token');
-        if (pageFlag === 1) {
-            getReviewOrderType(1, 1)
-        }
-        else if (pageFlag === 2) {
-            getReviewOrderType(2, 1)
-        }
+
+        getReviewOrderType(orderType, firstPage)
+        setOrderType(orderType);
     }
-   
+
     return (
         <Fragment>
 
@@ -85,7 +83,7 @@ export default function UserReviewList(props) {
                             
                                 <div className="login-register-wrapper">
                                     <div className="container" defaultActiveKey="login">
-                                    <ul style={{ listStyle: "none", textAlign: "right", marginTop: "10px", marginBottom: "-50px" }}>
+                                    <ul style={{ listStyle: "none", textAlign: "right", marginTop: "10px", marginBottom: "-30px" }}>
                                         <li style={{ display: "inline", marginRight: "20px", fontSize: "15px" }}> <Link onClick={(e) => orderTypeHandler(1, e)}>패키지</Link></li>
                                         <li style={{ display: "inline", marginRight: "20px", fontSize: "15px" }}> | </li>
                                         <li style={{ display: "inline", marginRight: "60px", fontSize: "15px" }}> <Link onClick={(e) => orderTypeHandler(2, e)}>상품</Link></li>
@@ -106,7 +104,7 @@ export default function UserReviewList(props) {
                         <div className="row">
                             {
                                 loading === false ?
-                                    <Pagination postsPerPage={postsPerPage} totalPosts={totalPosts}
+                                    <Pagination postsPerPage={postsPerPage} totalPosts={totalPosts} currentPage={currentPage}
                                         paginate={paginate} />
                                     :
                                     ""
