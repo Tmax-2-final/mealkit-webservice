@@ -14,7 +14,9 @@ const Product = (props) => {
     const [startDate, setStartDate] = useState(new Date("2021/01/01"));
     const [endDate, setEndDate] = useState(new Date());
 
+
     const [search, setSearch] = useState("");
+
     const [searchType, setSearchType] = useState("all");
     const [searchValue, setSearchValue] = useState("");
 
@@ -52,6 +54,12 @@ const Product = (props) => {
         })
     }, []);
 
+  const searchChange = (e) => {
+    e.preventDefault();
+    setSearch(e.target.value);
+  }
+
+
     const rendering = () => {
         const result = [];
         for (let i = 1; i <= totalPages; i++) {
@@ -86,6 +94,7 @@ const Product = (props) => {
         searchData: search
       }
 
+
       axios.post(`/catalog-service/catalogs/search?page=${pageNum}`, body, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -107,44 +116,62 @@ const Product = (props) => {
         })
 
 
-
-
-
-
+    let body = {
+      searchData: search
     }
 
-    const pageHandler = (pageNum, pageFlag, e) => {
-        e.preventDefault();
-        console.log(pageFlag);
-        setLoading(true);
-        setCurrentPages(pageNum);
-        let token = localStorage.getItem('token');
-        // 전체 구독 내역 조회
-        if(pageFlag === 0) {
-            const result = axios.get(totalFindUrl+pageNum, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-                .then((res) => {
-                    console.log(res.data);
-                    if (res.status === 200) {
-                        // setSubscriptionDatas(res.data.content);
-                        setTotalPages(res.data.totalPages);
-                        setCurrentPages(res.data.number + 1);
-                        setLoading(false);
-                    }
-                })
+    console.log(body);
+
+    axios.post(`/catalog-service/catalogs/search?page=${pageNum}`, body, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then((res) => {
+        console.log(res);
+        if(res.status === 200){
+          setCatalogDatas(res.data.content);
+          setTotalPages(res.data.totalPages);
+          setCurrentPages(res.data.number + 1);
+          setWhatPages(1);
+          setLoading(false)
         }
-        // 코드타입 별 알림 내역 조회
-        else if(pageFlag === 1) {
-            typeHandler(codeType, pageNum, e);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('오류가 발생했습니다');
+      })
+  }
+
+  const pageHandler = (pageNum, pageFlag, e) => {
+    e.preventDefault();
+    console.log(pageNum)
+    setLoading(true)
+    setCurrentPages(pageNum)
+    let token = localStorage.getItem('token')
+
+    if(pageFlag === 0) {
+      const reuslt = axios.get(`/catalog-service/catalogs?page=`+pageNum, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-        // 키워드 검색 별 알림 내역 조회
-        else if(pageFlag === 2) {
-            searchHandler(pageNum, e);
-        }
+      })
+        .then((res) => {
+          console.log(res.data)
+          if(res.status === 200) {
+            setCatalogDatas(res.data.content);
+            setTotalPages(res.data.totalPages);
+            setCurrentPages(res.data.number + 1);
+            setLoading(false)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }else if(pageFlag === 1) {
+      searchHandler(pageNum, e);
     }
+  }
 
     return(
         <Fragment>
