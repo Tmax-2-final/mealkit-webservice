@@ -35,8 +35,8 @@ export default function ProductRegForm() {
     const S3_BUCKET = 'tmax-2';
     const REGION = 'ap-northeast-2';
 
-    const ACCESS_KEY = 'AKIATJ2JIKKMKGGO3UF7';
-    const SECRET_ACCESS_KEY = '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';
+    const ACCESS_KEY = '' ;//'AKIATJ2JIKKMKGGO3UF7';
+    const SECRET_ACCESS_KEY = '';//'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';
     let newFileName1 = '';
     let newFileName2 = '';
     let newFileName3 = '';
