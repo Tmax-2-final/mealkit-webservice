@@ -5,13 +5,11 @@ import com.example.catalogservice.dto.MyPackageDto;
 import com.example.catalogservice.dto.PatalogDto;
 import com.example.catalogservice.dto.PkgMgtDto;
 import com.example.catalogservice.jpa.*;
-import com.example.catalogservice.vo.RequestMyPackage;
-import com.example.catalogservice.vo.ResponseMyPackage;
-import com.example.catalogservice.vo.ResponsePatalog;
-import com.example.catalogservice.vo.ResponsePkgMgt;
+import com.example.catalogservice.vo.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CatalogService {
     Iterable<CatalogEntity> getAllCatalogs();
@@ -33,6 +31,8 @@ public interface CatalogService {
     PatalogDto createPatalog(PatalogDto patalog);
     MyPackageDto getMyPackageByCatalogId(MyPackageDto myPackageDto);
     Iterable<MyPackageEntity> getUserMyPackageByUserIdAll(String userId);
+    Page<CatalogEntity> getCatalogByAll(Pageable pageRequest);
+    Page<CatalogEntity> getCatalogBySearch(RequestData requestData, Pageable pageRequest);
     void deleteMyPackage (MyPackageEntity myPackageEntity);
     void deleteCatalog(Long catalogId);
     void deletePatalog(Long patalogId);
