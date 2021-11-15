@@ -14,7 +14,8 @@ const Product = (props) => {
     const [startDate, setStartDate] = useState(new Date("2021/01/01"));
     const [endDate, setEndDate] = useState(new Date());
 
-    const [search, setSearch] = useState("" );
+
+    const [search, setSearch] = useState("");
 
     const [searchType, setSearchType] = useState("all");
     const [searchValue, setSearchValue] = useState("");
@@ -82,62 +83,38 @@ const Product = (props) => {
         return result;
     }
 
-    const searchTypeChange = (e) => {
+    const searchHandler = (pageNum, e) => {
         e.preventDefault();
-        setSearchType(e.target.value);
-    }
-
-    const searchValueChange = (e) => {
-        e.preventDefault();
-        setSearchValue(e.target.value);
-    }
-
-    const typeHandler = (type, pageNum, e) => {
-        e.preventDefault();
+        console.log(pageNum);
         setLoading(true);
 
-        console.log(type);
+      let token = localStorage.getItem('token');
 
-        let token = localStorage.getItem('token');
-
-        const start = moment(startDate, 'YYYY-MM-DD').format().split('T')[0];
-        const end = moment(endDate, 'YYYY-MM-DD').format().split('T')[0];
-
-        console.log(start)
-        console.log(end)
-
-    //     axios.get(`/subscription-service/subscription/status/${type}?page=${pageNum}&startDate=${start}&endDate=${end}`, {
-    //         headers: {
-    //             Authorization: `Bearer ${token}`
-    //         }
-    //     })
-    //         .then((res) => {
-    //             console.log(res.data);
-    //             if(res.status === 200) {
-    //                 setSubscriptionDatas(res.data.content);
-    //                 setTotalPages(res.data.totalPages);
-    //                 setCurrentPages(res.data.number + 1);
-    //                 setWhatPages(1);
-    //                 setCodeType(type);
-    //                 setLoading(false);
-    //             }
-    //             else {
-    //                 alert('오류가 발생했습니다.');
-    //             }
-    //
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //             alert('오류가 발생했습니다');
-    //         })
-     }
+      let body = {
+        searchData: search
+      }
 
 
-  const searchHandler = (pageNum, e) => {
-    e.preventDefault();
-    setLoading(true)
+      axios.post(`/catalog-service/catalogs/search?page=${pageNum}`, body, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then((res) => {
+          console.log(res);
+          if(res.status === 200){
+            setUserDatas(res.data.content);
+            setTotalPages(res.data.totalPages);
+            setCurrentPages(res.data.number + 1);
+            setWhatPages(1);
+            setLoading(false)
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          alert('오류가 발생했습니다');
+        })
 
-    let token = localStorage.getItem('token');
 
     let body = {
       searchData: search
