@@ -7,10 +7,9 @@ import axios from "axios";
 import Pagination from "../../elements/ui/Pagination";
 
 
-export default function PkgReviewList(props) {
+export default function PkgReviewList({ packageData, setReviewCnt }) {
 
     const [reviewDatas, setReviewDatas] = useState([]);
-    const [reviewCnt, setReviewCnt] = useState(0);
 
     // 페이징
     const [currentPage, setCurrentPage] = useState(1);
@@ -28,7 +27,8 @@ export default function PkgReviewList(props) {
 
 
     const getPkgReviews = (page) => {
-        axios.get(`/review-service/reviews/page/pkg/${pkgId}`, {
+        // axios.get(`/review-service/reviews/page/pkg/${packageData.patalogId}`, {
+        axios.get(`/review-service/reviews/page/pkg/53`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -56,8 +56,6 @@ export default function PkgReviewList(props) {
 
     return (
         <Fragment>
-
-            
                 <div className="login-register-area pt-100 pb-100">
                     <div className="container">
                         <div className="row">
@@ -82,7 +80,7 @@ export default function PkgReviewList(props) {
                 <div className="row">
                     {
                         loading === false ?
-                            <Pagination postsPerPage={postsPerPage} totalPosts={totalPosts}
+                            <Pagination postsPerPage={postsPerPage} totalPosts={totalPosts} currentPage={currentPage}
                                 paginate={paginate} />
                             :
                             ""

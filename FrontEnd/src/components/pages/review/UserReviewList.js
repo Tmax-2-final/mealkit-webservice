@@ -83,7 +83,7 @@ export default function UserReviewList(props) {
                             
                                 <div className="login-register-wrapper">
                                     <div className="container" defaultActiveKey="login">
-                                    <ul style={{ listStyle: "none", textAlign: "right", marginTop: "10px", marginBottom: "-30px" }}>
+                                    <ul style={{ listStyle: "none", textAlign: "right", marginTop: "10px", marginBottom: "20px" }}>
                                         <li style={{ display: "inline", marginRight: "20px", fontSize: "15px" }}> <Link onClick={(e) => orderTypeHandler(1, e)}>패키지</Link></li>
                                         <li style={{ display: "inline", marginRight: "20px", fontSize: "15px" }}> | </li>
                                         <li style={{ display: "inline", marginRight: "60px", fontSize: "15px" }}> <Link onClick={(e) => orderTypeHandler(2, e)}>상품</Link></li>

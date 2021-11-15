@@ -4,16 +4,16 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import ReviewTable from "../../../pages/review/ReviewTable";
 import axios from "axios";
+import PkgReviewList from '../../../pages/review/PkgReviewList';
 
 
 export default function PackageDetailBottom({packageData}) {
 
     const [value, setValue] = useState('1');
-
-    const [reviewCnt, setReviewCnt] = useState('1324')
-    const [reviewDatas, setReviewDatas] = useState([]);
     const [imageCurrentNo, setImageCurrentNo] = useState(0);
-    const [ pkgMgtDatas, setPkgMgtDatas] = useState();
+    const [pkgMgtDatas, setPkgMgtDatas] = useState();
+    const [reviewCnt, setReviewCnt] = useState(0);
+
 
     const images = [
         `https://tmax-2.s3.ap-northeast-2.amazonaws.com/product-1-img1.jpg`,
@@ -38,16 +38,6 @@ export default function PackageDetailBottom({packageData}) {
                 console.log(res.data);
 
             })
-
-        axios.get(`/review-service/reviews/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-            .then(data => {
-                console.log(data);
-                setReviewDatas(data.data);
-            });
     }, [packageData]);
 
     
@@ -161,13 +151,15 @@ export default function PackageDetailBottom({packageData}) {
                 </div>
                 <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                     <div className="row">
-                        <ReviewTable
-                            reviewDatas={reviewDatas}
-                            setReviewDatas={setReviewDatas}
+                        <PkgReviewList
+                            packageData={packageData}
+                            setReviewCnt={setReviewCnt}
                         />
+
                     </div>
                 </div>
             </div>
+            
         </div>
 
     );
