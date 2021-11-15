@@ -10,7 +10,7 @@ export default function ReviewTable({ reviewDatas, setReviewDatas }) {
     return (
         <div className="cart-main-area pt-12 pb-12">
             <div className="container">
-                <h3 className="cart-page-title">리뷰 목록</h3>
+                
                 <div className="row">
                     <div className="col-lg-12 col-md-12">
                         <div className="table-content table-responsive cart-table-content" style={{ whiteSpace: "pre-wrap" }}>
