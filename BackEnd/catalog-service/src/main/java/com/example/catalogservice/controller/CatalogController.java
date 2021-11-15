@@ -13,6 +13,10 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,12 +60,17 @@ public class CatalogController {
 
     @ApiOperation(value = "전체상품 조회", notes = "전체 상품을 조회한다")
     @GetMapping("/catalogs")
-    public ResponseEntity<Iterable<CatalogEntity>> getCatalogs() {
-        log.info("berfore catalogs");
-        Iterable<CatalogEntity> catalogList = catalogService.getAllCatalogs();
-        log.info("after catalogs");
-        return ResponseEntity.status(HttpStatus.OK).body(catalogList);
+    public ResponseEntity<Page<ResponseCatalog>> getCatalogs(@PageableDefault(size = 5, sort ="catalogId", direction = Sort.Direction.DESC) Pageable pageRequest) {
+
+        Page<CatalogEntity> catalogList = catalogService.getCatalogByAll(pageRequest);
+
+        Page<ResponseCatalog> responseCatalogList = catalogList.map(
+                v -> new ModelMapper().map(v, ResponseCatalog.class)
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseCatalogList);
     }
+
 
     @ApiOperation(value = "전체패키지 조회", notes = "전체 패키지를 조회한다")
     @GetMapping("/patalogs")
@@ -107,6 +116,20 @@ public class CatalogController {
         log.info("after package");
         return ResponseEntity.status(HttpStatus.OK).body(packageList);
     }
+
+    @ApiOperation(value = "검색어가 포함된 모든 상품 검색", notes="날짜별 유저 검색")
+    @PostMapping("/catalogs/search")
+    public ResponseEntity<Page<ResponseCatalog>> getCatalogsBySearch(@RequestBody RequestData requestData,
+                                                             @PageableDefault(size = 5, sort = "catalogId", direction = Sort.Direction.DESC) Pageable pageRequest) {
+        Page<CatalogEntity> catalogList = catalogService.getCatalogBySearch(requestData, pageRequest);
+        Page<ResponseCatalog> responseCatalogList = catalogList.map(
+                v -> new ModelMapper().map(v, ResponseCatalog.class)
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseCatalogList);
+    }
+
+
 
     @ApiOperation(value = "마이패키지 등록", notes="마이패키지 등록")
     @PostMapping("/{userId}/mypackage")
@@ -185,6 +208,7 @@ public class CatalogController {
         ResponseCatalog responseCatalog = mapper.map(catalogDto, ResponseCatalog.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseCatalog);
     }
+
 
     @ApiOperation(value = "패키지 등록", notes = "패키지를 등록한다")
     @PostMapping( "/{userId}/patalogs")
