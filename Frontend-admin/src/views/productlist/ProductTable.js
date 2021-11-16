@@ -65,7 +65,7 @@ export default function ProductTable({ catalogDatas, setCatalogDatas, loading })
                                         {
                                             loading === false ?
                                                 (
-                                                    catalogDatas.map((item) => (
+                                                    catalogDatas.content.map((item) => (
                                                         <CTableRow key={item.id}>
                                                             <CTableHeaderCell scope="row">{item.catalogId}</CTableHeaderCell>
                                                             <CTableDataCell><img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" style={{width:"auto", height:"5rem"}} /></CTableDataCell>

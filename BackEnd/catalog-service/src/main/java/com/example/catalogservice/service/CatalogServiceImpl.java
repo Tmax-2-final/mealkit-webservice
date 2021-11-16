@@ -5,25 +5,19 @@ import com.example.catalogservice.dto.MyPackageDto;
 import com.example.catalogservice.dto.PatalogDto;
 import com.example.catalogservice.dto.PkgMgtDto;
 import com.example.catalogservice.jpa.*;
-import com.example.catalogservice.vo.RequestMyPackage;
-import com.example.catalogservice.vo.ResponseMyPackage;
-import com.example.catalogservice.vo.ResponsePatalog;
-import com.example.catalogservice.vo.ResponsePkgMgt;
+import com.example.catalogservice.vo.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static java.lang.Math.floor;
 
 @Data
 @Slf4j
@@ -49,10 +43,6 @@ public class CatalogServiceImpl implements CatalogService{
         this.pkgMgtRepository = pkgMgtRepository;
     }
 
-    @Override
-    public Iterable<CatalogEntity> getAllCatalogs() {
-        return catalogRepository.findAll();
-    }
 
     @Override
     public Iterable<PatalogEntity> getAllPatalogs() { return patalogRepository.findAll(); }
@@ -196,6 +186,13 @@ public class CatalogServiceImpl implements CatalogService{
 //
         return result;
     }
+
+    @Override
+    public Page<CatalogEntity> getCatalogByAll(Pageable pageRequest) { return catalogRepository.findAll(pageRequest);}
+
+    @Override
+    public Page<CatalogEntity> getCatalogBySearch(RequestData requestData, Pageable pageRequest) {
+        return catalogRepository.findByNameLike(requestData.getSearchData(), pageRequest);}
 
     @Override
     public void deleteMyPackage(MyPackageEntity myPackageEntity) { myPackageRepository.delete(myPackageEntity);};

@@ -101,6 +101,14 @@ export default function Preference(props) {
             alert("조리시간을 선택해주세요")
             return;
         }
+        if (error === true) {
+            alert("선호하는 테마를 두가지 이상 골라주세요")
+            return;
+        }
+        if (error2 === true) {
+            alert("선호하는 맛을 두가지 이상 골라주세요")
+            return;
+        }
 
         let userId = localStorage.getItem('userid');
         let token = localStorage.getItem('token');
@@ -173,7 +181,8 @@ export default function Preference(props) {
     const { chk1, chk2, chk3, chk4, chk5 } = theme;
     const error = [chk1, chk2, chk3, chk4, chk5].filter((v) => v).length < 2;
 
-    const { ck1, ck2, ck3, ck4} = flavor;
+    const { ck1, ck2, ck3, ck4 } = flavor;
+    const error2 = [ck1, ck2, ck3, ck4].filter((v) => v).length < 2;
 
     return (
         <Fragment>

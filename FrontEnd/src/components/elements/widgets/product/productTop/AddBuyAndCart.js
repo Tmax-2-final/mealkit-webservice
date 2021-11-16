@@ -91,8 +91,6 @@ export default function AddBuyAndCart({props, productData}) {
                     }
                 })
                 .catch((err) => {
-                    alert("다시 다시 입력해주세요.");
-
                     console.log(err);
                 });
         }        
@@ -116,19 +114,6 @@ export default function AddBuyAndCart({props, productData}) {
                     <button onClick={()=> handlePutCartList()}>마이패키지에 담기</button>
                 </div>
 
-                {/*<div className="pro-details-cart btn-hover ml-30"> */}
-                {/*    <Link to={{*/}
-                {/*                pathname: "/payment",*/}
-                {/*                state: {*/}
-                {/*                    data:[productData],*/}
-                {/*                    totalPriceData:count*productData.unitPrice*/}
-                {/*                },*/}
-                {/*    }} */}
-                {/*    onClick={addQty}*/}
-                {/*    style={{backgroundColor:buyBtnColor}}>*/}
-                {/*        {productData.stock !== 0 ? "구매하기" : "품절"}*/}
-                {/*    </Link>*/}
-                {/*</div>                */}
             </div>
             <div class="pro-details-meta">
                 <span>재고 :</span>

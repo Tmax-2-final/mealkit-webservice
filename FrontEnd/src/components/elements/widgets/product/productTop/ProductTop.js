@@ -4,30 +4,19 @@ import ProductDetailLeft from './ProductDetailLeft';
 import ProductDetailLeft2 from './ProductDetailLeft2';
 import ProductDetailRight from './ProductDetailRight';
 import ReviewTable from '../../../../pages/review/ReviewTable';
-import UserReviewList from '../../../../pages/review/UserReviewList';
+import ProductReviewList from '../../../../pages/review/ProductReviewList';
 import axios from "axios";
 
 
 export default function ProductTop({props, productData}) {
+    
     const [value, setValue] = useState('1');
-
-    const [reviewCnt, setReviewCnt] = useState('1324')
     const [reviewDatas, setReviewDatas] = useState([]);
+    const [reviewCnt, setReviewCnt] = useState(0);
 
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('userid');
 
-    useEffect(() => {
-        axios.get(`/review-service/reviews/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-            .then(data => {
-                console.log(data);
-                setReviewDatas(data.data);
-            });
-    }, []);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -80,9 +69,9 @@ export default function ProductTop({props, productData}) {
                 </div>
                 <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                     <div className="row mt-30">                    
-                        <ReviewTable
-                            reviewDatas={reviewDatas}
-                            setReviewDatas={setReviewDatas}
+                        <ProductReviewList
+                            productData={productData}
+                            setReviewCnt={setReviewCnt}
                         />
                     </div>
                 </div>
