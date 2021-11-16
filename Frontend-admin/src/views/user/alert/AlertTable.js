@@ -3,6 +3,25 @@ import React from 'react';
 
 export default function UserTable({ alertDatas, setAlertDatas, loading }) {
 
+    const alertTypeText = (type) => {
+        switch (type) {
+            case 202:
+                return '구독결제';
+            case 203:
+                return '구독확정';
+            case 204:
+                return '구독변경';
+            case 205:
+                return '구독취소';
+            case 301:
+                return '배송시작';
+            case 302:
+                return '배송취소';
+            default:
+                return '#';
+        }
+    }
+
     return (
         <div className="cart-main-area pt-20 pb-2">
             <div className="container">
@@ -30,7 +49,7 @@ export default function UserTable({ alertDatas, setAlertDatas, loading }) {
                                                         <CTableRow key={item.id}>
                                                             <CTableHeaderCell scope="row">{item.id}</CTableHeaderCell>
                                                             <CTableDataCell>{item.userId}</CTableDataCell>
-                                                            <CTableDataCell>{item.type}</CTableDataCell>
+                                                            <CTableDataCell>{alertTypeText(item.type)}</CTableDataCell>
                                                             <CTableDataCell>{item.email}</CTableDataCell>
                                                             <CTableDataCell>{item.title}</CTableDataCell>
                                                             <CTableDataCell>{new Date(Date.parse(item.createdAt)).toLocaleString()}</CTableDataCell>

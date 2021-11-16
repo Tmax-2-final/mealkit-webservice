@@ -43,7 +43,7 @@ const Logout = (props) => {
         <ClipLoader
           color="gray"
           loading={loading}
-          size="50" />
+          size="50px" />
       </div>
     </Fragment>
   )

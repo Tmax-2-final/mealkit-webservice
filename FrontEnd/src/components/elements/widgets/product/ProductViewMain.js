@@ -22,14 +22,6 @@ export default function ProductViewMain({categoryName, sliceNumber, columNumber,
                 console.log(res.data);
                 if(res.status === 200) {
                     setNewData(res.data.content);
-                    // console.log(res.data.totalPages);
-                    // setTotalPages(res.data.totalPages);
-                    // setCurrentPages(res.data.number + 1);
-                    // console.log(totalPages);
-                    // console.log(currentPages);
-
-                    // setWhatPages(0);
-                    // setLoading(false);
                 }
             })
 
@@ -48,119 +40,32 @@ export default function ProductViewMain({categoryName, sliceNumber, columNumber,
     console.log("===searchData====");
 
     const searchDataMain = categoryName !== "전체메뉴" ? newData.filter(item => item.category === categoryName): newData;
-
-    // const handleDelete = (id) => {
-    //     fetch(`http://${process.IP}:${process.PORT}/wish/${id}`,{
-    //         method: "DELETE"
-    //     }).then(
-    //         alert("삭제되었습니다.")
-    //     )
-    // }
-
-    // const handlePutCompareList = (id) => {
-
-    //     fetch(`http://${process.IP}:${process.PORT}/product/${id}`)
-    //     .then(res => {
-    //         return res.json();
-    //     })
-    //     .then(data => {
-    //         fetch(`http://${process.IP}:${process.PORT}/compare`,{
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({
-    //                 id: data.id,
-    //                 name: data.name,
-    //                 image: data.image,
-    //                 price: data.price,
-    //                 discount: data.discount,
-    //                 shortDescription: data.shortDescription,
-    //                 rating : data.rating,
-    //             }),
-    //         })
-    //     }).then(
-    //         alert("success")
-    //     )
-
-    // }
-
-    // const handlePutWishList = (id) => {
-        
-    //     fetch(`http://${process.IP}:${process.PORT}/product/${id}`)
-    //     .then(res => {
-    //         return res.json();
-    //     })
-    //     .then(data => {
-    //         fetch(`http://${process.IP}:${process.PORT}/wish/`,{
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({
-    //                 id: data.id,
-    //                 name: data.name,
-    //                 image: data.image,
-    //                 price: data.price,
-    //                 discount: data.discount
-    //             }),
-    //         })
-    //     }).then(
-    //         alert("success")
-    //     )
-    // }
     
     const productList = searchDataMain.map((item, index) => (
         
         <div className={`col-xl-${columNumber} col-md-6 col-lg-${columNumber} col-sm-6`} key={item.productId}>
-        <div className="product-wrap mb-25">
-            <div className="product-img">
-                <Link to={`/productdetail/${item.productId}`}>
-                    <img className="default-img" src={`https://bookstore-image.s3.us-east-2.amazonaws.com/${item.image}`} alt="" />
-                    <img className="hover-img" src={`https://bookstore-image.s3.us-east-2.amazonaws.com/${item.image}`} alt="" />
-                </Link>
-                {/*<div className="product-action">*/}
-                {/*    <div className="pro-same-action pro-wishlist">*/}
-                {/*        <button*/}
-                {/*            value={item.productId}*/}
-                {/*            onClick={() => handlePutWishList(item.productId)}*/}
-                {/*        >*/}
-                {/*            <i className="las la-bookmark"></i>*/}
-                {/*        </button>*/}
-                {/*    </div>*/}
-                {/*    <div className="pro-same-action pro-cart">*/}
-                {/*        <button disabled="" className="active">Buy</button>*/}
-                {/*    </div>*/}
-                {/*    <div className="pro-same-action pro-quickview">*/}
-                {/*        <button */}
-                {/*            className="" */}
-                {/*            title={item.productId}*/}
-                {/*            onClick={() => handlePutCompareList(item.productId)}*/}
-                {/*            value={item.productId}*/}
-                {/*        >*/}
-                {/*            <i className="las la-eye"></i>*/}
-                {/*        </button>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
-            </div>
-            <div className="product-content text-center">
-                <h3><Link to={`/productdetail/${item.productId}`}>{item.name}</Link></h3>
-                <div className="product-rating">
-                    {item.rating && item.rating > 0 ? (
-                        <Rating ratingValue={item.rating} />
-                    ) : (
-                    ""
-                    )}
+            <div className="product-wrap mb-25">
+                <div className="product-img">
+                    <Link to={`/productdetail/${item.productId}`}>
+                        <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
+                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image2}`} alt="" />
+                    </Link>
                 </div>
-                <div className="product-price">
-                    <span>{item.unitPrice}원</span>
+                <div className="product-content text-center">
+                    <h3><Link to={`/productdetail/${item.productId}`}>{item.name}</Link></h3>
+                    <div className="product-rating">
+                        {item.rating && item.rating > 0 ? (
+                            <Rating ratingValue={item.rating} />
+                        ) : (
+                            ""
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
         
 
-    )).slice(0,sliceNumber);
+    )).slice(0,8);
 
 
 
