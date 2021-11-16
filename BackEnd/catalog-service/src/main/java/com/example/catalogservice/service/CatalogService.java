@@ -31,6 +31,7 @@ public interface CatalogService {
     MyPackageDto getMyPackageByCatalogId(MyPackageDto myPackageDto);
     Iterable<MyPackageEntity> getUserMyPackageByUserIdAll(String userId);
     Page<CatalogEntity> getCatalogByAll(Pageable pageRequest);
+    Page<PatalogEntity> getPatalogByAll(Pageable pageRequest);
     Page<CatalogEntity> getCatalogBySearch(RequestData requestData, Pageable pageRequest);
     void deleteMyPackage (MyPackageEntity myPackageEntity);
     void deleteCatalog(Long catalogId);

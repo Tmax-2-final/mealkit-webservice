@@ -25,6 +25,23 @@ export default function ProductRegForm() {
   const [ age, setAge ] = useState();
   const [ details, setDetails ] = useState();
 
+  const [accessKey, setAccessKey] = useState('');
+  const [secretAccessKey, setSecretAccessKey] = useState('');
+
+  useEffect(()=>{
+    axios.get(`/config-service/s3-accesskey/default`)
+      .then((res) => {
+        console.log(res.data.propertySources[0]);
+        setAccessKey(res.data.propertySources[0].source.ACCESS_KEY);
+        setSecretAccessKey(res.data.propertySources[0].source.SECRET_ACCESS_KEY);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }, []);
+
+
+
     const fileInput1 = useRef();
     const fileInput2 = useRef();
     const fileInput3 = useRef();
@@ -35,8 +52,7 @@ export default function ProductRegForm() {
     const S3_BUCKET = 'tmax-2';
     const REGION = 'ap-northeast-2';
 
-    const ACCESS_KEY = '' ;//'AKIATJ2JIKKMKGGO3UF7';
-    const SECRET_ACCESS_KEY = '';//'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';
+
     let newFileName1 = '';
     let newFileName2 = '';
     let newFileName3 = '';
@@ -210,8 +226,8 @@ export default function ProductRegForm() {
       const config = {
         bucketName: S3_BUCKET,
         region: REGION,
-        accessKeyId: ACCESS_KEY,
-        secretAccessKey: SECRET_ACCESS_KEY
+        accessKeyId: accessKey,
+        secretAccessKey: secretAccessKey
       };
       const ReactS3Client = new S3(config);
       ReactS3Client.uploadFile(file1, newFileName1, file2, newFileName2, file3, newFileName3).then(data => {

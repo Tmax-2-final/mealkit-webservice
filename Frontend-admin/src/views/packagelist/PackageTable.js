@@ -65,7 +65,7 @@ export default function PackageTable({ patalogDatas, setPatalogDatas, loading })
                                         {
                                             loading === false ?
                                                 (
-                                                    patalogDatas.map((item) => (
+                                                    patalogDatas.content.map((item) => (
                                                         <CTableRow key={item.patalogId}>
                                                             <CTableHeaderCell scope="row">{item.patalogId}</CTableHeaderCell>
                                                             <CTableDataCell><img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" style={{width:"auto", height:"5rem"}} /></CTableDataCell>

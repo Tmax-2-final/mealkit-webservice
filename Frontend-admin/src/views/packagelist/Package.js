@@ -13,6 +13,7 @@ const Package = (props) => {
     const [patalogDatas, setPatalogDatas] = useState([]);
     const [startDate, setStartDate] = useState(new Date("2021/01/01"));
     const [endDate, setEndDate] = useState(new Date());
+    const [search, setSearch] = useState("");
 
     const [searchType, setSearchType] = useState("all");
     const [searchValue, setSearchValue] = useState("");
@@ -34,7 +35,7 @@ const Package = (props) => {
         }
 
         let token = localStorage.getItem('token');
-        const result = axios.get(`/catalog-service/patalogs`,{
+        const result = axios.get(`/catalog-service/patalogs?page=`,{
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -44,12 +45,19 @@ const Package = (props) => {
             if(res.status === 200) {
                 setPatalogDatas(res.data);
                 setTotalPages(res.data.totalPages);
+                console.log(res.data.totalPages);
+                console.log(totalPages);
                 setCurrentPages(res.data.number + 1);
                 setWhatPages(0);
                 setLoading(false);
             }
         })
     }, []);
+
+  const searchChange = (e) => {
+    e.preventDefault();
+    setSearch(e.target.value);
+  }
 
     const rendering = () => {
         const result = [];
@@ -98,30 +106,6 @@ const Package = (props) => {
         console.log(start)
         console.log(end)
 
-    //     axios.get(`/subscription-service/subscription/status/${type}?page=${pageNum}&startDate=${start}&endDate=${end}`, {
-    //         headers: {
-    //             Authorization: `Bearer ${token}`
-    //         }
-    //     })
-    //         .then((res) => {
-    //             console.log(res.data);
-    //             if(res.status === 200) {
-    //                 setSubscriptionDatas(res.data.content);
-    //                 setTotalPages(res.data.totalPages);
-    //                 setCurrentPages(res.data.number + 1);
-    //                 setWhatPages(1);
-    //                 setCodeType(type);
-    //                 setLoading(false);
-    //             }
-    //             else {
-    //                 alert('오류가 발생했습니다.');
-    //             }
-    //
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //             alert('오류가 발생했습니다');
-    //         })
      }
 
     const searchHandler = (pageNum, e) => {
@@ -176,27 +160,26 @@ const Package = (props) => {
         let token = localStorage.getItem('token');
         // 전체 구독 내역 조회
         if(pageFlag === 0) {
-            const result = axios.get(totalFindUrl+pageNum, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+          const result = axios.get(`/catalog-service/patalogs?page=` + pageNum, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+            .then((res) => {
+              console.log(res.data);
+              if (res.status === 200) {
+                // setSubscriptionDatas(res.data.content);
+                setTotalPages(res.data.totalPages);
+                setCurrentPages(res.data.number + 1);
+                setLoading(false);
+              }
             })
-                .then((res) => {
-                    console.log(res.data);
-                    if (res.status === 200) {
-                        // setSubscriptionDatas(res.data.content);
-                        setTotalPages(res.data.totalPages);
-                        setCurrentPages(res.data.number + 1);
-                        setLoading(false);
-                    }
-                })
-        }
-        // 코드타입 별 알림 내역 조회
-        else if(pageFlag === 1) {
-            typeHandler(codeType, pageNum, e);
-        }
-        // 키워드 검색 별 알림 내역 조회
-        else if(pageFlag === 2) {
+            .catch((err) => {
+              console.log(err)
+            })
+          // 코드타입 별 알림 내역 조회
+          // 키워드 검색 별 알림 내역 조회
+        }else if(pageFlag === 1) {
             searchHandler(pageNum, e);
         }
     }
