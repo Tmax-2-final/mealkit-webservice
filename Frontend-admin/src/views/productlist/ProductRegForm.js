@@ -7,50 +7,69 @@ import { CForm, CFormInput, CFormLabel, CFormSelect, CFormTextarea, CInputGroup 
 export default function ProductRegForm() {
 
   const [countList, setCountList] = useState([0]);
-  const [loading, setLoading] = useState(false);
 
-  const [name, setName] = useState('');
-  const [stock, setStock] = useState(100);
-  const [category, setCategory] = useState(0);
-  const [rating, setRating] = useState(5);
+  const [name, setName] = useState();
+  const [stock, setStock] = useState();
+  const [unitPrice, setUnitPrice] = useState();
+  const [category, setCategory] = useState();
+  const [ rating, setRating ] = useState();
+  const [ image1, setImage1 ] = useState();
+  const [ image2, setImage2 ] = useState();
+  const [ image3, setImage3 ] = useState();
+  const [ image4, setImage4 ] = useState();
+  const [ image5, setImage5 ] = useState();
+  const [ image6, setImage6 ] = useState();
+  const [ flavor, setFlavor ] = useState();
+  const [ cookingtime, setCookingtime ] = useState();
+  const [ age, setAge ] = useState();
+  const [ details, setDetails ] = useState();
 
-  const [flavor, setFlavor] = useState(0);
-  const [cookingtime, setCookingtime] = useState(0);
-  const [age, setAge] = useState(0);
-  const [details, setDetails] = useState('');
+  const [accessKey, setAccessKey] = useState('');
+  const [secretAccessKey, setSecretAccessKey] = useState('');
 
-  const fileInput1 = useRef();
-  const fileInput2 = useRef();
-  const fileInput3 = useRef();
-  
-  const S3_BUCKET = 'tmax-2';
-  const REGION = 'ap-northeast-2';
-  const ACCESS_KEY = '';
-  const SECRET_ACCESS_KEY = '';
+  useEffect(()=>{
+    axios.get(`/config-service/s3-accesskey/default`)
+      .then((res) => {
+        console.log(res.data.propertySources[0]);
+        setAccessKey(res.data.propertySources[0].source.ACCESS_KEY);
+        setSecretAccessKey(res.data.propertySources[0].source.SECRET_ACCESS_KEY);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }, []);
 
-  const history = useHistory();
+    const fileInput1 = useRef();
+    const fileInput2 = useRef();
+    const fileInput3 = useRef();
 
-  const [guideTxts, setGuideTxts] = useState({
-    userGuide: '최대 20자 까지 가능합니다.',
-    stockGuide: '최대 100개 까지 가능합니다.',
-    priceGuide: '최소 1000원 입니다.',
-    // authorGuide : '한글 or 영어로 작성해주세요.',
-    // publisherGuide : '한글로 작성해주세요.',
-    categoryGuide: '해당하는 카테고리 중 하나만 선택해주세요.',
-    ratingGuide: '최고 5점 최저 1점 입니다.',
-    imageGuide: "'jpg, png, jpeg, gif' 포맷으로만 입력해주세요"
-  });
 
-  const [error, setError] = useState({
-    nameError: '',
-    authorError: '',
-    stockError: '',
-    priceError: '',
-    categoryError: '',
-    publisherError: '',
-    ratingError: '',
-    detailsError: ''
-  })
+    const S3_BUCKET = 'tmax-2';
+    const REGION = 'ap-northeast-2';
+
+    const history = useHistory();
+
+    const [guideTxts, setGuideTxts] = useState({
+        userGuide : '최대 20자 까지 가능합니다.',
+        stockGuide : '최대 100개 까지 가능합니다.',
+        priceGuide : '최소 1000원 입니다.',
+        // authorGuide : '한글 or 영어로 작성해주세요.',
+        // publisherGuide : '한글로 작성해주세요.',
+        categoryGuide : '자기계발서, 경제 경영, 과학, 소설, 수험서 중 하나만 작성해주세요.',
+        ratingGuide : '최고 5점 최저 1점 입니다.',
+        imageGuide : "'jpg/jpeg' 포맷으로만 입력해주세요"
+    });
+
+    const [error, setError] = useState({
+        nameError: '',
+        authorError: '',
+        stockError: '',
+        priceError: '',
+        categoryError: '',
+        publisherError: '',
+        ratingError: '',
+        detailsError: ''
+    })
 
   const nameHandler = (e) => {
     e.preventDefault();

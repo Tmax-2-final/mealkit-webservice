@@ -191,6 +191,10 @@ public class CatalogServiceImpl implements CatalogService{
     public Page<CatalogEntity> getCatalogByAll(Pageable pageRequest) { return catalogRepository.findAll(pageRequest);}
 
     @Override
+    public Page<PatalogEntity> getPatalogByAll(Pageable pageRequest) { return patalogRepository.findAll(pageRequest);}
+
+
+    @Override
     public Page<CatalogEntity> getCatalogBySearch(RequestData requestData, Pageable pageRequest) {
         return catalogRepository.findByNameLike(requestData.getSearchData(), pageRequest);}
 

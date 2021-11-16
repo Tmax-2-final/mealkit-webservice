@@ -92,6 +92,21 @@ const Product = (props) => {
     setSearchValue(e.target.value);
   }
 
+  const typeHandler = (type, pageNum, e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    console.log(type);
+
+    let token = localStorage.getItem('token');
+
+    const start = moment(startDate, 'YYYY-MM-DD').format().split('T')[0];
+    const end = moment(endDate, 'YYYY-MM-DD').format().split('T')[0];
+
+    console.log(start)
+    console.log(end)
+
+  }
 
   const searchHandler = (pageNum, e) => {
         e.preventDefault();

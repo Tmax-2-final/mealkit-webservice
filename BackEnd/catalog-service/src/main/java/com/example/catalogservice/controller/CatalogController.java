@@ -74,11 +74,15 @@ public class CatalogController {
 
     @ApiOperation(value = "전체패키지 조회", notes = "전체 패키지를 조회한다")
     @GetMapping("/patalogs")
-    public ResponseEntity<Iterable<PatalogEntity>> getPatalogs() {
-        log.info("berfore patalogs");
-        Iterable<PatalogEntity> patalogList = catalogService.getAllPatalogs();
-        log.info("after patalogs");
-        return ResponseEntity.status(HttpStatus.OK).body(patalogList);
+    public ResponseEntity<Page<ResponsePatalog>> getPatalogs(@PageableDefault(size = 5, sort="patalogId", direction = Sort.Direction.DESC) Pageable pageRequest) {
+
+        Page<PatalogEntity> patalogList = catalogService.getPatalogByAll(pageRequest);
+
+        Page<ResponsePatalog> responsePatalogList = patalogList.map(
+                v -> new ModelMapper().map(v, ResponsePatalog.class)
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(responsePatalogList);
     }
 
     @ApiOperation(value = "마이패키지 조회", notes = "마이 패키지를 조회한다")
