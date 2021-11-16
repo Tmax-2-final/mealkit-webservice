@@ -205,7 +205,7 @@ const Alert = (props) => {
             <div className="container">
                 {/* 타입 별 리스트 조회 */}
                 <div className="row mb-4">
-                    <div className="col-12 col-lg-3 col-sm-6">
+                    <div className="col-12 col-lg-2 col-sm-6">
                         <div className="alert-card card mb-2" onClick={(e) => typeHandler('202', 1, e)}
                             >
                             <div className="card-body d-flex justify-content-between align-items-start">
@@ -215,7 +215,7 @@ const Alert = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-12 col-lg-3 col-sm-6">
+                    <div className="col-12 col-lg-2 col-sm-6">
                         <div className="alert-card card mb-2" onClick={(e) => typeHandler('203', 1, e)}>
                             <div className="card-body d-flex justify-content-between align-items-start">
                                 <div>
@@ -224,7 +224,25 @@ const Alert = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-12 col-lg-3 col-sm-6">
+                    <div className="col-12 col-lg-2 col-sm-6">
+                        <div className="alert-card card mb-2" onClick={(e) => typeHandler('204', 1, e)}>
+                            <div className="card-body d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4>구독변경</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-12 col-lg-2 col-sm-6">
+                        <div className="alert-card card mb-2" onClick={(e) => typeHandler('205', 1, e)}>
+                            <div className="card-body d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4>구독취소</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-12 col-lg-2 col-sm-6">
                         <div className="alert-card card mb-2" onClick={(e) => typeHandler('301', 1, e)}>
                             <div className="card-body d-flex justify-content-between align-items-start">
                                 <div>
@@ -233,7 +251,7 @@ const Alert = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-12 col-lg-3 col-sm-6">
+                    <div className="col-12 col-lg-2 col-sm-6">
                         <div className="alert-card card mb-2" onClick={(e) => typeHandler('302', 1, e)}>
                             <div className="card-body d-flex justify-content-between align-items-start">
                                 <div>
