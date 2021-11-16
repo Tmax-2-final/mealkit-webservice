@@ -20,8 +20,7 @@ export default function Bloglist(){
     useEffect(() => {
         axios.get("catalog-service/patalogs")
             .then(res => {
-                setNewBlogData(res.data);;
-
+                setNewBlogData(res.data);
                 console.log(res.data);
             })
     },[]);
@@ -29,14 +28,23 @@ export default function Bloglist(){
 
 
     const blogList = newBlogData.map(item => (
-        <div key={item.id} className="col-12 col-md-3 mb-3">
-            <Link to={`/blogdetail/${item.id}`}><div className="blogImg" style={{backgroundImage:`url(https://bookstore-image.s3.us-east-2.amazonaws.com/${item.image})`,backgroundSize:"cover"}}></div></Link>
-            <div className="blogTxt">
-            <Link to={`/blogdetail/${item.id}`}><p className="blogTitle">{item.name}</p></Link>
-            <Link to={`/authordetail/${item.author}`}><p className="blogAuth">제작자 : {item.author}</p></Link>
+        <div key={item.id} className="col-xl-3 col-md-6 col-lg-3 col-sm-6">
+            <div className="product-wrap mb-25">
+                <div className="package-img">
+                    <Link to={`/packagedetail/${item.patalogId}`}>
+                        <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" width="100%" />
+                    </Link>
+                </div>
+                <Link to={`/packagedetail/${item.patalogId}`}>
+                </Link>
+                <div className="recommend-package-text">
+                    <Link to={`/packagedetail/${item.patalogId}`}>
+                        <p style={{ textAlign: "center", fontSize: "15px" }}><span style={{ fontWeight: "bold" }}>{item.name.split("@")[0]}</span> 님의 패키지</p>
+                    </Link>
+                </div>
             </div>
         </div>
-    )).slice(0,4)
+    )).slice(0,8)
 
 
     return(

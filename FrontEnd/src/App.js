@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import Home from './components/pages/Home/Home';
-import Cart from './components/pages/cart/Cart';
+import Event from './components/pages/event/Event';
 import Compare from './components/pages/compare/Compare';
 import Wishlist from './components/pages/wishlist/Wishlist';
 import ProductDetail from './components/pages/ProductDetail/ProductDetail';
@@ -69,7 +69,7 @@ function App() {
         <Switch>
           <Route exact path="/"><Home /></Route>
           <Route exact path="/mypkg" component={Compare}></Route>
-          <Route exact path="/cart" component={Cart}></Route>
+          <Route exact path="/event" component={Event}></Route>
           <Route exact path="/wishlist"><Wishlist /></Route>
           <Route exact path="/features"><Features /></Route>
           <Route exact path="/productdetail/:id" component={ProductDetail}></Route>

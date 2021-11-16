@@ -19,10 +19,7 @@ export default function Deal(){
                 <Title
                     title = "베스트 밀키트"
                     subtitle= "사람들이 많이 찾는 밀키트에요."/>
-                {/* <TabMenu 
-                    setCategoryName = {setCategoryName}
-                    categoryName = {categoryName}
-                /> */}
+
                 <ProductViewMain
                     categoryName = {categoryName}
                     sliceNumber = {sliceNumber}

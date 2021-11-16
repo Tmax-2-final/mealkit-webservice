@@ -13,12 +13,10 @@ export default function Home() {
             <Banner />
             {/* 배송되나요? 받을 수 있어요 */}
             <Brand />
-
-            {/* 베스트 밀키트 */}
-            <Deal />
-
             {/* 유저가 만든 정기 구독 패키지 */}
             <Blog />
+            {/* 베스트 밀키트 */}
+            <Deal />
             
             <Footer />
         </Fragment>
