@@ -20,10 +20,11 @@ export default function SideMenu() {
         window.location.href="/";
     }
 
-    const backdoorHandler = (e) => {
+    const csCenterHandler = (e) => {
         e.preventDefault();
 
-        localStorage.setItem('token',"123")
+        localStorage.setItem('token',"root")
+        localStorage.setItem('userid','root')
         window.location.href="/";
     }
 
@@ -59,56 +60,27 @@ export default function SideMenu() {
                                     </Fragment>
                                 )
                             }
-                            <Link style={{ paddingLeft: "15px" }} to="/#" onClick={backdoorHandler}><b>백도어</b></Link>
+                            <Link style={{ paddingLeft: "15px" }} to="/#" onClick={csCenterHandler}><b>고객센터</b></Link>
                         </ul>
-                    </nav>                
+                    </nav>
+                    {
+                        isLogin ?
+                            (
+                                <div className="row pt-2">
+                                    <div className="col-9 col-lg-9 col-sm-9" style={{ textAlign: "right" }}>
+                                        <p>{localStorage.getItem('userid')}<span style={{ color: "gray" }}> 회원님 안녕하세요.</span></p>
+                                    </div>
+                                    <div className="col-3 col-lg-3 col-sm-3" style={{textAlign:"left"}}>
+                                        <Link to="/mypkg"> <i type="button" className="fas fa-shopping-cart fa-2x" /></Link>
+                                    </div>
+                                </div>
+                            )
+                            :
+                            null
+                    }
                 </div>
-                {
-                    isLogin ?
-                    (
-                            <div className="second-main-menu" style={{ float: "center" }}>
-                                <p>{localStorage.getItem('userid')}<span style={{ color: "gray" }}> 회원님 안녕하세요.</span></p>
-                                <Link to="/mypkg"> <i type="button" className="fas fa-archive fa-2x" /></Link>
-                            </div>
-                    )
-                    :
-                    <Fragment></Fragment>
-                }
-
-
-                {/* <div className="">
-                <div className="">
-                   <a href="/register"><i>회원가입</i></a>
-                    <ul className="sub">
-                       {
-                            !isLogin ?
-                                (
-                                   <>
-                                   <li><Link to="/login">login</Link></li>
-                                   <li><Link to="/register">register</Link></li>
-                                   </>
-                                )
-                                    :
-                                (
-                                    <>
-                                    <li><Link onClick={onClickHandler}>logout</Link></li>
-                                   {
-                                        isRole === "ROLE_ADMIN" ?
-                                            <li><Link to="/admin/users">admin</Link></li>
-                                            :
-                                            <li><Link to="/mypage">mypage</Link></li>
-                                    }
-                                    </>
-                                )
-                        }
-
-                    </ul>
-                </div>
-                </div> */}
-                {/* <div className="same-style mobile-off-canvas d-block d-lg-none">
-                    <button className="mobile-aside-button"><i className="las la-bars"></i></button>
-                </div> */}
             </div>
+            
         </div>
 
     );
