@@ -55,12 +55,12 @@ export default function SideMenu() {
                                 (
                                     <Fragment>
                                             <Link style={{ paddingLeft: "15px" }} to="/mypage"><b>마이페이지</b></Link>
-                                            <Link style={{ paddingLeft: "15px" }} to="/#" onClick={onClickHandler}><b>로그아웃</b></Link>
+                                            <Link style={{ paddingLeft: "15px" }} to="#" onClick={onClickHandler}><b>로그아웃</b></Link>
                                             
                                     </Fragment>
                                 )
                             }
-                            <Link style={{ paddingLeft: "15px" }} to="/#" onClick={csCenterHandler}><b>고객센터</b></Link>
+                            <Link style={{ paddingLeft: "15px" }} to="#" onClick={csCenterHandler}><b>고객센터</b></Link>
                         </ul>
                     </nav>
                     {
@@ -68,7 +68,7 @@ export default function SideMenu() {
                             (
                                 <div className="row pt-2">
                                     <div className="col-9 col-lg-9 col-sm-9" style={{ textAlign: "right" }}>
-                                        <p>{localStorage.getItem('userid')}<span style={{ color: "gray" }}> 회원님 안녕하세요.</span></p>
+                                        <p>{localStorage.getItem('userid').split("@")[0]}<span style={{ color: "gray" }}> 회원님 안녕하세요.</span></p>
                                     </div>
                                     <div className="col-3 col-lg-3 col-sm-3" style={{textAlign:"left"}}>
                                         <Link to="/mypkg"> <i type="button" className="fas fa-shopping-cart fa-2x" /></Link>

@@ -7,6 +7,7 @@ export default function Brand(){
     const [modalOpen, setModalOpen ] = useState(false);
     const [address, setAddress] = useState('');
     const [postcode, setPostcode] = useState('');
+    const [fullAddress, setFullAddress] = useState('');
 
     const openModal = () => {
         setModalOpen(true);
@@ -26,6 +27,7 @@ export default function Brand(){
                     setModalOpen = {setModalOpen} 
                     setAddress = {setAddress} 
                     setPostcode = {setPostcode} 
+                    setFullAddress = {setFullAddress}
             />
         <section id="brand">
             <div className="container">
