@@ -14,7 +14,7 @@ const AppBreadcrumb = () => {
       window.location.href="/#/404"
       return ;
     }
-    console.log(currentRoute.name)
+    // console.log(currentRoute.name)
     return currentRoute.name
   }
 
