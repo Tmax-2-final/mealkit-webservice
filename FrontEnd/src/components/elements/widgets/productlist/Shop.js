@@ -13,7 +13,7 @@ export default function Shop({search, categoryName, setSearch, props}) {
     const [columNumber, setColumNumber] = useState(4);
     const [onActive, setOnActive] = useState(false);
 
-    const [newData, setnewData] = useState([]);
+    const [newData, setNewData] = useState([]);
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ postsPerPage ] = useState(5);
     const [ loading, setLoading ] = useState(false);
@@ -21,18 +21,38 @@ export default function Shop({search, categoryName, setSearch, props}) {
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+    let userId = localStorage.getItem('userid');
+    let token = localStorage.getItem('token');
+
     useEffect(() => {
 
         const fetchPosts = async () => {
             setLoading(true);
         }
 
-        axios.get("/catalog-service/catalogs")
+        axios.get(`/catalog-service/catalogs?page=`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then((res) => {
+                console.log(res.data);
+                if(res.status === 200) {
+                    setNewData(res.data.content);
+                }
+            })
+
+
+        axios.get(`/catalog-service/catalogs?page=`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(res => {
-                setnewData(res.data);
+                setNewData(res.data.content);
                 setSearch(null);
                 setLoading(false);
-                console.log(res.data);
+                console.log(res.data.content);
             });
         fetchPosts();
     },[]);

@@ -9,5 +9,5 @@ import java.util.Date;
 
 public interface CatalogRepository extends JpaRepository<CatalogEntity, Long> {
     CatalogEntity findByCatalogId(Long catalogId);
-    Page<CatalogEntity> findAllBySearchContaining(String search, Pageable pageable);
+    Page<CatalogEntity> findByNameLike(String searchData, Pageable pageable);
 }

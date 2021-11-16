@@ -43,10 +43,6 @@ public class CatalogServiceImpl implements CatalogService{
         this.pkgMgtRepository = pkgMgtRepository;
     }
 
-    @Override
-    public Iterable<CatalogEntity> getAllCatalogs() {
-        return catalogRepository.findAll();
-    }
 
     @Override
     public Iterable<PatalogEntity> getAllPatalogs() { return patalogRepository.findAll(); }
@@ -196,7 +192,7 @@ public class CatalogServiceImpl implements CatalogService{
 
     @Override
     public Page<CatalogEntity> getCatalogBySearch(RequestData requestData, Pageable pageRequest) {
-        return catalogRepository.findAllBySearchContaining(requestData.getSearchData(), pageRequest);}
+        return catalogRepository.findByNameLike(requestData.getSearchData(), pageRequest);}
 
     @Override
     public void deleteMyPackage(MyPackageEntity myPackageEntity) { myPackageRepository.delete(myPackageEntity);};

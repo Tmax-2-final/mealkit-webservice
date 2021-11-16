@@ -7,12 +7,39 @@ export default function ProductViewMain({categoryName, sliceNumber, columNumber,
     console.log(categoryName);
     console.log(search);
     
-    const [newData, setnewData] = useState([]);
+    const [newData, setNewData] = useState([]);
+
+    let userId = localStorage.getItem('userid');
+    let token = localStorage.getItem('token');
     
     useEffect(() => {
-        axios.get("/catalog-service/catalogs")
+        const result = axios.get(`/catalog-service/catalogs?page=`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then((res) => {
+                console.log(res.data);
+                if(res.status === 200) {
+                    setNewData(res.data.content);
+                    // console.log(res.data.totalPages);
+                    // setTotalPages(res.data.totalPages);
+                    // setCurrentPages(res.data.number + 1);
+                    // console.log(totalPages);
+                    // console.log(currentPages);
+
+                    // setWhatPages(0);
+                    // setLoading(false);
+                }
+            })
+
+        axios.get(`/catalog-service/catalogs?page=`, {
+            header: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .then(res => {
-            setnewData(res.data);
+            setNewData(res.data.content);
             console.log(res.data);
         })
     },[]);
