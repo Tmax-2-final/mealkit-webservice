@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface CatalogService {
-    Iterable<CatalogEntity> getAllCatalogs();
     Iterable<PatalogEntity> getAllPatalogs();
     Iterable<MyPackageEntity> getAllMyPackage();
     Iterable<MyPackageEntity> getUserMyPackage(String userId);

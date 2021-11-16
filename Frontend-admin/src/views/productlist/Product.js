@@ -13,15 +13,10 @@ const Product = (props) => {
     const [catalogDatas, setCatalogDatas] = useState([]);
     const [startDate, setStartDate] = useState(new Date("2021/01/01"));
     const [endDate, setEndDate] = useState(new Date());
-
-
     const [search, setSearch] = useState("");
-
     const [searchType, setSearchType] = useState("all");
     const [searchValue, setSearchValue] = useState("");
-
     const [codeType, setCodeType] = useState('0');
-
     const [totalPages, setTotalPages] = useState(0);
     const [currentPages, setCurrentPages] = useState(1);
     const [whatPages, setWhatPages] = useState(0); // 0: 전체 조회 1: 타입별 조회 2: 검색 조회
@@ -46,8 +41,12 @@ const Product = (props) => {
             console.log(res.data);
             if(res.status === 200) {
                 setCatalogDatas(res.data);
+                console.log(res.data.totalPages);
                 setTotalPages(res.data.totalPages);
                 setCurrentPages(res.data.number + 1);
+                console.log(totalPages);
+                console.log(currentPages);
+
                 setWhatPages(0);
                 setLoading(false);
             }
@@ -83,7 +82,18 @@ const Product = (props) => {
         return result;
     }
 
-    const searchHandler = (pageNum, e) => {
+  const searchTypeChange = (e) => {
+    e.preventDefault();
+    setSearchType(e.target.value);
+  }
+
+  const searchValueChange = (e) => {
+    e.preventDefault();
+    setSearchValue(e.target.value);
+  }
+
+
+  const searchHandler = (pageNum, e) => {
         e.preventDefault();
         console.log(pageNum);
         setLoading(true);
@@ -93,32 +103,6 @@ const Product = (props) => {
       let body = {
         searchData: search
       }
-
-
-      axios.post(`/catalog-service/catalogs/search?page=${pageNum}`, body, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-        .then((res) => {
-          console.log(res);
-          if(res.status === 200){
-            setUserDatas(res.data.content);
-            setTotalPages(res.data.totalPages);
-            setCurrentPages(res.data.number + 1);
-            setWhatPages(1);
-            setLoading(false)
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          alert('오류가 발생했습니다');
-        })
-
-
-    let body = {
-      searchData: search
-    }
 
     console.log(body);
 
@@ -145,7 +129,8 @@ const Product = (props) => {
 
   const pageHandler = (pageNum, pageFlag, e) => {
     e.preventDefault();
-    console.log(pageNum)
+    console.log(pageNum);
+    console.log(pageFlag);
     setLoading(true)
     setCurrentPages(pageNum)
     let token = localStorage.getItem('token')
@@ -159,7 +144,7 @@ const Product = (props) => {
         .then((res) => {
           console.log(res.data)
           if(res.status === 200) {
-            setCatalogDatas(res.data.content);
+            setCatalogDatas(res.data);
             setTotalPages(res.data.totalPages);
             setCurrentPages(res.data.number + 1);
             setLoading(false)
