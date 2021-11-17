@@ -129,8 +129,15 @@ function MyPage(props) {
         }
     }
 
-    const subChangeHandler = () => {
-        {
+    const subChangeHandler = (type, e) => {
+        if(type === 1) {
+            props.history.push({
+                pathname: '/subscription/introduce',
+                state: {
+                }
+            })
+        }
+        else {
             props.history.push({
                 pathname: '/subscription/editgrade',
                 state: {
@@ -166,18 +173,20 @@ function MyPage(props) {
                             <div className="card">
                                 <div className="card-header" style={{ backgroundColor: "white" }}>
                                     <div className="row">
-                                        <div className="col-9 col-lg-8 col-sm-8">
+                                        <div className="col-8 col-lg-8 col-sm-8">
                                             <h5 className="card-title mt-2">고객 상세정보</h5>
                                         </div>
-                                        <div className="col-3 col-lg-4 col-sm-4">
-                                            {
-                                                data.oauth === "kakao" ?
-                                                    null
-                                                    :
-                                                    <button type="button" className="btn btn-outline-dark btn-sm mr-2"><Link to='/mypage/myInfoEdit'>수정</Link></button>
-                                            }
-                                            <button type="button" className="btn btn-outline-primary btn-sm" onClick={deleteHandler}>탈퇴</button>
+                                        <div className="col-2 col-lg-2 col-sm-2">
+                                            <button type="button" className="btn btn-outline-primary btn-sm mr-2" onClick={deleteHandler}>탈퇴</button>
                                         </div>
+                                        {
+                                            data.oauth === "kakao" ?
+                                                null
+                                                :
+                                                <div className="col-2 col-lg-2 col-sm-2">
+                                                    <button type="button" className="btn btn-outline-dark btn-sm"><Link to='/mypage/myInfoEdit'>수정</Link></button>
+                                                </div>
+                                        }
                                     </div>
                                 </div>
                                 <div className="card-body">
@@ -209,15 +218,27 @@ function MyPage(props) {
                         <div className="col-lg-9 col-md-9 mb-5">
                             <div className="card">
                                 <div className="card-header" style={{ backgroundColor: "white" }}>
-                                <div className="row">
-                                    <div className="col-7">
-                                        <h5 className="card-title mt-2">구독 내역</h5>
+                                    <div className="row">
+                                        <div className="col-7">
+                                            <h5 className="card-title mt-2">구독 내역</h5>
+                                        </div>
+                                        <div className="col-5 text-right">
+                                            {
+                                                data.subscribeYn === 0 ?
+                                                    (
+                                                        <button className="btn btn-outline-primary btn-sm mr-2" onClick={(e) => subChangeHandler(1, e)} ><span>구독신청</span></button>
+
+                                                    )
+                                                    :
+                                                    (
+                                                        <div>
+                                                        <button className="btn btn-outline-primary btn-sm mr-2" onClick={(e) => subChangeHandler(2, e)} ><span>구독변경</span></button>
+                                                        <button className="btn btn-outline-primary btn-sm" onClick={subCancelHandler}><span>구독취소</span></button>
+                                                        </div>
+                                                    )
+                                            }
+                                        </div>
                                     </div>
-                                    <div className="col-5 text-right">
-                                        <button className="btn btn-outline-primary btn-sm mr-2" onClick={subChangeHandler} ><span>구독변경</span></button>
-                                        <button className="btn btn-outline-primary btn-sm" onClick={subCancelHandler}><span>구독취소</span></button>
-                                    </div>
-                                </div>
                                 </div>
                                 <div className="card-body">
                                     <div className="user-detail ml-3">

@@ -104,7 +104,7 @@ export default function AddBuyAndCart({props, productData}) {
     return(
         <>
             <div className="pro-details-quality">
-                <div className="cart-plus-minus">
+                <div className="">
                     {/*<button className="dec qtybutton" onClick={()=>handleCountDec()}>-</button>*/}
                     {/*<input className="cart-plus-minus-box" type="text" value={count} onChange={handleCount}  maxlength="3"/>*/}
 

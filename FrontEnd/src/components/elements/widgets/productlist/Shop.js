@@ -57,8 +57,24 @@ export default function Shop({search, categoryName, setSearch, props}) {
         fetchPosts();
     },[]);
 
+    const getCategoryNumber = (categoryName) => {
+        switch(categoryName) {
+            case "한식":
+                return '1';
+            case "양식":
+                return '2';
+            case "중식":
+                return '3';
+            case "일식":
+                return '4';
+            case "동남아":
+                return '5';
+            
+        }
+    }
 
-    const categoryData = categoryName !== "전체메뉴" ? newData.filter(item => item.category === categoryName ) : newData;
+
+    const categoryData = categoryName !== "전체메뉴" ? newData.filter(item => item.category === getCategoryNumber(categoryName) ) : newData;
     const searchData = search !== null ? newData.filter(item => (item.name.toLowerCase().includes(search)) || (item.category.includes(search))) : newData;
 
     const searchList = searchData.map((item, index) => (
@@ -68,7 +84,7 @@ export default function Shop({search, categoryName, setSearch, props}) {
                 <div className="product-img">
                     <Link to={`/productdetail/${item.catalogId}`}>
                         <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
-                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
+                        {/* <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image2}`} alt="" /> */}
                     </Link>
                 </div>
                 <div className="product-content text-center">
@@ -80,10 +96,7 @@ export default function Shop({search, categoryName, setSearch, props}) {
                             ""
                         )}
                     </div>
-                    <div className="product-price">
-                        <span>{item.unitPrice}원</span>
-                        {/*<span className="old">{item.unitPrice}</span>*/}
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -98,7 +111,7 @@ export default function Shop({search, categoryName, setSearch, props}) {
                 <div className="product-img">
                     <Link to={`/productdetail/${item.catalogId}`}>
                         <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
-                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
+                        {/* <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image2}`} alt="" /> */}
                     </Link>
                 </div>
                 <div className="product-content text-center">
@@ -110,10 +123,7 @@ export default function Shop({search, categoryName, setSearch, props}) {
                             ""
                         )}
                     </div>
-                    <div className="product-price">
-                        <span>{item.unitPrice}원</span>
-                        {/*<span className="old">{item.unitPrice}</span>*/}
-                    </div>
+                    
                 </div>
             </div>
         </div>

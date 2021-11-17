@@ -68,7 +68,7 @@ management:
         include: info, refresh, health, beans, busrefresh
 
 kafka:
-  url: 13.208.132.90:9092
+  url: localhost:9092
 
 logging:
   level:

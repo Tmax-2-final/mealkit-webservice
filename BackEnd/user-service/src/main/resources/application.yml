@@ -4,12 +4,12 @@ server:
 spring:
   application:
     name: user-service
-#  # api , config server 통신
-#  rabbitmq:
-#    host: 127.0.0.1
-#    port: 5672
-#    username: guest
-#    password: guest
+  # api , config server 통신
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
 #  h2:
 #    console:
 #      enabled: true
@@ -35,13 +35,13 @@ spring:
       sort:
         sort-parameter: sort          # 페이징 처리로 나온 데이터들을 정렬하는 인자 명은 sort
 
-#  zipkin:
-#    base-url: http://localhost:9411
-#    enabled: true
-#  # 데이터를 어느정도까지 전달할껀지
-#  sleuth:
-#    sampler:
-#      probability: 1.0
+  zipkin:
+    base-url: http://localhost:9411
+    enabled: true
+  # 데이터를 어느정도까지 전달할껀지
+  sleuth:
+    sampler:
+      probability: 1.0
 
 
 eureka:

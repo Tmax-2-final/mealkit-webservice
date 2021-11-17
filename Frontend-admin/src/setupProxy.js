@@ -2,6 +2,15 @@ const { createProxyMiddleware } = require('http-proxy-middleware')
 
 module.exports = function (app) {
     app.use(
+        createProxyMiddleware('/config-service', {
+            target: 'http://localhost:8888',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/config-service': ''
+            }
+        })
+    );
+    app.use(
         createProxyMiddleware('/user-service', {
             target: 'http://localhost:8000',
             changeOrigin: true

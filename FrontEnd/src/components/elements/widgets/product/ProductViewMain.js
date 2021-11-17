@@ -48,7 +48,7 @@ export default function ProductViewMain({categoryName, sliceNumber, columNumber,
                 <div className="product-img">
                     <Link to={`/productdetail/${item.productId}`}>
                         <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
-                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image2}`} alt="" />
+                        {/* <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image2}`} alt="" /> */}
                     </Link>
                 </div>
                 <div className="product-content text-center">

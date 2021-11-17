@@ -38,7 +38,7 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
 
         axios.get("/catalog-service/patalogs")
             .then(res => {
-                setnewData(res.data);
+                setnewData(res.data.content);
                 setSearch(null);
                 setLoading(false);
                 console.log(res.data);
@@ -83,7 +83,7 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
                 <div className="product-img">
                     <Link to={`/packagedetail/${item.patalogId}`}>
                         <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
-                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
+                        {/* <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" /> */}
                     </Link>
                 </div>
                 <div className="product-content text-center">
@@ -114,7 +114,7 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
                 <div className="product-img">
                     <Link to={`/packagedetail/${item.patalogId}`}>
                         <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
-                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" />
+                        {/* <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image}`} alt="" /> */}
                     </Link>
                 </div>
                 <div className="product-content text-center">
@@ -143,7 +143,7 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
                 <div className="product-img">
                     <Link to={`/packagedetail/${item.catalogId}`}>
                         <img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
-                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" />
+                        {/* <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image2}`} alt="" /> */}
                     </Link>
                 </div>
                 <div className="product-content text-center">

@@ -47,7 +47,7 @@ export default function ProductTop({props, productData}) {
                 </li>
                 <li className="nav-item" role="presentation">
                     <button className="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">
-                    <span style={{color:"black"}}><strong>상세설명</strong></span>
+                    <span style={{color:"black"}}><strong>상세정보</strong></span>
                     </button>
                 </li>
                 <li className="nav-item" role="presentation">
@@ -59,12 +59,12 @@ export default function ProductTop({props, productData}) {
                 <div className="tab-content" id="myTabContent">
                 <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <div className="row mt-30">
-                        <img src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/product-1-detail.PNG`} className="img-fluid mx-auto" alt="" style={{width:"auto", maxHeight:"100%"}}/>
+                        <img src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${productData.detailImg}`} className="img-fluid mx-auto" alt="" style={{width:"auto", maxHeight:"100%"}}/>
                     </div>
                 </div>
                 <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                     <div className="row mt-30">
-                        <img src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/product-1-info.PNG`} className="img-fluid mx-auto" alt="" style={{width:"auto", maxHeight:"100%"}}/>
+                        <img src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${productData.summaryImg}`} className="img-fluid mx-auto" alt="" style={{width:"auto", maxHeight:"100%"}}/>
                     </div>
                 </div>
                 <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">

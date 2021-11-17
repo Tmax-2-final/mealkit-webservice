@@ -4,8 +4,14 @@ server:
 spring:
   application:
     name: catalog-service
+  # api , config server 통신
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   zipkin:
-    base-url: http://13.208.132.90:9411
+    base-url: http://localhost:9411
     enabeld: true
   sleuth:
     probability: 1.0
@@ -32,9 +38,9 @@ spring:
         sort-parameter: sort
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://database-1.cnohqzdklodx.ap-northeast-2.rds.amazonaws.com:3306/mydb?serverTimezone=Asia/Seoul
-    username: root
-    password: root1234
+    url: jdbc:mariadb://localhost:3306/mydb?serverTimezone=Asia/Seoul
+    username:
+    password:
 
 eureka:
   instance:
@@ -59,3 +65,9 @@ logging:
 kafka:
   bootstrap-address: localhost:9092
   group-id: consumerGroupId
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, refresh, health, beans, busrefresh

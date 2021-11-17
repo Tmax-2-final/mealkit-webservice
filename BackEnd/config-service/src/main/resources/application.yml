@@ -7,18 +7,18 @@ spring:
   profiles:
     active: default
   # api , config server 통신
-#  rabbitmq:
-#    host: 127.0.0.1
-#    port: 5672
-#    username: guest
-#    password: guest
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   cloud:
     config:
       server:
         git:
           uri: https://github.com/Tmax-2-final/mealkit-config
-          username: wmin401
-          password: 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
+          username: username
+          password: secret
           default-label: main
 #          uri: file:///Users/namgonkim/Documents/GitHub/mealkit-config
 #          username:

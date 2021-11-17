@@ -3,14 +3,37 @@ import styled from 'styled-components';
 
 export default function ProductDetailLeft2({productData}) {
     const [imageCurrentNo, setImageCurrentNo] = useState(0);
+    const [images, setImages] = useState([]);
 
     useEffect(()=>{
+        fetchImageData();
     },[productData])
 
-    const images = ["https://tmax-2.s3.ap-northeast-2.amazonaws.com/product-1-img1.jpg",
-                    "https://tmax-2.s3.ap-northeast-2.amazonaws.com/product-1-img2.jpg",
-                    "https://tmax-2.s3.ap-northeast-2.amazonaws.com/product-1-img3.jpg",
-                    "https://tmax-2.s3.ap-northeast-2.amazonaws.com/product-1-img4.jpg",];
+
+    const fetchImageData = () => {
+        let data = new Array;
+        if (productData.image1) {
+            data.push(`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${productData.image1}`);
+        }
+        if (productData.image2) {
+            data.push(`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${productData.image2}`);
+        }
+        if (productData.image3) {
+            data.push(`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${productData.image3}`);
+        }
+        if (productData.image4) {
+            data.push(`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${productData.image4}`);
+        }
+
+        setImages(data);
+    }
+
+    // const images = [
+    //     productData.image1 ? (`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${productData.image1}`) : ,
+    //     productData.image2 ? (`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${productData.image2}`) : '',
+    //     productData.image3 ? (`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${productData.image3}`) : '',
+    //     productData.image4 ? (`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${productData.image4}`) : '',
+    //             ];
 
     const onChangeImage = (index) => {
         if (images.length <= index) index = 0;

@@ -8,22 +8,17 @@ export default function ProductRegForm() {
 
   const [countList, setCountList] = useState([0]);
 
-  const [name, setName] = useState();
-  const [stock, setStock] = useState();
-  const [unitPrice, setUnitPrice] = useState();
-  const [category, setCategory] = useState();
-  const [ rating, setRating ] = useState();
-  const [ image1, setImage1 ] = useState();
-  const [ image2, setImage2 ] = useState();
-  const [ image3, setImage3 ] = useState();
-  const [ image4, setImage4 ] = useState();
-  const [ image5, setImage5 ] = useState();
-  const [ image6, setImage6 ] = useState();
-  const [ flavor, setFlavor ] = useState();
-  const [ cookingtime, setCookingtime ] = useState();
-  const [ age, setAge ] = useState();
-  const [ details, setDetails ] = useState();
-  const [ loading, setLoading ] = useState();
+  const [name, setName] = useState('');
+  const [stock, setStock] = useState(100);
+  const [category, setCategory] = useState(0);
+  const [rating, setRating] = useState(5);
+
+  const [flavor, setFlavor] = useState(0);
+  const [cookingtime, setCookingtime] = useState(0);
+  const [age, setAge] = useState(0);
+  const [details, setDetails] = useState('');
+
+  const [ loading, setLoading ] = useState(false);
 
   const [accessKey, setAccessKey] = useState('');
   const [secretAccessKey, setSecretAccessKey] = useState('');
