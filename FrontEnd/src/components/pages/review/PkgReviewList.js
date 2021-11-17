@@ -27,8 +27,8 @@ export default function PkgReviewList({ packageData, setReviewCnt }) {
 
 
     const getPkgReviews = (page) => {
-        // axios.get(`/review-service/reviews/page/pkg/${packageData.patalogId}`, {
-        axios.get(`/review-service/reviews/page/pkg/53`, {
+        axios.get(`/review-service/reviews/page/pkg/${packageData.patalogId}`, {
+        // axios.get(`/review-service/reviews/page/pkg/53`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
