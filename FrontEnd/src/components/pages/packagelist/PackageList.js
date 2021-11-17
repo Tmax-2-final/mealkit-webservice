@@ -2,7 +2,7 @@ import Header from '../../layout/Header';
 import Footer from '../../layout/Footer';
 import Bread from '../../elements/ui/Bread';
 import SidePackage from '../../elements/widgets/packagelist/SidePackage';
-import PackageShop from '../../elements/widgets/packagelist/PackageShop';
+import PackageShop2 from '../../elements/widgets/packagelist/PackageShop2';
 
 import React, {useEffect, useState} from 'react';
 import { useParams } from 'react-router';
@@ -13,7 +13,7 @@ export default function PackageList(props) {
     // let path = props.location.pathname;
     // let strLength = props.location.pathname.length;
     // const category = path !== "/productlist" ? path.substring(13, strLength) : "전체메뉴";
-    const [categoryName, setCategoryName] = useState("전체메뉴");
+    const [categoryName, setCategoryName] = useState("유저 패키지");
     // const category = props.locaton.pathname !== "/productlist" ? props.locaton.pathname: null;
     const [search, setSearch] = useState(null);
     const { selCategoryName } = useParams(); 
@@ -23,7 +23,7 @@ export default function PackageList(props) {
 
     useEffect(() => {
         if(selCategoryName != null) setCategoryName(selCategoryName)
-        else setCategoryName("전체메뉴");
+        else setCategoryName("유저 패키지");
     },[selCategoryName]);
 
     if(categoryName === "패키지 직접 제작"){
@@ -36,7 +36,7 @@ export default function PackageList(props) {
         <>
         <Header/>
         <Bread
-            productName = "Categories"
+            productName = "구독패키지"
         />
         <div className="shop-area pt-95 pb-100">
             <div className="container">
@@ -45,7 +45,7 @@ export default function PackageList(props) {
                         setCategoryName = {setCategoryName}
                         setSearch={setSearch}
                     />
-                    <PackageShop
+                    <PackageShop2
                         // 카테고리를 바로 선택하여 상품리스트에 접속 시 URL의 카테고리 맵핑
                         categoryName = {categoryName}
                         search = {search}

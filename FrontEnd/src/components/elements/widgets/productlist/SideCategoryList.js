@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-export default function SideCategoryList({data, setCategoryName, setSearch}) {
+export default function SideCategoryList({data, setCategoryName, setSearch, setInputData}) {
 
     const [chk, setChk] = useState(false)
     const [ inputStatus, setInputStatus] = useState('')
@@ -10,6 +10,7 @@ export default function SideCategoryList({data, setCategoryName, setSearch}) {
         setChk(!chk)
         setChk(chk)
         setCategoryName(name)
+        setInputData('');
     }
 
     return(

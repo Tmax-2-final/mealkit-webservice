@@ -32,7 +32,7 @@ export default function ProductList(props) {
         <>
         <Header/>
         <Bread
-            productName = "Categories"
+            productName = "밀키트상품"
         />
         <div className="shop-area pt-95 pb-100">
             <div className="container">
