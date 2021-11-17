@@ -23,6 +23,7 @@ export default function ProductRegForm() {
   const [ cookingtime, setCookingtime ] = useState();
   const [ age, setAge ] = useState();
   const [ details, setDetails ] = useState();
+  const [ loading, setLoading ] = useState();
 
   const [accessKey, setAccessKey] = useState('');
   const [secretAccessKey, setSecretAccessKey] = useState('');
@@ -186,7 +187,7 @@ export default function ProductRegForm() {
     setLoading(true)
     let s3File;
     let s3FileName;
-    
+
     let body = new FormData();
     // 상품 메인 이미지 업로드
     let productMainFiles = fileInput1.current.files;
@@ -195,7 +196,7 @@ export default function ProductRegForm() {
     for(let i=0;i<productMainFiles.length;i++) {
       s3File = productMainFiles[i];
       s3FileName = s3File.name;
-      
+
       if(s3Uploader(s3File, s3FileName) === false) {
         setLoading(false)
         return;
@@ -206,7 +207,7 @@ export default function ProductRegForm() {
     // 상품 상세 이미지 업로드
     let productDetailFile = fileInput2.current.files;
     // console.log(productDetailFile)
-    
+
     s3File = productDetailFile[0];
     s3FileName = s3File.name;
 
@@ -241,8 +242,8 @@ export default function ProductRegForm() {
     const config = {
       bucketName: S3_BUCKET,
       region: REGION,
-      accessKeyId: ACCESS_KEY,
-      secretAccessKey: SECRET_ACCESS_KEY
+      accessKeyId: accessKey,
+      secretAccessKey: secretAccessKey
     };
     const ReactS3Client = new S3(config);
 
@@ -261,8 +262,8 @@ export default function ProductRegForm() {
         console.log(err)
         return false;
       })
-    
-  } 
+
+  }
 
   const submitHandler = (formData) => {
 
@@ -299,7 +300,7 @@ export default function ProductRegForm() {
         if (res.status === 201) {
           alert("상품 등록이 완료 되었습니다.");
           history.push({
-            pathname: 'products/list'
+            pathname: '/products/list'
           })
           setLoading(false)
         }
@@ -422,7 +423,7 @@ export default function ProductRegForm() {
 
                     <CInputGroup className="mb-3 row">
                       <CFormLabel className="pl-0" htmlFor="formFileMultiple"><strong>상품 메인 이미지</strong><span style={{ color: "red" }}>*</span> (최대 4개까지 등록 가능합니다.)</CFormLabel>
-                      <CFormInput type="file" id="formFileMultiple" ref={fileInput1} onChange={productMainMultiFileChange} 
+                      <CFormInput type="file" id="formFileMultiple" ref={fileInput1} onChange={productMainMultiFileChange}
                         accept='image/jpg,impge/png,image/jpeg,image/gif' multiple />
                       {
                         error.detailsError
@@ -439,14 +440,14 @@ export default function ProductRegForm() {
                             margin: '-5px 0 10px 15px'
                           }}>{guideTxts.imageGuide}</div>
                       }
-                      
+
                     </CInputGroup>
 
                     <CInputGroup className="mb-3 row">
                       <CFormLabel className="pl-0" htmlFor="formFile"><strong>상품 상세 이미지</strong><span style={{ color: "red" }}>*</span> (최대 1개까지 등록 가능합니다.)</CFormLabel>
                       <CFormInput type="file" id="formFile" ref={fileInput2} onChange={productDetailFileChange}
                         accept='image/jpg,impge/png,image/jpeg,image/gif' />
-                      
+
                       {
                         error.detailsError
                           ?

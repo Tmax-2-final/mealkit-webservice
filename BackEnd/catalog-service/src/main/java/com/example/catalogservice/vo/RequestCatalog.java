@@ -24,8 +24,6 @@ public class RequestCatalog {
 
     private Integer age;
 
-    private String theme;
-
     private String flavor;
 
     private int cookingtime;
@@ -35,8 +33,6 @@ public class RequestCatalog {
     private String detailImg;
 
     private String details;
-
-    private Integer unitPrice;
 
     private Double rating;
 

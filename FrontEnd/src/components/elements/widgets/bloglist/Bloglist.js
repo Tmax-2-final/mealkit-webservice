@@ -5,22 +5,17 @@ import axios from "axios";
 export default function Bloglist(){
 
     const [newBlogData , setNewBlogData] = useState([]);
-
-    // useEffect(() => {
-    //     fetch("http://localhost:3005/blog")
-    //     .then(res => {
-    //         return res.json();
-    //     })
-    //     .then(data => {
-    //         setNewBlogData(data);
-    //     })
-    //     //.catch(error => console.log(error))
-    // },[]);
+    let token = localStorage.getItem('token');
+    let userId = localStorage.getItem("userId");
 
     useEffect(() => {
-        axios.get("catalog-service/patalogs")
+        axios.get(`catalog-service/patalogs?page=&size=8`,{
+            headers: {
+                Authoriazation : `Bearer ${token}`
+            }
+        })
             .then(res => {
-                setNewBlogData(res.data);
+                setNewBlogData(res.data.content);
                 console.log(res.data);
             })
     },[]);
