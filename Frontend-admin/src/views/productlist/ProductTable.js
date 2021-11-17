@@ -1,6 +1,6 @@
 import { CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
 import React from 'react';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import Rating from "../packagelist/Rating";
@@ -9,7 +9,8 @@ export default function ProductTable({ catalogDatas, setCatalogDatas, loading })
 
   const history = useHistory();
 
-  const handleDelete = (id) => {
+  const handleDelete = (id, e) => {
+    e.preventDefault()
 
     axios.delete(`/catalog-service/catalogs/${id}`)
       .then(res => {
@@ -18,7 +19,10 @@ export default function ProductTable({ catalogDatas, setCatalogDatas, loading })
           .then(data => {
             console.log(data);
             setCatalogDatas(data.data);
-            window.location.href = "products/list";
+
+            history.push({
+                pathname: '/products/list'
+            })
 
             // setCatalogDatas(data.data);
           })
@@ -71,12 +75,12 @@ export default function ProductTable({ catalogDatas, setCatalogDatas, loading })
                                                     catalogDatas.content.map((item) => (
                                                         <CTableRow key={item.id}>
                                                             <CTableHeaderCell scope="row">{item.catalogId}</CTableHeaderCell>
-                                                            <CTableDataCell><img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" style={{width:"auto", height:"5rem"}} /></CTableDataCell>
+                                                            <CTableDataCell><img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" style={{width:"100px", height:"100px"}} /></CTableDataCell>
                                                             <CTableDataCell>{item.name}</CTableDataCell>
                                                             <CTableDataCell>{item.stock}</CTableDataCell>
                                                             <CTableDataCell>{item.category}</CTableDataCell>
                                                             <CTableDataCell>{item.rating && item.rating > 0 ? (<Rating ratingValue={item.rating} />):("")}</CTableDataCell>
-                                                          <CTableDataCell><Link onClick={(e)=> handleDelete(item.catalogId)}><i className="far fa-trash-alt"></i></Link></CTableDataCell>
+                                                          <CTableDataCell><Link onClick={(e)=> handleDelete(item.catalogId, e)}><i className="far fa-trash-alt"></i></Link></CTableDataCell>
                                                         </CTableRow>
                                                     ))
                                                 )

@@ -113,7 +113,7 @@ export default function CompareTable(props) {
                 <div className="product-img">
                     <Link to={`/packagedetail/${item.catalogEntity.catalogId}`}>
                         <img className="img-fluid" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.catalogEntity.image1}`} alt="" />
-                        <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.catalogEntity.image1}`} alt="" />
+                        {/* <img className="hover-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.catalogEntity.image2}`} alt="" /> */}
                     </Link>
                 </div>
                 <div className="compare-remove">
