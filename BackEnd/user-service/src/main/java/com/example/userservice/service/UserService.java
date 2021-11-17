@@ -58,7 +58,7 @@ public interface UserService extends UserDetailsService {
     Iterable<PrfrEntity> getAllPrfrs();
 
     /* 특정 회원의 선호도 조회 */
-    Iterable<PrfrEntity> getPrfrsByUserId(String userId);
+    PrfrEntity getPrfrsByUserId(String userId);
 
     /* 특정 회원의 선호도 삭제 */
     void deletePrfr(String userId ,Long prfrId);
