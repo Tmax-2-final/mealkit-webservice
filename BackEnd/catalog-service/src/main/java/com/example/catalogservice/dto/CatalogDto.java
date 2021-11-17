@@ -28,8 +28,6 @@ public class CatalogDto implements Serializable {
 
     private Integer age;
 
-    private String theme;
-
     private String flavor;
 
     private int cookingtime;
@@ -39,8 +37,6 @@ public class CatalogDto implements Serializable {
     private String detailImg;
 
     private String details;
-
-    private Integer unitPrice;
 
     private Double rating;
 

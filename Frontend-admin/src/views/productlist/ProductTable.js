@@ -3,8 +3,11 @@ import React from 'react';
 import { useHistory } from "react-router-dom";
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import Rating from "../packagelist/Rating";
 
 export default function ProductTable({ catalogDatas, setCatalogDatas, loading }) {
+
+  const history = useHistory();
 
   const handleDelete = (id) => {
 
@@ -15,7 +18,7 @@ export default function ProductTable({ catalogDatas, setCatalogDatas, loading })
           .then(data => {
             console.log(data);
             setCatalogDatas(data.data);
-            window.location.href = "/products/list#/products/list"
+            window.location.href = "products/list";
 
             // setCatalogDatas(data.data);
           })
@@ -56,8 +59,8 @@ export default function ProductTable({ catalogDatas, setCatalogDatas, loading })
                                             <CTableHeaderCell scope="col">이미지</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">상품명</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">재고</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">가격</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">수정</CTableHeaderCell>
+                                            <CTableHeaderCell scope="col">카테고리</CTableHeaderCell>
+                                            <CTableHeaderCell scope="col">평점</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">삭제 </CTableHeaderCell>
                                         </CTableRow>
                                     </CTableHead>
@@ -71,8 +74,8 @@ export default function ProductTable({ catalogDatas, setCatalogDatas, loading })
                                                             <CTableDataCell><img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" style={{width:"auto", height:"5rem"}} /></CTableDataCell>
                                                             <CTableDataCell>{item.name}</CTableDataCell>
                                                             <CTableDataCell>{item.stock}</CTableDataCell>
-                                                            <CTableDataCell>{item.unitPrice}</CTableDataCell>
-                                                            <CTableDataCell>수정</CTableDataCell>
+                                                            <CTableDataCell>{item.category}</CTableDataCell>
+                                                            <CTableDataCell>{item.rating && item.rating > 0 ? (<Rating ratingValue={item.rating} />):("")}</CTableDataCell>
                                                           <CTableDataCell><Link onClick={(e)=> handleDelete(item.catalogId)}><i className="far fa-trash-alt"></i></Link></CTableDataCell>
                                                         </CTableRow>
                                                     ))

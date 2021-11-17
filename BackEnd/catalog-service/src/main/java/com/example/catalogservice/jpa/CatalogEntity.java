@@ -34,9 +34,6 @@ public class CatalogEntity implements Serializable {
     private Integer age;
 
     @Column
-    private String theme;
-
-    @Column
     private String flavor;
 
     @Column
@@ -48,13 +45,10 @@ public class CatalogEntity implements Serializable {
     @Column(nullable = false)
     private String detailImg;
 
-    @Column(nullable = true)
+    @Column
     private String details;
 
-    @Column(nullable = false)
-    private Integer unitPrice;
-
-    @Column(nullable = true)
+    @Column
     private Double rating;
 
     @Column(nullable = false)

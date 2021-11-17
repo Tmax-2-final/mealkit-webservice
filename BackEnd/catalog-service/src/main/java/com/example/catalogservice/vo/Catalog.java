@@ -25,9 +25,6 @@ public class Catalog {
     @JsonProperty("author")
     private String author;
 
-    @JsonProperty("unitPrice")
-    private Integer unitPrice;
-
     @JsonProperty("rating")
     private Double rating;
 

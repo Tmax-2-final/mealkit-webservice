@@ -180,6 +180,7 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
     console.log(postsPerPage)
     console.log(paginate)
 
+
     const confirmSubPkgHandler = (e) => {
 
         let body = {
