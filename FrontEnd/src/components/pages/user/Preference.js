@@ -213,12 +213,12 @@ export default function Preference(props) {
                                                             <div>
                                                             <strong>1. 연령대를 골라주세요</strong><br /><br />
                                                                 <select name="age" value={age} onChange={ageHandler}>
-                                                                    <option value="10" >10대</option>
-                                                                    <option value="20" >20대</option>
-                                                                    <option value="30" >30대</option>
-                                                                    <option value="40" >40대</option>
-                                                                    <option value="50" >50대</option>
-                                                                    <option value="60" >60대 이상</option>
+                                                                    <option value="1" >10대</option>
+                                                                    <option value="2" >20대</option>
+                                                                    <option value="3" >30대</option>
+                                                                    <option value="4" >40대</option>
+                                                                    <option value="5" >50대</option>
+                                                                    <option value="6" >60대 이상</option>
                                                                 </select>
                                                             </div>
                                                             <div>
@@ -248,7 +248,7 @@ export default function Preference(props) {
                                                                 <input type="checkbox" name="ck3" value="3" checked={ck3} onChange={flavorHandler} style={{ margin: "8px" }} /> 느끼한 맛
                                                                 <input type="checkbox" name="ck4" value="4" checked={ck4} onChange={flavorHandler} style={{ margin: "8px" }} /> 새콤한 맛
                                                             </div>
-                                                     
+
                                                             <div>
                                                                 <br /><br /><strong>5. 원하는 요리의 소요 시간은? </strong><br /><br />
                                                                 <input type="radio" name="cookingtime" value="1" onChange={cookingtimeHandler} style={{ width: "15px", height: "15px", margin: "8px" }} /> 10분 이내
