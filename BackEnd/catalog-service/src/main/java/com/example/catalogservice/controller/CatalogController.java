@@ -350,4 +350,33 @@ public class CatalogController {
         }
 
     }
+
+    @ApiOperation(value = "유저패키지 페이징 조회", notes = "유저 패키지를 페이징 조회한다")
+    @GetMapping("/patalogs/user")
+    public ResponseEntity<Page<ResponsePatalog>> getSubPatalogs(
+            @RequestParam(value = "searchValue", defaultValue = "") String searchValue,
+            @PageableDefault(size = 9, sort="patalogId", direction = Sort.Direction.DESC) Pageable pageRequest) {
+
+        // 패키지 이름 검색
+        Page<PatalogEntity> patalogList = catalogService.getSubPatalogs(searchValue, pageRequest);
+
+        Page<ResponsePatalog> responsePatalogList = patalogList.map(
+                v -> new ModelMapper().map(v, ResponsePatalog.class)
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(responsePatalogList);
+    }
+
+    @ApiOperation(value = "추천패키지 조회", notes = "추천 패키지를 조회한다")
+    @GetMapping("/patalogs/recommend")
+    public ResponseEntity<Iterable<CatalogEntity>> getRecommendPatalogs(@RequestParam(value = "themes") String themes,
+                                                              @RequestParam(value = "flavors") String flavors,
+                                                              @RequestParam(value = "cookingtime") Integer cookingtime,
+                                                              @RequestParam(value = "age") Integer age) {
+
+
+        Iterable<CatalogEntity> catalogList = catalogService.getRecommendPatalogs(themes.split(","), flavors.split(","), cookingtime, age);
+
+        return ResponseEntity.status(HttpStatus.OK).body(catalogList);
+    }
 }

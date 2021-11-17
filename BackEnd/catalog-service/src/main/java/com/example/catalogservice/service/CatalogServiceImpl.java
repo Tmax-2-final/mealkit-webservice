@@ -239,4 +239,17 @@ public class CatalogServiceImpl implements CatalogService{
         myPackageRepository.save(myPackageEntity);
     }
 
+    @Override
+    public Page<PatalogEntity> getSubPatalogs(String searchValue, Pageable pageRequest) {
+        return patalogRepository.findByNameContaining(searchValue, pageRequest);
+    }
+
+    @Override
+    public Iterable<CatalogEntity> getRecommendPatalogs(String[] themes, String[] flavors, Integer cookingtime, Integer age) {
+
+        Iterable<CatalogEntity> catalogList = catalogRepository.findByCategoryInOrFlavorInOrCookingtimeOrAge(themes, flavors, cookingtime, age);
+
+        return catalogList;
+    }
+
 }

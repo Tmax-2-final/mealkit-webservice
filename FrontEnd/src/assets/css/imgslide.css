@@ -21,7 +21,7 @@
   overflow-x: hidden;
 }
 .imageSlide .slideBox .slideList {
-  width: 2800px;
+  width: 10000px;
   transition: all 300ms ease 0s;
   overflow: hidden;
 }

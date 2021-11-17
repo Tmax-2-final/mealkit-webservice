@@ -6,15 +6,7 @@ export default function SidePackage({setCategoryName, setSearch}) {
 
     const [categoryList, setCategoryList] = useState([]);
 
-
-
-
     const [inputData, setInputData] = useState([]);
-
-
-
-
-    let process = require('../../../../myProcess.json');
 
     useEffect(()=>{
         axios.get("/catalog-service/package")
@@ -26,10 +18,10 @@ export default function SidePackage({setCategoryName, setSearch}) {
     },[]);
 
     useEffect(() =>{
-        let lowerInputData = String(inputData).toLowerCase();
-        setSearch(lowerInputData);
-        console.log("테스트");
-        console.log(inputData);
+        // let lowerInputData = String(inputData).toLowerCase();
+        // setSearch(lowerInputData);
+        // console.log("테스트");
+        // console.log(inputData);
     }, [])
 
 
@@ -39,9 +31,9 @@ export default function SidePackage({setCategoryName, setSearch}) {
             data={item}
             setCategoryName = {setCategoryName}
             setSearch = {setSearch}
+            setInputData = {setInputData}
         />
     ))
-    console.log(categoryLi);
 
     const searchDataHandler = (e) => {
         e.preventDefault();
@@ -49,26 +41,22 @@ export default function SidePackage({setCategoryName, setSearch}) {
 
         let lowerInputData = String(inputData).toLowerCase();
         setSearch(lowerInputData)
-        console.log(inputData);
 
     }
 
     const submitHandler = (e) => {
         e.preventDefault();
-        console.log(inputData);
         setInputData(e.target.value);
-        setSearch(inputData);
-        console.log(inputData);
-
-        // let body = {
-        //     searchData: searchData
-        // };
     };
 
     const noActionHandler = (e) => {
         e.preventDefault();
     }
 
+    const searchHandler = (e) => {
+        e.preventDefault();
+        setSearch(inputData);
+    }
 
     return(
         <div className="col-lg-3 order-2 order-lg-1">
@@ -77,7 +65,9 @@ export default function SidePackage({setCategoryName, setSearch}) {
                     <h4 className="pro-sidebar-title">Search </h4>
                     <div className="pro-sidebar-search mb-50 mt-25">
 
-                        <form className="pro-sidebar-search-form" onSubmit={noActionHandler}>
+                        <form className="pro-sidebar-search-form" 
+                            //onSubmit={noActionHandler}
+                        >
                             <input
                                 value={inputData}
                                 type="text"
@@ -85,7 +75,11 @@ export default function SidePackage({setCategoryName, setSearch}) {
                                 onChange={submitHandler}
 
                             />
-                            <button ><i className="pe-7s-search"></i></button>
+                            <button class="btn btn-primary" 
+                                onClick={searchHandler}
+                            >
+                                조회
+                            <i className="las la-search ml-2" /></button>
 
                         </form>
                     </div>
@@ -94,41 +88,12 @@ export default function SidePackage({setCategoryName, setSearch}) {
                     <h4 className="pro-sidebar-title">Categories </h4>
                     <div className="sidebar-widget-list mt-30">
                         <ul>
-                            
                             {categoryLi}
-                            
                         </ul>
                     </div>
                 </div>
                 <div className="sidebar-widget mt-50">
-                    {/*<h4 className="pro-sidebar-title">Tag </h4>*/}
                     <div className="sidebar-widget-tag mt-25">
-                        {/*<ul>*/}
-                        {/*    <li><button>아프니깐 청춘이다.</button></li>*/}
-                        {/*    <li><button>훈이의 Cisco Networking</button></li>*/}
-                        {/*    <li><button>남곤이 짱</button></li>*/}
-                        {/*    <li><button>지웅이 짱</button></li>*/}
-                        {/*    <li><button>women</button></li>*/}
-                        {/*    <li><button>coat</button></li>*/}
-                        {/*    <li><button>top</button></li>*/}
-                        {/*    <li><button>sleeveless</button></li>*/}
-                        {/*    <li><button>electronics</button></li>*/}
-                        {/*    <li><button>furniture</button></li>*/}
-                        {/*    <li><button>plant</button></li>*/}
-                        {/*    <li><button>organic food</button></li>*/}
-                        {/*    <li><button>flower</button></li>*/}
-                        {/*    <li><button>book</button></li>*/}
-                        {/*    <li><button>cosmetics</button></li>*/}
-                        {/*    <li><button>accessories</button></li>*/}
-                        {/*    <li><button>handmade</button></li>*/}
-                        {/*    <li><button>kids</button></li>*/}
-                        {/*    <li><button>auto parts</button></li>*/}
-                        {/*    <li><button>cakes</button></li>*/}
-                        {/*    <li><button>pet food</button></li>*/}
-                        {/*    <li><button>medical</button></li>*/}
-                        {/*    <li><button>black friday</button></li>*/}
-                        {/*    <li><button>christmas</button></li>*/}
-                        {/*</ul>*/}
                     </div>
                 </div>
             </div>

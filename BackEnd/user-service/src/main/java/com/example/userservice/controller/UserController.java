@@ -214,14 +214,12 @@ public class UserController {
 
     @ApiOperation(value = "특정 회원 선호도 조회", notes = "특정 회원의 선호도 모두 조회")
     @GetMapping("/users/preference/{userId}")
-    public ResponseEntity<List<ResponsePrfr>> getPrfr(@PathVariable("userId") String userId){
-        Iterable<PrfrEntity> prfrList = userService.getPrfrsByUserId(userId);
-        List<ResponsePrfr> responsePrfrList = new ArrayList<>();
-        prfrList.forEach(v -> {
-            System.out.println(v.getPrfrId());
-            responsePrfrList.add(new ModelMapper().map(v, ResponsePrfr.class));
-        });
-        return ResponseEntity.status(HttpStatus.OK).body(responsePrfrList);
+    public ResponseEntity<ResponsePrfr> getPrfr(@PathVariable("userId") String userId){
+        PrfrEntity prfrEntity = userService.getPrfrsByUserId(userId);
+
+        ResponsePrfr responsePrfr = new ModelMapper().map(prfrEntity, ResponsePrfr.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responsePrfr);
     }
 
     @ApiOperation(value = "선호도 삭제", notes = "해당 고객이 자신이 작성한 선호도 삭제")

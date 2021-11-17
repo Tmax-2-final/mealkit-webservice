@@ -89,12 +89,6 @@ export default function AddPackage({props, packageData, pkgMgtData}) {
     return(
         <>
             <div className="pro-details-quality">
-                <div className="cart-plus-minus">
-                    {/*<button className="dec qtybutton" onClick={()=>handleCountDec()}>-</button>*/}
-                    {/*<input className="cart-plus-minus-box" type="text" value={count} onChange={handleCount}  maxlength="3"/>*/}
-                    
-                    {/*<button className="inc qtybutton" onClick={()=>handleCountAdd()}>+</button>*/}
-                </div>
                 <div className="pro-details-cart btn-hover" style={{display:isDisply}}>
                     <button onClick={()=> handlePutCartList()}>마이패키지에 담기</button>
                 </div>

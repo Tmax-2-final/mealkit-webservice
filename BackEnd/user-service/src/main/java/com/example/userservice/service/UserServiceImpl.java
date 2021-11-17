@@ -301,8 +301,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Iterable<PrfrEntity> getPrfrsByUserId(String userId) {
-        return prfrRepository.findAllByUserId(userId);
+    public PrfrEntity getPrfrsByUserId(String userId) {
+        return prfrRepository.findByUserId(userId);
     }
 
     @Transactional
