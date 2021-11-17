@@ -1,15 +1,15 @@
 import React from "react";
     const Pagination = ({ postsPerPage, totalPosts, paginate, currentPage }) => {
-        console.log(postsPerPage);
-        console.log(totalPosts)
         const pageNumber = [];
 
-        //Math.ceil : 올림 처리
-        for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
-            console.log(totalPosts/postsPerPage);
-            pageNumber.push(i);
+        const pageCnt = Math.ceil(totalPosts / postsPerPage);
+
+        if(isFinite(pageCnt) || isNaN(pageCnt)){
+            //Math.ceil : 올림 처리
+            for (let i = 1; i <= pageCnt; i++) {
+                pageNumber.push(i);
+            }
         }
-        console.log(pageNumber);
 
         return (
             <div className="pagination text-center mt-30">
