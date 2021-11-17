@@ -179,6 +179,7 @@ function ConfirmSubPkg(props) {
         setModalOpen(false);
     }
 
+    console.log(myPkgData);
 
     const myPkgList = myPkgData.map((item) => {
         if(item.catalogEntity != null) item = item.catalogEntity;
@@ -240,8 +241,8 @@ function ConfirmSubPkg(props) {
         let body = {
             name: userId +"님의 패키지",
             category: "유저 패키지",
-            rating: "3",
-            image: "01.jpg"
+            rating: "5",
+            image: myPkgData[0].catalogEntity != null ? myPkgData[0].catalogEntity.image1 : myPkgData[0].image1
         }
 
         console.log(body);
@@ -266,7 +267,7 @@ function ConfirmSubPkg(props) {
                         let jsonArray = new Array();
                         myPkgData.map( item=> {
                             let jsonObj = new Object();
-                            jsonObj.catalogId = item.catalogEntity.catalogId;
+                            jsonObj.catalogId =  item.catalogEntity != null ? item.catalogEntity.catalogId : item.catalogId
                             jsonObj.patalogId = res.data.patalogId;
                             jsonObj = JSON.stringify(jsonObj);
                             jsonArray.push(JSON.parse(jsonObj));
