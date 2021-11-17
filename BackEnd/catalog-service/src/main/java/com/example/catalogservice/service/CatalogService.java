@@ -41,7 +41,6 @@ public interface CatalogService {
     void updateStock(CatalogEntity catalogEntity);
     void updateMyPackage(MyPackageDto myPackageDto);
 
-
-
-
+    Page<PatalogEntity> getSubPatalogs(String searchValue, Pageable pageRequest);
+    Iterable<CatalogEntity> getRecommendPatalogs(String[] themes, String[] flavors, Integer cookingtime, Integer age);
 }
