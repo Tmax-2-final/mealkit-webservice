@@ -38,7 +38,7 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
 
         axios.get("/catalog-service/patalogs")
             .then(res => {
-                setnewData(res.data);
+                setnewData(res.data.content);
                 setSearch(null);
                 setLoading(false);
                 console.log(res.data);
