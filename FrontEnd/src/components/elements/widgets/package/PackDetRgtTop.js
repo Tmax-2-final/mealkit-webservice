@@ -3,7 +3,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import Rating from '../../ui/Rating';
 
 export default function PackDetRgtTop({name,price,rating,txt}) {
-
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

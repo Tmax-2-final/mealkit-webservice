@@ -151,10 +151,13 @@ export default function PackageDetailBottom({packageData}) {
                 </div>
                 <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                     <div className="row">
-                        <PkgReviewList
+                        {
+                            <PkgReviewList
                             packageData={packageData}
                             setReviewCnt={setReviewCnt}
-                        />
+                            />
+                        }
+                        
 
                     </div>
                 </div>
