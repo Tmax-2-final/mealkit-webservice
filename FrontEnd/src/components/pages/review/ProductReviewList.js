@@ -50,7 +50,7 @@ export default function ProductReviewList({ productData, setReviewCnt }) {
 
     useEffect((e) => {
         getProductReviews(1)
-    }, []);
+    }, [productData]);
 
     return (
         <Fragment>
