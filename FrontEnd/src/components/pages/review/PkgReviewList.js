@@ -52,7 +52,7 @@ export default function PkgReviewList({ packageData, setReviewCnt }) {
     
     useEffect((e) => {
         getPkgReviews(1)
-    }, []);
+    }, [packageData]);
 
     return (
         <Fragment>
