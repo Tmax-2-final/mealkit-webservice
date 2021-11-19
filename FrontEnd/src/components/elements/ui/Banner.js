@@ -11,7 +11,7 @@ export default function Banner() {
       <div className="carousel-inner">
         <div className="carousel-item active">
           <svg className="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"></svg>
-          <img alt="" width="auto" src="./assets/img/logo/yellow2.png" />
+          <img alt="" width="auto" src="./assets/img/banner/main-banner2.png" />
           <div className="carousel-caption text-start">
             {/* <h1>WECOME TO O M T Book Store!</h1> */}
           </div>
@@ -25,7 +25,7 @@ export default function Banner() {
         </div>
         <div className="carousel-item">
           <svg className="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#768" /></svg>
-          <img alt="" src="./assets/img/logo/sleepy.png" />
+          <img alt="" src="./assets/img/banner/main-banner1.png" />
           <div className="container">
             <div className="carousel-caption">
 
@@ -34,7 +34,7 @@ export default function Banner() {
         </div>
         <div className="carousel-item">
           <svg className="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777" /></svg>
-          <img alt="" width="200" src="./assets/img/logo/sale.png" />
+          <img alt="" width="200" src="./assets/img/banner/main-banner3.png" />
           <div className="container">
             <div className="carousel-caption text-end">
             </div>

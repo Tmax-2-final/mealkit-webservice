@@ -30,7 +30,7 @@ export default function Shop({search, categoryName, setSearch, props}) {
             setLoading(true);
         }
 
-        axios.get(`/catalog-service/catalogs?page=`,{
+        axios.get(`/catalog-service/catalogs?page=&size=100`,{
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -43,7 +43,7 @@ export default function Shop({search, categoryName, setSearch, props}) {
             })
 
 
-        axios.get(`/catalog-service/catalogs?page=`, {
+        axios.get(`/catalog-service/catalogs?page=&size=100`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -102,7 +102,7 @@ export default function Shop({search, categoryName, setSearch, props}) {
         </div>
 
 
-    )).slice(indexOfFirstPost, indexOfLastPost);
+    ));
 
     const categoryList = categoryData.map((item, index) => (
 
@@ -128,7 +128,7 @@ export default function Shop({search, categoryName, setSearch, props}) {
             </div>
         </div>
 
-    )).slice(indexOfFirstPost, indexOfLastPost);
+    ));
 
     const currentNewData = (search == null ? categoryData :searchData);
     const currentList = (search == null? categoryList : searchList)
@@ -176,8 +176,8 @@ export default function Shop({search, categoryName, setSearch, props}) {
 
                 </div>
             </div>
-            <Pagination postsPerPage={postsPerPage} totalPosts={currentNewData.length}
-                        paginate={paginate} />
+            {/* <Pagination postsPerPage={postsPerPage} totalPosts={currentNewData.length}
+                        paginate={paginate} /> */}
             {/*<div className="pro-pagination-style text-center mt-30">*/}
             {/*    <ul className="mb-0 mt-0">*/}
             {/*        <li className="page-item active"><button className="page-link">1</button></li>*/}

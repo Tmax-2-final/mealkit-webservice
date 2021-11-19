@@ -27,7 +27,6 @@ export default function ProductTable({ catalogDatas, setCatalogDatas, loading })
             // setCatalogDatas(data.data);
           })
       })
-
   }
 
     const getStatusText = (status) => {
@@ -38,6 +37,23 @@ export default function ProductTable({ catalogDatas, setCatalogDatas, loading })
                 return "구독중 (패키지확정 완료)"
             case '3':
                 return "구독취소"
+            default:
+                break;
+        }
+    }
+
+    const getCategoryText = (category) => {
+        switch (category) {
+            case '1':
+                return "한식"
+            case '2':
+                return "양식"
+            case '3':
+                return "중식"
+            case '4':
+                return "일식"
+            case '5':
+                return "동남아"
             default:
                 break;
         }
@@ -78,7 +94,7 @@ export default function ProductTable({ catalogDatas, setCatalogDatas, loading })
                                                             <CTableDataCell><img className="default-img" src={`https://tmax-2.s3.ap-northeast-2.amazonaws.com/${item.image1}`} alt="" style={{width:"100px", height:"100px"}} /></CTableDataCell>
                                                             <CTableDataCell>{item.name}</CTableDataCell>
                                                             <CTableDataCell>{item.stock}</CTableDataCell>
-                                                            <CTableDataCell>{item.category}</CTableDataCell>
+                                                            <CTableDataCell>{getCategoryText(item.category)}</CTableDataCell>
                                                             <CTableDataCell>{item.rating && item.rating > 0 ? (<Rating ratingValue={item.rating} />):("")}</CTableDataCell>
                                                           <CTableDataCell><Link onClick={(e)=> handleDelete(item.catalogId, e)}><i className="far fa-trash-alt"></i></Link></CTableDataCell>
                                                         </CTableRow>

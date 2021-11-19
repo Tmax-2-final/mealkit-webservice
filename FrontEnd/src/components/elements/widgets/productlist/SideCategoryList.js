@@ -10,7 +10,7 @@ export default function SideCategoryList({data, setCategoryName, setSearch, setI
         setChk(!chk)
         setChk(chk)
         setCategoryName(name)
-        setInputData('');
+        // setInputData('');
     }
 
     return(

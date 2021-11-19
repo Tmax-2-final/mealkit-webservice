@@ -168,7 +168,7 @@ const Package = (props) => {
             .then((res) => {
               console.log(res.data);
               if (res.status === 200) {
-                // setSubscriptionDatas(res.data.content);
+                setPatalogDatas(res.data);
                 setTotalPages(res.data.totalPages);
                 setCurrentPages(res.data.number + 1);
                 setLoading(false);

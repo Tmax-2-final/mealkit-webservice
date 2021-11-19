@@ -28,13 +28,19 @@ export default function Event() {
                                     <div className="row ml-3">
                                         
                                         <div className="event-img-box pt-3 pb-3">
-                                            <img src="/assets/img/event/event.jpg" width="900px" height="250px" />
+                                            <img src="/assets/img/banner/main-banner2.png" width="900px" height="250px" />
                                         </div>
                                         <div className="event-img-box pb-3">
-                                            <img src="/assets/img/event/event1.jpg" width="900px" height="250px" />
+                                            <img src="/assets/img/banner/main-banner1.png" width="900px" height="250px" />
                                         </div>
                                         <div className="event-img-box pb-3">
-                                            <img src="/assets/img/event/event2.jpg" width="900px" height="250px" />
+                                            <img src="/assets/img/banner/main-banner3.png" width="900px" height="250px" />
+                                        </div>
+                                        <div className="event-img-box pb-3">
+                                            <img src="/assets/img/banner/main-banner4.png" width="900px" height="250px" />
+                                        </div>
+                                        <div className="event-img-box pb-3">
+                                            <img src="/assets/img/banner/main-banner5.png" width="900px" height="250px" />
                                         </div>
                                     </div>
                                 </dic>
@@ -45,7 +51,13 @@ export default function Event() {
                                     <div className="row ml-3">
                                         
                                         <div className="event-img-box pb-3">
-                                            <img src="/assets/img/banner/banner27.jpg" width="800px" height="250px" />
+                                            <img src="/assets/img/event/event.jpg" width="900px" height="250px" />
+                                        </div>
+                                        <div className="event-img-box pb-3">
+                                            <img src="/assets/img/event/event1.jpg" width="900px" height="250px" />
+                                        </div>
+                                        <div className="event-img-box pb-3">
+                                            <img src="/assets/img/event/event2.jpg" width="900px" height="250px" />
                                         </div>
                                         
                                     </div>
