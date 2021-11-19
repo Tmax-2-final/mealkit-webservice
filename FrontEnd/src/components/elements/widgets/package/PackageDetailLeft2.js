@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from "axios";
 
-export default function PackageDetailLeft2({packageData}) {
+export default function PackageDetailLeft2({packageData, setSelCatalogData}) {
     const [imageCurrentNo, setImageCurrentNo] = useState(0);
     const [ pkgMgtDatas, setPkgMgtDatas] = useState([]);
     const [ loading, setLoading ] = useState(false);
@@ -28,6 +28,7 @@ export default function PackageDetailLeft2({packageData}) {
         })
             .then(res => {
                 setPkgMgtDatas(res.data);
+                setSelCatalogData(res.data[0].catalogEntity);
                 console.log(res.data);
                 setLoading(false);
             })
@@ -50,6 +51,7 @@ export default function PackageDetailLeft2({packageData}) {
             if (index < 0) index = pkgMgtDatas.length - 1;
 
             setImageCurrentNo(index);
+            setSelCatalogData(pkgMgtDatas[index].catalogEntity);
         }
 
         return(

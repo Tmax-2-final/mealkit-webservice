@@ -4,7 +4,7 @@ import AddBuyAndCart from '../product/productTop/AddBuyAndCart';
 import AddPackage from "./AddPackage";
 import axios from "axios";
 
-export default function PackDetRgtMiddle({props, packageData}) {
+export default function PackDetRgtMiddle({props, packageData, selCatalogData}) {
 
     const [ pkgMgtData, setPkgMgtData ] = useState([]);
     const [ loading, setLoading ] = useState(false);
@@ -48,6 +48,7 @@ export default function PackDetRgtMiddle({props, packageData}) {
                 props = {props}
                 packageData = {packageData}
                 pkgMgtData = {pkgMgtData}
+                selCatalogData = {selCatalogData}
             /> 
         </Fragment>
     

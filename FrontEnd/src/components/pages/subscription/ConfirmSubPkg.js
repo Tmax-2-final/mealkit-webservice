@@ -134,7 +134,7 @@ function ConfirmSubPkg(props) {
     });
     const [endDate, setEndDate] = useState(() => {
         let date = new Date();
-        let weekago = new Date(date.setDate(date.getDate() + 8));
+        let weekago = new Date(date.setDate(date.getDate() + 16));
         weekago = weekago.setHours(0,0,0,0);
         return weekago;
     });
@@ -179,7 +179,22 @@ function ConfirmSubPkg(props) {
         setModalOpen(false);
     }
 
-    console.log(myPkgData);
+    const getThemeText = ((theme) => {
+        switch (theme) {
+            case '1':
+                return "한식";
+            case '2': 
+                return "일식"
+            case '3':
+                return "중식"
+            case '4':
+                return "일식"
+            case '5':
+                return "동남아 음식"
+            default:
+                break;
+        }
+    }) 
 
     const myPkgList = myPkgData.map((item) => {
         if(item.catalogEntity != null) item = item.catalogEntity;
@@ -192,7 +207,7 @@ function ConfirmSubPkg(props) {
                     />
                 </td>
                 <td className="text-center align-middle" style={{fontSize:"1.2rem"}}>{item.name}</td>
-                <td className="text-center align-middle" style={{fontSize:"1.2rem"}}>{item.category}</td>
+                <td className="text-center align-middle" style={{fontSize:"1.2rem"}}>{getThemeText(item.category)}</td>
                 <td className="text-center align-middle" style={{fontSize:"1.2rem"}}>1개</td>
             </tr>
         );

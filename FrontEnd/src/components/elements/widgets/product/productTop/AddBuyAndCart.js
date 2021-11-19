@@ -100,6 +100,51 @@ export default function AddBuyAndCart({props, productData}) {
         setCount(e.target.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1'));
     }
 
+    const getFlavorText = ((flavor) => {
+        switch (flavor) {
+            case '1':
+                return "짠 맛";
+            case '2': 
+                return "매운 맛"
+            case '3':
+                return "느끼한 맛"
+            case '4':
+                return "새콤한 맛"
+            default:
+                break;
+        }
+    }) 
+
+    const getCookingtimeText = ((cookingtime) => {
+        switch (cookingtime) {
+            case 1:
+                return "10분 이내";
+            case 2: 
+                return "10 ~ 20분"
+            case 3:
+                return "20분 이상"
+            default:
+                break;
+        }
+    }) 
+
+    const getThemeText = ((theme) => {
+        switch (theme) {
+            case '1':
+                return "한식";
+            case '2': 
+                return "일식"
+            case '3':
+                return "중식"
+            case '4':
+                return "일식"
+            case '5':
+                return "동남아 음식"
+            default:
+                break;
+        }
+    }) 
+
 
     return(
         <>
@@ -124,19 +169,19 @@ export default function AddBuyAndCart({props, productData}) {
             <div class="pro-details-meta">
             <span>카테고리 :</span>
             <ul>
-                <li><a href="/shop-grid-standard">양식</a></li>
+                <li><a href="/shop-grid-standard">{getThemeText(productData.category)}</a></li>
             </ul>
             </div>
             <div class="pro-details-meta">
                 <span>조리시간 :</span>
                 <ul>
-                    <li><a href="/shop-grid-standard">35분</a></li>
+                    <li><a href="/shop-grid-standard">{getCookingtimeText(productData.cookingtime)}</a></li>
                 </ul>
             </div>
             <div class="pro-details-meta">
-                <span>용량 : </span>
+                <span>맛 : </span>
                 <ul>
-                    <li><a href="/shop-grid-standard">3인분</a></li>
+                    <li><a href="/shop-grid-standard">{getFlavorText(productData.flavor)}</a></li>
                 </ul>
             </div>
         </>

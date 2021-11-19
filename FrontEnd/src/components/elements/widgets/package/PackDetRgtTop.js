@@ -1,14 +1,12 @@
-import { Fragment,useState } from "react";
+import { Fragment,useEffect,useState } from "react";
 import Rating from '../../ui/Rating';
 
 export default function PackDetRgtTop({name,price,rating,txt}) {
 
+
     return (
         <Fragment>
-            <h2>{name}</h2>
-            <div className="product-details-price">
-                <span>{price} 원</span>
-            </div>
+            <h2 className="mb-4">{name}</h2>
             <div className="pro-details-rating-wrap">
                 {rating && rating > 0 ? (
                     <Rating ratingValue={rating} />

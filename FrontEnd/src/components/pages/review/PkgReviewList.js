@@ -8,7 +8,6 @@ import Pagination from "../../elements/ui/Pagination";
 
 
 export default function PkgReviewList({ packageData, setReviewCnt }) {
-
     const [reviewDatas, setReviewDatas] = useState([]);
 
     // 페이징
@@ -38,6 +37,7 @@ export default function PkgReviewList({ packageData, setReviewCnt }) {
         })
             .then(res => {
 
+                console.log('=== 리뷰 데이터 ===');
                 console.log(res.data.content);
                 console.log('=======================');
 
@@ -52,7 +52,7 @@ export default function PkgReviewList({ packageData, setReviewCnt }) {
     
     useEffect((e) => {
         getPkgReviews(1)
-    }, []);
+    }, [packageData]);
 
     return (
         <Fragment>
