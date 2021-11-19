@@ -86,6 +86,19 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
             })
     },[]);
 
+    const getUserPkgText = (pkgName) => {
+        let result = pkgName.split("님")[0];
+        if (result.includes("@")) {
+            result = result.split("@")[0];
+        }
+        if (result.length > 3) {
+            let enc = result.substring(0, result.length - 3)
+            enc = enc + "***";
+            result = enc;
+        }
+        return result;
+    }
+
 
     const categoryData = newData;
 
@@ -105,7 +118,7 @@ export default function PackageShop({search, categoryName, setSearch, props}) {
                     </Link>
                 </div>
                 <div className="product-content text-center">
-                    <h3><Link to={`/packagedetail/${item.patalogId}`}>{item.name}</Link></h3>
+                    <h3><Link to={`/packagedetail/${item.patalogId}`}>{getUserPkgText(item.name)} 님</Link></h3>
                     <div className="product-rating">
                         {item.rating && item.rating > 0 ? (
                             <Rating ratingValue={item.rating} />
