@@ -20,7 +20,18 @@ export default function Bloglist(){
             })
     },[]);
 
-
+    const getUserPkgText = (pkgName) => {
+        let result = pkgName.split("님")[0];
+        if(result.includes("@")) {
+            result = result.split("@")[0];
+        }
+        if(result.length > 3) {
+            let enc = result.substring(0, result.length - 3)
+            enc = enc + "***";
+            result = enc;
+        }
+        return result;
+    }
 
     const blogList = newBlogData.map(item => (
         <div key={item.id} className="col-xl-3 col-md-6 col-lg-3 col-sm-6">
@@ -32,9 +43,9 @@ export default function Bloglist(){
                 </div>
                 <Link to={`/packagedetail/${item.patalogId}`}>
                 </Link>
-                <div className="recommend-package-text">
+                <div className="recommend-package-text pt-2">
                     <Link to={`/packagedetail/${item.patalogId}`}>
-                        <p style={{ textAlign: "center", fontSize: "15px" }}><span style={{ fontWeight: "bold" }}>{item.name.split("@")[0]}</span> 님의 패키지</p>
+                        <p style={{ textAlign: "center", fontSize: "18px" }}><span style={{ fontWeight: "bold" }}>{getUserPkgText(item.name)} 님</span></p>
                     </Link>
                 </div>
             </div>

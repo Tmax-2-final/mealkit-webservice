@@ -14,32 +14,20 @@ import PackageDetailRight from "./PackageDetailRight";
 
 
 export default function PackageTop1({props, packageData}) {
-    console.log(packageData);
-    const [value, setValue] = useState('1');
-    const [ loading, setLoading ] = useState(false);
-    const [reviewCnt, setReviewCnt] = useState('1324')
-    const [reviewDatas, setReviewDatas] = useState([]);
-
-    let token = localStorage.getItem('token');
-    let userId = localStorage.getItem('userid');
-
-
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+    const [selCatalogData, setSelCatalogData] = useState();
 
     return (
-        
         <div className="shop-area pt-100 pb-100">
             <div className="container">
                 <div className="row">
                     <PackageDetailLeft2
                         packageData = {packageData}
+                        setSelCatalogData = {setSelCatalogData}
                     />
                     <PackageDetailRight
                         props = {props}
                         packageData = {packageData}
+                        selCatalogData = {selCatalogData}
                     />
                     <PackageDetailBottom
                         props = {props}

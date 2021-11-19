@@ -150,7 +150,7 @@ public class ReviewController {
 
     @ApiOperation(value = "리뷰 전체 페이징 조회", notes = "모든 회원들의 리뷰 정보를 페이지별로 조회한다.")
     @GetMapping(value = "/reviews/page")
-    public ResponseEntity<Page<ResponseReview>> getAllPageReviews(@PageableDefault(size = 8, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest){
+    public ResponseEntity<Page<ResponseReview>> getAllPageReviews(@PageableDefault(size = 4, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest){
         log.info("구독 전체 조회 API START");
 
         Page<ReviewEntity> reviewList = reviewService.getAllPageReviews(pageRequest);
@@ -166,7 +166,7 @@ public class ReviewController {
     @ApiOperation(value = "회원별 리뷰 페이징 조회", notes = "회원별 리뷰 정보를 페이지별로 조회한다.")
     @GetMapping(value = "/reviews/page/{userId}")
     public ResponseEntity<Page<ResponseReview>> getPageReviewsByUserId(@PathVariable("userId") String userId,
-                                                                       @PageableDefault(size = 8, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest){
+                                                                       @PageableDefault(size = 4, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest){
         log.info("리뷰 조회 API START");
 
         Page<ReviewEntity> reviewList = reviewService.getPageReviewsByUserId(userId, pageRequest);
@@ -182,7 +182,7 @@ public class ReviewController {
     @ApiOperation(value = "상품별 리뷰 페이징 조회", notes = "상품별 리뷰 정보를 페이지별로 조회한다.")
     @GetMapping(value = "/reviews/page/product/{productId}")
     public ResponseEntity<Page<ResponseReview>> getPageReviewsByProductId(@PathVariable("productId") Long productId,
-                                                                          @PageableDefault(size = 8, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest){
+                                                                          @PageableDefault(size = 4, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest){
         log.info("구독 조회 API START");
 
         Page<ReviewEntity> reviewList = reviewService.getPageReviewsByProductId(productId, pageRequest);
@@ -198,7 +198,7 @@ public class ReviewController {
     @ApiOperation(value = "패키지별 리뷰 페이징 조회", notes = "패키지별 리뷰 정보를 페이지별로 조회한다.")
     @GetMapping(value = "/reviews/page/pkg/{pkgId}")
     public ResponseEntity<Page<ResponseReview>> getPageReviewsByPkgId(@PathVariable("pkgId") Long pkgId,
-                                                                      @PageableDefault(size = 8, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest){
+                                                                      @PageableDefault(size = 4, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest){
         log.info("리뷰 조회 API START");
 
         Page<ReviewEntity> reviewList = reviewService.getPageReviewsByPkgId(pkgId, pageRequest);
@@ -215,7 +215,7 @@ public class ReviewController {
     @GetMapping("/reviews/{userId}/{orderType}")
     public ResponseEntity<Page<ResponseReview>> getReviewsByUserIdAndOrderType(@PathVariable("userId") String userId,
                                                                                @PathVariable("orderType") Integer orderType,
-                                                                               @PageableDefault(size = 8, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest
+                                                                               @PageableDefault(size = 4, sort = "reviewId", direction = Sort.Direction.DESC) Pageable pageRequest
                                                                                ){
         log.info("리뷰 조회 API START");
 

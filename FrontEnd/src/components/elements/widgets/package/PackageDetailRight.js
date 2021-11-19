@@ -6,12 +6,12 @@ import ProDetRgtBottom from '../product/productTop/ProDetRgtBottom';
 import PackDetRgtTop from "./PackDetRgtTop";
 import PackDetRgtMiddle from "./PackDetRgtMiddle";
 
-export default function PackageDetailRight({props, packageData}) {
+export default function PackageDetailRight({props, packageData, selCatalogData}) {
     useEffect(()=>{
         
     },[packageData])
 
-    console.log(packageData);
+    console.log(selCatalogData);
     
     return (
         <div className="col-lg-6 col-md-6">
@@ -21,11 +21,12 @@ export default function PackageDetailRight({props, packageData}) {
                     name = {packageData.name}
                     price = {packageData.unitPrice}
                     rating = {packageData.rating}
-                    txt = {packageData.details}
+                    txt = {selCatalogData && selCatalogData.details}
                 />
                 <PackDetRgtMiddle
                     props = {props}
                     packageData = {packageData}
+                    selCatalogData = {selCatalogData}
                 />
                 {/* <ProDetRgtBottom /> */}
 

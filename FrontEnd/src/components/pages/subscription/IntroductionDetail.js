@@ -117,14 +117,10 @@ function IntroductionDetail(props) {
         <div className="container mt-40">
             <div className="row">
                 <div className="col-12 text-center">
-                    <img src="/assets/img/subscription/introduction/01.jpg" width="75%" height="auto" alt="구독혜택설명" />
+                    <img src="/assets/img/subscription/introduction/main-subscribe.jpeg" width="75%" height="auto" alt="구독혜택설명" />
                 </div>
             </div>  
-            <div className="row">
-                <div className="col-12 text-center">
-                    <img src="/assets/img/subscription/introduction/01.jpg" width="75%" height="auto" alt="구독혜택설명" />
-                </div>
-            </div>  
+  
             <div className="row mb-40" style={{position:'sticky', bottom:'0px', height:'100px'}}>
                 <div className="col-12 h-100">
                     <div className="product-details-content h-100">

@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 
-export default function AddPackage({props, packageData, pkgMgtData}) {
+export default function AddPackage({props, packageData, pkgMgtData, selCatalogData}) {
 
 
     console.log(pkgMgtData);
@@ -34,23 +34,6 @@ export default function AddPackage({props, packageData, pkgMgtData}) {
         }
     },[packageData]
     );
-
-
-    const addQty = (e) => {
-
-        packageData.qty = count;
-        
-    };
-
-    const handleCountAdd = (e) => {
-        setCount(count+1);
-    }
-
-    const handleCountDec = () => {
-        count > 1 ? setCount(count-1) : alert("최소 수량은 1개 입니다.")
-    }
-
-    console.log(packageData);
 
     const handlePutCartList = () => {
 
@@ -85,6 +68,50 @@ export default function AddPackage({props, packageData, pkgMgtData}) {
         setCount(e.target.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1'));
     }
 
+    const getFlavorText = ((flavor) => {
+        switch (flavor) {
+            case '1':
+                return "짠 맛";
+            case '2': 
+                return "매운 맛"
+            case '3':
+                return "느끼한 맛"
+            case '4':
+                return "새콤한 맛"
+            default:
+                break;
+        }
+    }) 
+
+    const getCookingtimeText = ((cookingtime) => {
+        switch (cookingtime) {
+            case 1:
+                return "10분 이내";
+            case 2: 
+                return "10 ~ 20분"
+            case 3:
+                return "20분 이상"
+            default:
+                break;
+        }
+    }) 
+
+    const getThemeText = ((theme) => {
+        switch (theme) {
+            case '1':
+                return "한식";
+            case '2': 
+                return "일식"
+            case '3':
+                return "중식"
+            case '4':
+                return "일식"
+            case '5':
+                return "동남아 음식"
+            default:
+                break;
+        }
+    }) 
 
     return(
         <>
@@ -92,39 +119,31 @@ export default function AddPackage({props, packageData, pkgMgtData}) {
                 <div className="pro-details-cart btn-hover" style={{display:isDisply}}>
                     <button onClick={()=> handlePutCartList()}>마이패키지에 담기</button>
                 </div>
-                
-                {/*<div className="pro-details-cart btn-hover ml-30"> */}
-                {/*    <Link to={{*/}
-                {/*                pathname: "/payment",*/}
-                {/*                state: {*/}
-                {/*                    data:[productData],*/}
-                {/*                    totalPriceData:count*productData.unitPrice*/}
-                {/*                },*/}
-                {/*    }} */}
-                {/*    onClick={addQty}*/}
-                {/*    style={{backgroundColor:buyBtnColor}}>*/}
-                {/*        {productData.stock !== 0 ? "구매하기" : "품절"}*/}
-                {/*    </Link>*/}
-                {/*</div>                */}
             </div>
-            {/*<div class="pro-details-meta">*/}
-            {/*    <span>재고 :</span>*/}
-            {/*    <ul>*/}
-            {/*        <li><a href="/shop-grid-standard" style={{color:stockTextColor}}>{packageData.stock !== 0 ? packageData.stock : "품절"}</a></li>*/}
-            {/*    </ul>*/}
-            {/*</div>*/}
-            {/*<div class="pro-details-meta">*/}
-            {/*<span>카테고리 :</span>*/}
-            {/*<ul>*/}
-            {/*    <li><a href="/shop-grid-standard">{packageData.category}</a></li>*/}
-            {/*</ul>*/}
-            {/*</div>*/}
-            {/*<div class="pro-details-meta">*/}
-            {/*    <span>ISBN :</span>*/}
-            {/*    <ul>*/}
-            {/*        <li><a href="/shop-grid-standard">{packageData.patalogId}</a></li>*/}
-            {/*    </ul>*/}
-            {/*</div>*/}
+            <div class="pro-details-meta">
+                <span>재고 :</span>
+                <ul>
+                    <li><a href="/shop-grid-standard" style={{color:stockTextColor}}>{selCatalogData && selCatalogData.stock !== 0 ? selCatalogData.stock : "품절"}</a></li>
+                </ul>
+            </div>
+            <div class="pro-details-meta">
+            <span>카테고리 :</span>
+            <ul>
+                <li><a href="/shop-grid-standard">{getThemeText(selCatalogData && selCatalogData.category)}</a></li>
+            </ul>
+            </div>
+            <div class="pro-details-meta">
+                <span>조리시간 :</span>
+                <ul>
+                    <li><a href="/shop-grid-standard">{getCookingtimeText(selCatalogData && selCatalogData.cookingtime)}</a></li>
+                </ul>
+            </div>
+            <div class="pro-details-meta">
+                <span>맛 : </span>
+                <ul>
+                    <li><a href="/shop-grid-standard">{getFlavorText(selCatalogData && selCatalogData.flavor)}</a></li>
+                </ul>
+            </div>
         </>
     );
 }
