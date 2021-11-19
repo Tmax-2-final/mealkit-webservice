@@ -30,9 +30,9 @@ export default function PackageDetail(props) {
         <Fragment>
             <Header/>
             <Bread
-                patalogId = {packageData.patalogId}
-                patalogName = {packageData.name}
-                patalogUrl = {`/pakagedetail/${packageData.patalogId}`}
+                productId = {packageData.patalogId}
+                productName = "패키지 상세 보기"
+                productUrl = {`/pakagedetail/${packageData.patalogId}`}
             />
             <PackageTop1
                 props = {props}
