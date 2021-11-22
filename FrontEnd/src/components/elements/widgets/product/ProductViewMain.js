@@ -13,7 +13,7 @@ export default function ProductViewMain({categoryName, sliceNumber, columNumber,
     let token = localStorage.getItem('token');
     
     useEffect(() => {
-        const result = axios.get(`/catalog-service/catalogs?page=`,{
+        const result = axios.get(`/catalog-service/catalogs?sort=rating,desc&size=8&page=`,{
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -24,16 +24,6 @@ export default function ProductViewMain({categoryName, sliceNumber, columNumber,
                     setNewData(res.data.content);
                 }
             })
-
-        axios.get(`/catalog-service/catalogs?page=`, {
-            header: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        .then(res => {
-            setNewData(res.data.content);
-            console.log(res.data);
-        })
     },[]);
 
 
