@@ -111,16 +111,6 @@ spring:
           filters:
             # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
             - RewritePath=/catalog-service/(?<segment>.*), /$\{segment}
-
-        # order service
-        - id: order-service
-          uri: ORDER-SERVICE
-          predicates:
-            - Path=/order-service/**
-          filters:
-            # 원 주소 -> 바뀔 주소. 패스를 다시 지정한다.
-            - RewritePath=/order-service/(?<segment>.*), /$\{segment}
-
         # alert service
         - id: alert-service
           uri: http://172.31.44.34:50002
