@@ -339,6 +339,14 @@ function ConfirmSubPkg(props) {
             console.log(`====== ${apiName} 응답 데이터 ======`);
             console.log(res.data);
             console.log("===================================");
+
+                let body = {
+                    type: 203,
+                    userId: userId,
+                    oauth: localStorage.getItem('oauth'),
+                    subGradeName: subGradeText
+                }
+                axios.post(`/alert-service/alerts`, body)
         })
         .catch(error => {
             alert(`${apiName}에 실패했습니다. 관리자에게 문의바랍니다. \r\n(${error})`);

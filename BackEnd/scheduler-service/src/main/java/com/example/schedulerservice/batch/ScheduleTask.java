@@ -33,8 +33,8 @@ public class ScheduleTask {
         this.alertServiceClient = alertServiceClient;
     }
 
-    // 매일 14시 0분 0초마다 실행
-    @Scheduled(cron="30 * * * * ?")
+    // 매일 02시 0분 0초마다 실행
+    @Scheduled(cron="0 0 14 * * ?")
     public void paymentSubscriptionCronJobSch() {
         log.info("Before call subscription-service paymentSubscription");
         List<ResponseSubscription> responseSubscriptionList = subscriptionServiceClient.paymentSubscription();

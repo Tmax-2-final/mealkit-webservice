@@ -116,11 +116,11 @@ public class MailService {
                     "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000;line-height:20px;\">" +
                     "<span style=\"margin-right:11px;\">");
             msg.append(requestAlert.getSubGradeName());
-            msg.append("</span>" +
-                    "</td></tr><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7;border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
-                    "구독주문번호</td>" +
-                    "<td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000;\">");
-            msg.append(requestAlert.getSubOrderId());
+//            msg.append("</span>" +
+//                    "</td></tr><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7;border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
+//                    "구독주문번호</td>" +
+//                    "<td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000;\">");
+//            msg.append(requestAlert.getSubOrderId());
             msg.append("</td></tr><tr><td style=\"width:108px;padding:14px 12px;background:#f7f7f7;border-bottom:1px solid #ededed; color:#000; vertical-align:top;\">" +
                     "배송상태" +
                     "</td><td style=\"padding:11px 0 11px 12px; border-bottom:1px solid #f5f5f5; color:#000; \">");
