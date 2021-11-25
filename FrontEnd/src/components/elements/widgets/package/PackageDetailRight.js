@@ -21,7 +21,7 @@ export default function PackageDetailRight({props, packageData, selCatalogData})
                     name = {packageData.name}
                     price = {packageData.unitPrice}
                     rating = {packageData.rating}
-                    txt = {selCatalogData && selCatalogData.details}
+                    packageData={packageData.pkgMgt}
                 />
                 <PackDetRgtMiddle
                     props = {props}

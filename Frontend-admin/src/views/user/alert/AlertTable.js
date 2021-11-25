@@ -16,7 +16,7 @@ export default function UserTable({ alertDatas, setAlertDatas, loading }) {
             case 301:
                 return '배송시작';
             case 302:
-                return '배송취소';
+                return '배송완료';
             default:
                 return '#';
         }

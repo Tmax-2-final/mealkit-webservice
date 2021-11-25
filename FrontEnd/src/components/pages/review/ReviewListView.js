@@ -70,7 +70,7 @@ export default function ReviewListView({ data, setReviewDatas }) {
             {/* <td className="product-createdat">
                 <span>{new Date(Date.parse(data.createdAt)).toLocaleString()}</span>
             </td> */}
-            <td className="product-remove"><button onClick={handleDelete}><i className="fa fa-times"></i></button></td>
+            {/* <td className="product-remove"><button onClick={handleDelete}><i className="fa fa-times"></i></button></td> */}
         </tr>
     );
 }
