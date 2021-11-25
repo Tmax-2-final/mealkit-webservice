@@ -2,11 +2,12 @@ import axios from "axios";
 import React, { Fragment, useEffect, useState } from "react";
 import Rating from '../../ui/Rating';
 
-export default function PackDetRgtTop({name,price,rating,txt}) {
+export default function PackDetRgtTop({ name, price, rating, packageData}) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         let timer = setTimeout(() => { setLoading(false) }, 1000);
+        // console.log(packageData)
     });
 
     const getUserPkgText = (pkgName) => {
@@ -36,7 +37,14 @@ export default function PackDetRgtTop({name,price,rating,txt}) {
                                 <h4>평점 : {rating} / 5</h4>
                             </div>
                             <div className="pro-details-list">
-                                <p>{txt}</p>
+                                <h4>상품 구성</h4>
+                                
+                                {
+                                    packageData.map((item) => (
+                                        <p key={item.pkgMgtId} style={{ fontWeight: "bold", fontSize: "16px" }}>{item.catalogEntity.name}</p>
+                                    ))
+                                }
+                                
                             </div>
                     </div>
                 )

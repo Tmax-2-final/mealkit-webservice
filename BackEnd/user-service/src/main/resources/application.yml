@@ -64,6 +64,10 @@ management:
       exposure:
         include: info, refresh, health, beans, busrefresh
 
+kafka:
+  bootstrap-address: localhost:9092
+  group-id: consumerGroupId
+
 # FeignClient 사용 시 발생한 로그 추적
 logging:
   level:

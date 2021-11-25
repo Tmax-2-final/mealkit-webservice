@@ -96,6 +96,10 @@ function MyPage(props) {
             const userId = localStorage.getItem('userid');
             const token = localStorage.getItem('token');
 
+            const headers = {
+                Authorization: `Bearer ${token}`
+            }
+
             axios.delete(`/user-service/users/${userId}`, { headers: headers })
                 .then((response) => {
                     if (response.status === 200) {

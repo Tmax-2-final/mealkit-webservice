@@ -24,7 +24,7 @@ export default function ReviewTable({ reviewDatas, setReviewDatas }) {
                                         <th>평점</th>
                                         {/* <th>작성자 </th> */}
                                         
-                                        <th>삭제 </th>
+                                        {/* <th>삭제 </th> */}
                                     </tr>
                                 </thead>
                                 <tbody>
