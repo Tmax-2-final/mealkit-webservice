@@ -15,7 +15,7 @@ spring:
       routes:
         # user service - swagger
         - id: user-service
-          uri: lb://172.31.44.34
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/v2/api-docs
             - Path=/user-service/swagger-resources
@@ -33,7 +33,7 @@ spring:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         # user service actuator
         - id: user-service
-          uri: lb://172.31.44.34
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/actuator/**
             - Method=GET,POST
@@ -41,7 +41,7 @@ spring:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         # user-login service
         - id: user-service
-          uri: lb://172.31.44.34
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/login
             - Method=POST
@@ -50,7 +50,7 @@ spring:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         # user-kakao-login service
         - id: user-service
-          uri: lb://172.31.44.34
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/oauth/callback/kakao
             - Method=GET
@@ -59,7 +59,7 @@ spring:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         # 관리자-login service
         - id: user-service
-          uri: lb://172.31.44.34
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/admin/login
             - Method=POST
@@ -68,7 +68,7 @@ spring:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         # user-회원가입 service
         - id: user-service
-          uri: lb://172.31.44.34
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/users
             - Method=POST
@@ -77,7 +77,7 @@ spring:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         # user-아이디 중복검사
         - id: user-service
-          uri: lb://172.31.44.34
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/users/id/**
             - Method=GET
@@ -86,7 +86,7 @@ spring:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         # user-비밀번호 찾기 /find/pw
         - id: user-service
-          uri: lb://172.31.44.34
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/find/pw
             - Method=PUT
@@ -95,7 +95,7 @@ spring:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         # user service
         - id: user-service
-          uri: lb://172.31.44.34
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/**
             - Method=GET,POST,PUT,DELETE
@@ -105,7 +105,7 @@ spring:
             - AuthorizationHeaderFilter
         # catalog service
         - id: catalog-service
-          uri: lb://172.31.51.93
+          uri: lb://CATALOG-SERVICE
           predicates:
             - Path=/catalog-service/**
           filters:
@@ -123,7 +123,7 @@ spring:
 
         # alert service
         - id: alert-service
-          uri: lb://172.31.44.34
+          uri: lb://ALERT-SERVICE
           predicates:
             - Path=/alert-service/**
           filters:
@@ -131,7 +131,7 @@ spring:
             - RewritePath=/alert-service/(?<segment>.*), /$\{segment}
         # subscription service
         - id: subscription-service
-          uri: lb://172.31.51.110
+          uri: lb://SUBSCRIPTION-SERVICE
           predicates:
             - Path=/subscription-service/**
           filters:
@@ -139,7 +139,7 @@ spring:
             - RewritePath=/subscription-service/(?<segment>.*), /$\{segment}
         # review service
         - id: review-service
-          uri: lb://172.31.51.93
+          uri: lb://REVIEW-SERVICE
           predicates:
             - Path=/review-service/**
           filters:
