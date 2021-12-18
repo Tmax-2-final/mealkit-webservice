@@ -15,6 +15,7 @@
 - 팀원: 김남곤
     - 회원 관리 및 알림 서비스 담당
 
+
 ## 시스템 전체 아키텍쳐
 ![image](https://user-images.githubusercontent.com/32921225/143766905-95456e05-41ee-4790-9642-ad57340e7c78.png)
 
