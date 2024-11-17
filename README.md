@@ -25,20 +25,7 @@
 
 
 ## 문서관리
-[작업 목록](https://www.notion.so/89ce9e72a6914ccfafd1e3c552f7cdbe)
-- 진행 상황을 작성하는 곳입니다.
-
-[일정 관리](https://www.notion.so/8e915e8d22dc4c5fa8ea8bbad5aec9a1)
-- 프로젝트 전체 일정을 관리하는 WBS 링크페이지입니다.
-
-[문서](https://www.notion.so/da22ed50af8a46c7904e32ad7e5249ba)
-- 프로젝트에 필요한 모든 문서를 포함한 곳입니다.
-
-[회의록](https://www.notion.so/419f53ee5d344b8e937d1f4c29019ddd)
-- 일일, 주간 회의를 작성하는 곳입니다.
-
-[기타 작업](https://www.notion.so/7f79b14c00154d7bb6c3ccb69f7ff5a3)
-- 기타적으로 작업했거나 조사한 자료들을 임시적으로 보관하는 곳입니다.
+[노션 링크](https://namgonkim.notion.site/47bfeec7e6d04f23961e515b5d9d2b7a?pvs=4)
 
 ## 개선사항
 1.  Architecture
